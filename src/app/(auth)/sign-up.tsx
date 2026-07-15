@@ -5,7 +5,7 @@ import { Link, router } from "expo-router";
 import Screen from "@/components/layouts/Screen";
 import Container from "@/components/layouts/Container";
 import KeyboardAvoidingWrapper from "@/components/layouts/KeyboardAvoidingWrapper";
-import { authClient } from "@/lib/auth-client";
+import { pb } from "@/lib/pocketbase";
 import { logger } from "@/utils/logger";
 
 import { Button } from "heroui-native/button";
@@ -27,16 +27,18 @@ export default function SignUpScreen() {
     setError(null);
     setLoading(true);
     try {
-      const { error: signUpError } = await authClient.signUp.email({
-        name: name.trim(),
+      await pb.collection("users").create({
         email: email.trim(),
         password,
+        passwordConfirm: password,
+        name: name.trim(),
       });
 
-      if (signUpError) {
-        setError(signUpError.message ?? "Sign up failed");
-        return;
-      }
+      const authData = await pb
+        .collection("users")
+        .authWithPassword(email.trim(), password);
+
+      console.log("Signed up and authenticated:", authData);
 
       router.replace("/home");
     } catch (err) {

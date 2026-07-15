@@ -1,10 +1,10 @@
 import { ActivityIndicator, View, useColorScheme } from "react-native";
 import { Redirect, Stack } from "expo-router";
 
-import { useSession } from "@/lib/auth-client";
+import { useAuth } from "@/api/hooks/use-auth";
 
 export default function AppLayout() {
-  const { data: session, isPending } = useSession();
+  const { session, isPending } = useAuth();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
 

@@ -4,7 +4,7 @@ import { router } from "expo-router";
 import Screen from "@/components/layouts/Screen";
 import Container from "@/components/layouts/Container";
 import { useUsers } from "@/api/hooks/use-users";
-import { authClient, useSession } from "@/lib/auth-client";
+import { useAuth } from "@/api/hooks/use-auth";
 import { logger } from "@/utils/logger";
 
 import { Button } from "heroui-native/button";
@@ -16,7 +16,7 @@ import { Surface } from "heroui-native/surface";
 import { Uniwind } from "uniwind";
 
 export default function HomeScreen() {
-  const { data: session } = useSession();
+  const { session, signOut } = useAuth();
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const {
@@ -29,7 +29,7 @@ export default function HomeScreen() {
 
   const handleSignOut = async () => {
     try {
-      await authClient.signOut();
+      signOut();
       router.replace("/sign-in");
     } catch (err) {
       logger.error("sign-out failed", err);
@@ -54,10 +54,10 @@ export default function HomeScreen() {
             </Avatar>
             <View>
               <Typography type="body-sm" weight="semibold" className="text-foreground">
-                {session?.user.name}
+                {session?.record?.name}
               </Typography>
               <Typography type="body-xs" color="muted">
-                {session?.user.email}
+                {session?.record?.email}
               </Typography>
             </View>
           </View>
@@ -76,7 +76,7 @@ export default function HomeScreen() {
             <Typography type="body" color="muted">
               You are signed in as{" "}
               <Typography type="body" weight="semibold">
-                {session?.user.name}
+                {session?.record?.name}
               </Typography>
             </Typography>
           </Card.Body>
@@ -90,7 +90,7 @@ export default function HomeScreen() {
           </Card.Header>
           <Card.Body className="gap-3">
             <Typography type="body-sm" color="muted">
-              Calls GET /users with the Better Auth cookie from SecureStore.
+              Calls GET /users with the PocketBase auth token.
             </Typography>
 
             {usersError ? (

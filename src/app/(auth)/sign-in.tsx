@@ -5,7 +5,7 @@ import { View } from "react-native";
 import Container from "@/components/layouts/Container";
 import KeyboardAvoidingWrapper from "@/components/layouts/KeyboardAvoidingWrapper";
 import Screen from "@/components/layouts/Screen";
-import { authClient } from "@/lib/auth-client";
+import { pb } from "@/lib/pocketbase";
 import { logger } from "@/utils/logger";
 
 import { Alert } from "heroui-native/alert";
@@ -26,19 +26,25 @@ export default function SignInScreen() {
     setError(null);
     setLoading(true);
     try {
-      const { error: signInError } = await authClient.signIn.email({
-        email: email.trim(),
-        password,
-      });
-
-      if (signInError) {
-        setError(signInError.message ?? "Sign in failed");
-        return;
+      // Ensure LAN host is applied (module load can miss Expo host IP).
+      const { getPocketBaseUrl } = await import("@/utils/env");
+      pb.baseUrl = getPocketBaseUrl();
+      if (__DEV__) {
+        console.log(`[sign-in] pocketbase=${pb.baseUrl}`);
       }
-
+      await pb.collection("users").authWithPassword(email, password);
       router.replace("/home");
     } catch (err) {
-      logger.error("sign-in failed", err);
+      const detail =
+        err && typeof err === "object"
+          ? {
+              message: (err as Error).message,
+              status: (err as { status?: number }).status,
+              url: (err as { url?: string }).url,
+              originalError: (err as { originalError?: unknown }).originalError,
+            }
+          : err;
+      logger.error("sign-in failed", detail);
       setError(err instanceof Error ? err.message : "Sign in failed");
     } finally {
       setLoading(false);
@@ -134,7 +140,7 @@ export default function SignInScreen() {
 
           <View className="items-center mt-4">
             <Typography type="body" color="muted">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
             </Typography>
             <Link href="/sign-up" asChild>
               <Button variant="ghost" size="sm">

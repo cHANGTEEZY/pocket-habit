@@ -1,8 +1,8 @@
 import axios, { type AxiosInstance } from "axios";
 import { router } from "expo-router";
 
-import { authClient } from "@/lib/auth-client";
-import { getApiUrl } from "@/utils/env";
+import { pb } from "@/lib/pocketbase";
+import { getPocketBaseUrl } from "@/utils/env";
 
 function serializeParams(params: Record<string, unknown> | undefined): string {
   const searchParams = new URLSearchParams();
@@ -26,11 +26,10 @@ function serializeParams(params: Record<string, unknown> | undefined): string {
 
 export function createApiClient(): AxiosInstance {
   const client = axios.create({
-    baseURL: getApiUrl(),
+    baseURL: getPocketBaseUrl(),
     headers: {
       "Content-Type": "application/json",
     },
-    // Manual Cookie header from SecureStore — do not let the runtime merge cookies.
     withCredentials: false,
     paramsSerializer: {
       serialize: serializeParams,
@@ -39,9 +38,8 @@ export function createApiClient(): AxiosInstance {
 
   client.interceptors.request.use(
     (config) => {
-      const cookies = authClient.getCookie();
-      if (cookies) {
-        config.headers.Cookie = cookies;
+      if (pb.authStore.isValid && pb.authStore.token) {
+        config.headers.Authorization = `Bearer ${pb.authStore.token}`;
       }
       return config;
     },
@@ -52,7 +50,6 @@ export function createApiClient(): AxiosInstance {
     (response) => response,
     async (error) => {
       if (error.response?.status === 401) {
-        // Safe to call even if already on an auth screen.
         router.replace("/sign-in");
       }
       return Promise.reject(error);

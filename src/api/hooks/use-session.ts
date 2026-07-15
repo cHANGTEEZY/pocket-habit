@@ -1,10 +1,10 @@
-import { useSession } from "@/lib/auth-client";
+import { useAuth } from "@/api/hooks/use-auth";
 
 /**
- * Thin wrapper around Better Auth `useSession` for consistent imports from `@/api`.
+ * Thin wrapper around PocketBase auth for consistent imports from `@/api`.
  */
 export function useAuthSession() {
-  return useSession();
+  return useAuth();
 }
 
-export { useSession };
+export { useAuth as useSession };

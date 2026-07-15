@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, View, useColorScheme } from "react-native";
 import { Redirect } from "expo-router";
 
-import { useSession } from "@/lib/auth-client";
+import { useAuth } from "@/api/hooks/use-auth";
 
 const SESSION_BOOT_TIMEOUT_MS = 3000;
 
 export default function Index() {
-  const { data: session, isPending } = useSession();
+  const { session, isPending } = useAuth();
   const [bootTimedOut, setBootTimedOut] = useState(false);
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";

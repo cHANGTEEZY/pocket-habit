@@ -1,5 +1,5 @@
 import { cn } from "heroui-native";
-import { ScrollView, type ViewStyle } from "react-native";
+import { ScrollView, View, type ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type ScreenProps = {
@@ -12,6 +12,11 @@ type ScreenProps = {
   testID?: string;
 };
 
+/**
+ * Screen shell with safe-area insets + themed background.
+ * SafeAreaView from safe-area-context does not process Uniwind className,
+ * so the themed surface lives on an inner View from react-native (uniwind-patched).
+ */
 const Screen = ({
   children,
   className,
@@ -22,27 +27,23 @@ const Screen = ({
   testID,
 }: ScreenProps) => {
   return (
-    <SafeAreaView
-      className={cn("flex-1 bg-background", className)}
-      // Explicit styles so layout still works if uniwind className fails to apply.
-      style={{ flex: 1, backgroundColor: "#f5f5f5" }}
-      edges={edges}
-      testID={testID}
-    >
-      {scroll ? (
-        <ScrollView
-          className="flex-1"
-          style={{ flex: 1 }}
-          contentContainerClassName={cn("flex-grow", contentContainerClassName)}
-          contentContainerStyle={[{ flexGrow: 1 }, contentContainerStyle]}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          {children}
-        </ScrollView>
-      ) : (
-        children
-      )}
+    <SafeAreaView style={{ flex: 1 }} edges={edges} testID={testID}>
+      <View className={cn("flex-1 bg-background", className)} style={{ flex: 1 }}>
+        {scroll ? (
+          <ScrollView
+            className="flex-1"
+            style={{ flex: 1 }}
+            contentContainerClassName={cn("flex-grow", contentContainerClassName)}
+            contentContainerStyle={[{ flexGrow: 1 }, contentContainerStyle]}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+            {children}
+          </ScrollView>
+        ) : (
+          children
+        )}
+      </View>
     </SafeAreaView>
   );
 };

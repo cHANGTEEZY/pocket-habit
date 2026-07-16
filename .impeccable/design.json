@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-16T00:00:00.000Z",
+  "title": "Design System: Expo Boilerplate",
+  "extensions": {
+    "colorMeta": {
+      "signal-blue": {
+        "role": "primary",
+        "displayName": "Signal Blue",
+        "canonical": "oklch(0.6204 0.195 253.83)",
+        "tonalRamp": [
+          "oklch(0.28 0.10 253.83)",
+          "oklch(0.36 0.13 253.83)",
+          "oklch(0.44 0.16 253.83)",
+          "oklch(0.52 0.185 253.83)",
+          "oklch(0.62 0.195 253.83)",
+          "oklch(0.72 0.16 253.83)",
+          "oklch(0.82 0.11 253.83)",
+          "oklch(0.92 0.06 253.83)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink (Eclipse)",
+        "canonical": "oklch(0.2103 0.0059 285.89)",
+        "tonalRamp": [
+          "oklch(0.15 0.006 285.89)",
+          "oklch(0.21 0.006 285.89)",
+          "oklch(0.32 0.006 285.89)",
+          "oklch(0.44 0.008 285.89)",
+          "oklch(0.55 0.014 285.94)",
+          "oklch(0.70 0.012 286.07)",
+          "oklch(0.85 0.006 286.32)",
+          "oklch(0.97 0.002 286.32)"
+        ]
+      },
+      "success": {
+        "role": "tertiary",
+        "displayName": "Success Green",
+        "canonical": "oklch(0.7329 0.1935 150.81)",
+        "tonalRamp": [
+          "oklch(0.30 0.10 150.81)",
+          "oklch(0.40 0.13 150.81)",
+          "oklch(0.50 0.16 150.81)",
+          "oklch(0.60 0.185 150.81)",
+          "oklch(0.73 0.1935 150.81)",
+          "oklch(0.82 0.15 150.81)",
+          "oklch(0.90 0.09 150.81)",
+          "oklch(0.96 0.04 150.81)"
+        ]
+      },
+      "warning": {
+        "role": "tertiary",
+        "displayName": "Warning Amber",
+        "canonical": "oklch(0.7819 0.1585 72.33)",
+        "tonalRamp": [
+          "oklch(0.32 0.09 72.33)",
+          "oklch(0.42 0.12 72.33)",
+          "oklch(0.52 0.14 72.33)",
+          "oklch(0.64 0.155 72.33)",
+          "oklch(0.78 0.1585 72.33)",
+          "oklch(0.86 0.13 72.33)",
+          "oklch(0.92 0.08 72.33)",
+          "oklch(0.97 0.04 72.33)"
+        ]
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "Danger Red",
+        "canonical": "oklch(0.6532 0.2328 25.74)",
+        "tonalRamp": [
+          "oklch(0.30 0.12 25.74)",
+          "oklch(0.40 0.16 25.74)",
+          "oklch(0.50 0.20 25.74)",
+          "oklch(0.58 0.22 25.74)",
+          "oklch(0.65 0.2328 25.74)",
+          "oklch(0.76 0.18 25.74)",
+          "oklch(0.86 0.11 25.74)",
+          "oklch(0.95 0.05 25.74)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": { "displayName": "Headline", "purpose": "Screen titles (h2, 30px semibold)." },
+      "title": { "displayName": "Title", "purpose": "Card headers (h5, 18px semibold)." },
+      "body": { "displayName": "Body", "purpose": "Primary reading text and descriptions." },
+      "label": { "displayName": "Label", "purpose": "Button and field labels (medium 500)." }
+    },
+    "shadows": [
+      { "name": "surface", "value": "0 2px 4px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.06)", "purpose": "Cards and non-overlay containers (light mode only)." },
+      { "name": "overlay", "value": "0 2px 8px rgba(0,0,0,0.02), 0 -6px 12px rgba(0,0,0,0.01), 0 14px 28px rgba(0,0,0,0.03)", "purpose": "Dialogs, popovers, sheets (light mode only)." }
+    ],
+    "motion": [
+      { "name": "press-scale", "value": "scale 0.985, ease-out", "purpose": "Tactile press feedback on buttons and pressables." }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single prominent action on a screen.",
+      "html": "<button class=\"ds-btn-primary\">Sign in</button>",
+      "css": ".ds-btn-primary { display:inline-flex; align-items:center; justify-content:center; height:56px; padding:0 20px; background:oklch(0.6204 0.195 253.83); color:oklch(0.9911 0 0); font-weight:500; font-size:18px; border:none; border-radius:32px; border-curve:continuous; transition:transform 0.2s ease-out, background 0.2s; } .ds-btn-primary:hover { background:color-mix(in oklab, oklch(0.6204 0.195 253.83) 90%, oklch(0.9911 0 0) 10%); } .ds-btn-primary:active { transform:scale(0.985); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Quiet secondary action.",
+      "html": "<button class=\"ds-btn-outline\">Refresh users</button>",
+      "css": ".ds-btn-outline { display:inline-flex; align-items:center; justify-content:center; height:48px; padding:0 16px; background:transparent; color:oklch(0.2103 0.0059 285.89); font-weight:500; font-size:16px; border:1px solid oklch(0.90 0.004 286.32); border-radius:24px; transition:transform 0.2s ease-out; } .ds-btn-outline:active { transform:scale(0.985); }"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Destructive action only (e.g. sign out).",
+      "html": "<button class=\"ds-btn-danger\">Sign out</button>",
+      "css": ".ds-btn-danger { display:inline-flex; align-items:center; justify-content:center; height:56px; padding:0 20px; background:oklch(0.6532 0.2328 25.74); color:oklch(0.9911 0 0); font-weight:500; font-size:18px; border:none; border-radius:32px; transition:transform 0.2s ease-out; } .ds-btn-danger:active { transform:scale(0.985); }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Non-overlay container for grouped content.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Users API</div><div class=\"ds-card-body\">Calls GET /users with the PocketBase auth token.</div></div>",
+      "css": ".ds-card { background:oklch(1 0 0); color:oklch(0.2103 0.0059 285.89); border-radius:12px; padding:16px; box-shadow:0 2px 4px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.06); } .ds-card-title { font-size:18px; font-weight:600; letter-spacing:-0.015em; } .ds-card-body { margin-top:8px; font-size:14px; color:oklch(0.5517 0.0138 285.94); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Filled field with no default border; focus uses Signal Blue.",
+      "html": "<input class=\"ds-input\" placeholder=\"you@example.com\" />",
+      "css": ".ds-input { height:48px; width:100%; padding:0 16px; background:oklch(1 0 0); color:oklch(0.2103 0.0059 285.89); font-size:16px; border:0; border-radius:14px; box-shadow:0 2px 4px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06); outline:none; } .ds-input::placeholder { color:oklch(0.5517 0.0138 285.94); } .ds-input:focus-visible { box-shadow:0 0 0 2px oklch(0.6204 0.195 253.83); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Calm Focus",
+    "overview": "The system is built so that nothing competes with the task in front of the person. Chrome recedes, surfaces stay quiet, and a single blue accent does all the pointing. This is a productivity tool a discerning person reaches for many times a day, so the aesthetic is premium through restraint rather than ornament: generous breathing room, a near-neutral canvas, and one confident color reserved for the thing that matters most on each screen. Depth is honest and light. Components are tactile and confident: controls are large, rounded, and responsive to touch, with a subtle press-scale that makes the interface feel physical without shouting.",
+    "keyCharacteristics": [
+      "One accent, used sparingly — Signal Blue points, it doesn't decorate.",
+      "Near-neutral canvas with cool-gray tinting; no warm-cream default.",
+      "Large, pill-shaped, tactile controls with press feedback.",
+      "Honest depth: subtle shadow in light, tonal layering in dark.",
+      "System typography for a native feel on both platforms."
+    ],
+    "rules": [
+      { "name": "The One Voice Rule", "body": "Signal Blue appears on at most one primary action per screen. Status colors speak only when there is real status to report. Everything else is neutral.", "section": "colors" },
+      { "name": "The One Family Rule", "body": "Hierarchy is built with weight and size in the system font, never a second typeface.", "section": "typography" },
+      { "name": "The Tonal-Dark Rule", "body": "In dark mode, never add a drop shadow to create depth. Step the surface lightness instead.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do reserve Signal Blue for the single primary action per screen (The One Voice Rule).",
+      "Do build type hierarchy with weight and size in the system font only.",
+      "Do convey dark-mode depth with tonal layering, not shadows.",
+      "Do keep controls large and pill-shaped with press feedback, and pair every animation with a prefers-reduced-motion fallback.",
+      "Do keep body text ≥4.5:1 and touch targets ≥44×44pt on both platforms.",
+      "Do let content lead — chrome recedes, the task is the most prominent thing on screen."
+    ],
+    "donts": [
+      "Don't ship the generic AI-slop starter look: identical card grids, tiny uppercase tracked eyebrows, or gradient text.",
+      "Don't go childish or over-gamified — no mascots, confetti-by-default, or playfulness at the expense of clarity.",
+      "Don't drift cold, corporate, or sterile.",
+      "Don't crowd the screen into a dense enterprise dashboard; protect whitespace.",
+      "Don't add a second accent or a second type family for variety.",
+      "Don't put a drop shadow on a dark-mode surface."
+    ]
+  }
+}

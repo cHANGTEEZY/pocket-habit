@@ -1,8 +1,9 @@
-import { View, useColorScheme } from "react-native";
+import { View } from "react-native";
 import { router } from "expo-router";
 
 import Screen from "@/components/layouts/Screen";
 import Container from "@/components/layouts/Container";
+import { useAppColorScheme, useToggleAppTheme } from "@/hooks/use-app-color-scheme";
 import { useUsers } from "@/api/hooks/use-users";
 import { useAuth } from "@/api/hooks/use-auth";
 import { logger } from "@/utils/logger";
@@ -13,12 +14,11 @@ import { Card } from "heroui-native/card";
 import { Avatar } from "heroui-native/avatar";
 import { Alert } from "heroui-native/alert";
 import { Surface } from "heroui-native/surface";
-import { Uniwind } from "uniwind";
 
 export default function HomeScreen() {
   const { session, signOut } = useAuth();
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const toggleTheme = useToggleAppTheme();
+  const isDark = useAppColorScheme() === "dark";
   const {
     data: usersData,
     isLoading: usersLoading,
@@ -34,10 +34,6 @@ export default function HomeScreen() {
     } catch (err) {
       logger.error("sign-out failed", err);
     }
-  };
-
-  const toggleTheme = () => {
-    Uniwind.setTheme(isDark ? "light" : "dark");
   };
 
   return (

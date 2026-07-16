@@ -4,17 +4,27 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { Uniwind, useCSSVariable } from "uniwind";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { HeroUINativeProvider } from "heroui-native";
 
 import { AppProviders } from "@/providers/app-providers";
+import { useAppColorScheme } from "@/hooks/use-app-color-scheme";
 
 SplashScreen.preventAutoHideAsync().catch(() => {
   // Ignore if splash was already hidden.
 });
 
 export default function RootLayout() {
+  const colorScheme = useAppColorScheme();
+  const backgroundColor = useCSSVariable("--color-background");
+
+  useEffect(() => {
+    // Follow the device color scheme by default (Uniwind adaptive themes).
+    Uniwind.setTheme("system");
+  }, []);
+
   useEffect(() => {
     SplashScreen.hideAsync().catch(() => {
       // Ignore if splash was already hidden.
@@ -22,11 +32,17 @@ export default function RootLayout() {
   }, []);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView
+      style={{
+        flex: 1,
+        backgroundColor:
+          typeof backgroundColor === "string" ? backgroundColor : undefined,
+      }}
+    >
       <SafeAreaProvider>
         <HeroUINativeProvider>
           <AppProviders>
-            <StatusBar style="auto" />
+            <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
             <Stack
               screenOptions={{
                 headerShown: false,

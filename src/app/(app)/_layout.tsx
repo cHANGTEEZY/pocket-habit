@@ -1,12 +1,12 @@
-import { ActivityIndicator, View, useColorScheme } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { Redirect, Stack } from "expo-router";
+import { useCSSVariable } from "uniwind";
 
 import { useAuth } from "@/api/hooks/use-auth";
 
 export default function AppLayout() {
   const { session, isPending } = useAuth();
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const backgroundColor = useCSSVariable("--color-background");
 
   if (isPending) {
     return (
@@ -15,7 +15,8 @@ export default function AppLayout() {
           flex: 1,
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: isDark ? "#0a0a0a" : "#f5f5f5",
+          backgroundColor:
+            typeof backgroundColor === "string" ? backgroundColor : undefined,
         }}
       >
         <ActivityIndicator size="large" />
@@ -33,7 +34,8 @@ export default function AppLayout() {
         headerShown: false,
         contentStyle: {
           flex: 1,
-          backgroundColor: isDark ? "#0a0a0a" : "#f5f5f5",
+          backgroundColor:
+            typeof backgroundColor === "string" ? backgroundColor : undefined,
         },
       }}
     >

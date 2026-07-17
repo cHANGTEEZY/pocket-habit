@@ -1,7 +1,8 @@
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { useSession } from "@/api";
 
+import { Avatar } from "heroui-native/avatar";
 import { Typography } from "heroui-native/text";
 
 function getGreeting(hour: number): string {
@@ -10,52 +11,49 @@ function getGreeting(hour: number): string {
   return "Good evening";
 }
 
-function getFirstName(name: unknown): string | null {
+function getInitials(name: unknown): string | null {
   if (typeof name !== "string") return null;
-  const first = name.trim().split(/\s+/)[0];
-  return first || null;
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return null;
+  if (parts.length === 1) return parts[0].slice(0, 1).toUpperCase();
+  return `${parts[0].slice(0, 1)}${parts[1].slice(0, 1)}`.toUpperCase();
 }
 
-function formatTodayLabel(date: Date): string {
-  return new Intl.DateTimeFormat("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-  }).format(date);
-}
-
-type TodayHeaderProps = {
-  /** When true, uses inviting empty-state copy instead of the checklist subtitle. */
-  isEmpty?: boolean;
-};
-
-export default function TodayHeader({ isEmpty = true }: TodayHeaderProps) {
+export default function TodayHeader() {
   const { session } = useSession();
-  const now = new Date();
-  const firstName = getFirstName(session?.record?.name);
-  const greeting = getGreeting(now.getHours());
-  const title = firstName ? `${greeting}, ${firstName}` : greeting;
+  const greeting = getGreeting(new Date().getHours());
+  const initials = getInitials(session?.record?.name);
+  const image =
+    typeof session?.record?.avatar === "string"
+      ? session.record.avatar
+      : typeof session?.record?.image === "string"
+        ? session.record.image
+        : null;
 
   return (
     <View
-      className="mb-8 gap-3"
+      className="mb-6 flex-row items-center justify-between"
       accessibilityRole="header"
-      accessibilityLabel={`${title}. ${formatTodayLabel(now)}`}
+      accessibilityLabel={greeting}
     >
-      <Typography type="body-sm" weight="medium" color="muted">
-        {formatTodayLabel(now)}
+      <Typography type="h1" weight="semibold" className="text-foreground">
+        {greeting}
       </Typography>
 
-      <View className="gap-1.5">
-        <Typography type="h1" weight="semibold" className="text-foreground">
-          {title}
-        </Typography>
-        <Typography type="body" color="muted" className="leading-relaxed">
-          {isEmpty
-            ? "A quiet start. Pick one small habit — checking in is enough."
-            : "Your habits for this day."}
-        </Typography>
-      </View>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Profile"
+        hitSlop={8}
+      >
+        <Avatar size="sm" color="accent" variant="soft">
+          {image ? <Avatar.Image source={{ uri: image }} /> : null}
+          {initials ? (
+            <Avatar.Fallback>{initials}</Avatar.Fallback>
+          ) : (
+            <Avatar.Fallback />
+          )}
+        </Avatar>
+      </Pressable>
     </View>
   );
 }

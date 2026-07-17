@@ -24,7 +24,9 @@ export default function AddFirstHabit() {
       </Card.Header>
 
       <Card.Body className="items-center gap-1.5 px-1 pt-5 pb-1">
-        <Card.Title className="text-center">Start your first habit</Card.Title>
+        <Card.Title className="text-center text-2xl">
+          Start your first habit
+        </Card.Title>
         <Card.Description className="text-center leading-relaxed">
           Add one small thing you want to do today. Checking in is enough to
           begin.

@@ -5,6 +5,8 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
+import { useAppColorScheme } from "@/hooks/use-app-color-scheme";
+
 type ScreenProps = {
   children: React.ReactNode;
   className?: string;
@@ -12,6 +14,11 @@ type ScreenProps = {
   contentContainerClassName?: string;
   contentContainerStyle?: ViewStyle;
   edges?: ("top" | "bottom" | "left" | "right")[];
+  /**
+   * Skip top content inset so children can draw under the status bar
+   * (e.g. mesh / collapsing headers). Caller must pad its own content.
+   */
+  bleedTop?: boolean;
   testID?: string;
 };
 
@@ -27,15 +34,27 @@ const Screen = ({
   contentContainerClassName,
   contentContainerStyle,
   edges,
+  bleedTop = false,
   testID,
 }: ScreenProps) => {
   const { top } = useSafeAreaInsets();
+  const scheme = useAppColorScheme();
+  // Hex fallback keeps NativeTabs / SafeArea from flashing a mismatched grey.
+  const backgroundColor = scheme === "dark" ? "#121214" : "#F7F7F7";
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={edges} testID={testID}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor }}
+      edges={edges}
+      testID={testID}
+    >
       <View
         className={cn("flex-1 bg-background", className)}
-        style={{ flex: 1, paddingTop: top }}
+        style={{
+          flex: 1,
+          paddingTop: bleedTop ? 0 : top,
+          backgroundColor,
+        }}
       >
         {scroll ? (
           <ScrollView

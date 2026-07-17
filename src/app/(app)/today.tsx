@@ -3,7 +3,7 @@ import Today from "@/features/today";
 
 export default function TodayScreen() {
   return (
-    <Screen scroll edges={["left", "right"]}>
+    <Screen edges={["left", "right"]} bleedTop>
       <Today />
     </Screen>
   );

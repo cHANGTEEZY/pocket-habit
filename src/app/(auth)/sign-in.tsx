@@ -61,6 +61,7 @@ export default function SignInScreen() {
       await pb.collection("users").authWithPassword(email.trim(), password);
       router.replace("/home");
     } catch (err) {
+      console.log("sign-in failed", err);
       logger.error("sign-in failed", err);
       setError(
         err instanceof Error
@@ -73,10 +74,13 @@ export default function SignInScreen() {
   };
 
   return (
-    <Screen scroll edges={["top", "bottom"]}>
+    <Screen scroll edges={[]}>
       <KeyboardAvoidingWrapper keyboardVerticalOffset={-50}>
         <Container className="pt-14 pb-4">
-          <AuthHeader title="Welcome back" subtitle="Sign in to pick up where you left off." />
+          <AuthHeader
+            title="Welcome back"
+            subtitle="Sign in to pick up where you left off."
+          />
 
           <View className="mt-10 gap-5">
             {error ? (

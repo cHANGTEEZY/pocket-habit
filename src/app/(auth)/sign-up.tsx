@@ -25,23 +25,32 @@ export default function SignUpScreen() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [fieldErrors, setFieldErrors] = useState<{
     name?: string;
     email?: string;
     password?: string;
+    confirmPassword?: string;
   }>({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
-
-  const clearFieldError = (key: "name" | "email" | "password") => {
+  const confirmPasswordRef = useRef<TextInput>(null);
+  const clearFieldError = (
+    key: "name" | "email" | "password" | "confirmPassword",
+  ) => {
     setFieldErrors((e) => (e[key] ? { ...e, [key]: undefined } : e));
   };
 
   const validate = () => {
-    const next: { name?: string; email?: string; password?: string } = {};
+    const next: {
+      name?: string;
+      email?: string;
+      password?: string;
+      confirmPassword?: string;
+    } = {};
     if (!name.trim()) {
       next.name = "Enter your name.";
     }
@@ -54,6 +63,11 @@ export default function SignUpScreen() {
       next.password = "Create a password.";
     } else if (password.length < MIN_PASSWORD) {
       next.password = `Use at least ${MIN_PASSWORD} characters.`;
+    }
+    if (!confirmPassword) {
+      next.confirmPassword = "Confirm your password.";
+    } else if (confirmPassword !== password) {
+      next.confirmPassword = "Passwords do not match.";
     }
     setFieldErrors(next);
     return Object.keys(next).length === 0;
@@ -69,7 +83,6 @@ export default function SignUpScreen() {
       await pb.collection("users").create({
         email: email.trim(),
         password,
-        passwordConfirm: password,
         name: name.trim(),
       });
       await pb.collection("users").authWithPassword(email.trim(), password);
@@ -87,7 +100,7 @@ export default function SignUpScreen() {
   };
 
   return (
-    <Screen scroll edges={["top", "bottom"]}>
+    <Screen scroll edges={[]}>
       <KeyboardAvoidingWrapper keyboardVerticalOffset={-50}>
         <Container className="pt-14 pb-4">
           <AuthHeader
@@ -156,6 +169,23 @@ export default function SignUpScreen() {
                 clearFieldError("password");
               }}
               error={fieldErrors.password}
+              editable={!loading}
+              autoComplete="new-password"
+              textContentType="newPassword"
+              returnKeyType="go"
+              onSubmitEditing={handleSignUp}
+            />
+
+            <AuthPasswordField
+              ref={confirmPasswordRef}
+              label="Confirm Password"
+              placeholder="Confirm your password"
+              value={confirmPassword}
+              onChangeText={(v) => {
+                setConfirmPassword(v);
+                clearFieldError("confirmPassword");
+              }}
+              error={fieldErrors.confirmPassword}
               editable={!loading}
               autoComplete="new-password"
               textContentType="newPassword"

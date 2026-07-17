@@ -3,6 +3,7 @@ import "../global.css";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
+import * as SystemUI from "expo-system-ui";
 import { useEffect } from "react";
 import { Uniwind, useCSSVariable } from "uniwind";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -19,6 +20,7 @@ SplashScreen.preventAutoHideAsync().catch(() => {
 export default function RootLayout() {
   const colorScheme = useAppColorScheme();
   const backgroundColor = useCSSVariable("--color-background");
+  const statusBarStyle = colorScheme === "dark" ? "light" : "dark";
 
   useEffect(() => {
     // Follow the device color scheme by default (Uniwind adaptive themes).
@@ -31,6 +33,12 @@ export default function RootLayout() {
     });
   }, []);
 
+  useEffect(() => {
+    if (typeof backgroundColor === "string") {
+      void SystemUI.setBackgroundColorAsync(backgroundColor);
+    }
+  }, [backgroundColor]);
+
   return (
     <GestureHandlerRootView
       style={{
@@ -42,7 +50,7 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <HeroUINativeProvider>
           <AppProviders>
-            <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+            <StatusBar style={statusBarStyle} animated />
             <Stack
               screenOptions={{
                 headerShown: false,

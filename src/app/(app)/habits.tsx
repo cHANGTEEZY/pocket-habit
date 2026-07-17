@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 const habits = () => {
   return (
@@ -9,5 +9,3 @@ const habits = () => {
 };
 
 export default habits;
-
-const styles = StyleSheet.create({});

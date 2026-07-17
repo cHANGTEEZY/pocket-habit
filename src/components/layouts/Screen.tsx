@@ -1,6 +1,9 @@
 import { cn } from "heroui-native";
 import { ScrollView, View, type ViewStyle } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 type ScreenProps = {
   children: React.ReactNode;
@@ -26,14 +29,22 @@ const Screen = ({
   edges,
   testID,
 }: ScreenProps) => {
+  const { top } = useSafeAreaInsets();
+
   return (
     <SafeAreaView style={{ flex: 1 }} edges={edges} testID={testID}>
-      <View className={cn("flex-1 bg-background", className)} style={{ flex: 1 }}>
+      <View
+        className={cn("flex-1 bg-background", className)}
+        style={{ flex: 1, paddingTop: top }}
+      >
         {scroll ? (
           <ScrollView
             className="flex-1"
             style={{ flex: 1 }}
-            contentContainerClassName={cn("flex-grow", contentContainerClassName)}
+            contentContainerClassName={cn(
+              "flex-grow",
+              contentContainerClassName,
+            )}
             contentContainerStyle={[{ flexGrow: 1 }, contentContainerStyle]}
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}

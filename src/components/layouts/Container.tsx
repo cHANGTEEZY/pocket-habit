@@ -11,7 +11,10 @@ const Container = ({ children, className, style }: ContainerProps) => {
   return (
     <View
       className={cn("flex-1 items-center w-full ", className)}
-      style={[{ flex: 1, width: "100%" }, style]}
+      style={[
+        { flex: 1, width: "100%", paddingHorizontal: 14, paddingTop: 10 },
+        style,
+      ]}
     >
       <View
         className="w-full max-w-[480px] flex-1"

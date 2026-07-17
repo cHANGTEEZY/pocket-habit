@@ -1,42 +1,13 @@
-import { Link } from "expo-router";
 import { forwardRef, useState } from "react";
 import { Pressable, type TextInput, View } from "react-native";
 
-import { EyeIcon, EyeOffIcon, FocusGlyph } from "@/components/icons";
+import { EyeIcon, EyeOffIcon } from "@/components/icons";
 
 import { Description } from "heroui-native/description";
 import { FieldError } from "heroui-native/field-error";
 import { Input, type InputProps } from "heroui-native/input";
 import { Label } from "heroui-native/label";
 import { TextField } from "heroui-native/text-field";
-import { Typography } from "heroui-native/text";
-
-type AuthHeaderProps = {
-  title: string;
-  subtitle: string;
-};
-
-export function AuthHeader({ title, subtitle }: AuthHeaderProps) {
-  return (
-    <View className="gap-5">
-      <View
-        className="h-12 w-12 items-center justify-center rounded-2xl bg-accent"
-        style={{ borderCurve: "continuous" }}
-        accessible={false}
-      >
-        <FocusGlyph size={26} />
-      </View>
-      <View className="gap-1.5">
-        <Typography type="h1" weight="semibold" className="text-foreground">
-          {title}
-        </Typography>
-        <Typography type="body" color="muted">
-          {subtitle}
-        </Typography>
-      </View>
-    </View>
-  );
-}
 
 type AuthFieldProps = InputProps & {
   label: string;
@@ -102,30 +73,3 @@ export const AuthPasswordField = forwardRef<TextInput, AuthFieldProps>(
 );
 
 AuthPasswordField.displayName = "AuthPasswordField";
-
-type AuthFooterProps = {
-  prompt: string;
-  actionLabel: string;
-  href: "/sign-in" | "/sign-up";
-};
-
-export function AuthFooter({ prompt, actionLabel, href }: AuthFooterProps) {
-  return (
-    <View className="mt-auto flex-row items-center justify-center pt-8 pb-2">
-      <Typography type="body" color="muted">
-        {prompt}{" "}
-      </Typography>
-      <Link href={href} asChild>
-        <Pressable
-          hitSlop={8}
-          accessibilityRole="link"
-          className="min-h-11 justify-center"
-        >
-          <Typography type="body" weight="semibold" className="text-accent">
-            {actionLabel}
-          </Typography>
-        </Pressable>
-      </Link>
-    </View>
-  );
-}

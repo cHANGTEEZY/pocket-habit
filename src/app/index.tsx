@@ -36,7 +36,7 @@ export default function Index() {
   }
 
   if (session) {
-    return <Redirect href="/home" />;
+    return <Redirect href="/today" />;
   }
 
   return <Redirect href="/sign-in" />;

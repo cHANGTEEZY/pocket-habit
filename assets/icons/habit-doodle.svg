@@ -1,0 +1,61 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Contrast enhanced black doodle routine icon</title>
+  <desc id="desc">Black doodle icon of a person with routine symbols using white halos, outlines, and shadows for improved contrast.</desc>
+  <defs>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.18"/>
+    </filter>
+    <style>
+      .halo{stroke:#fff;stroke-width:22;stroke-linecap:round;stroke-linejoin:round;fill:none}
+      .line{stroke:#000;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;fill:none}
+      .thin{stroke:#000;stroke-width:7;stroke-linecap:round;stroke-linejoin:round;fill:none}
+      .panel{fill:#fff;stroke:#000;stroke-width:8;stroke-linecap:round;stroke-linejoin:round;filter:url(#softShadow)}
+      .dot{fill:#000}
+    </style>
+  </defs>
+
+  <!-- White halo behind circular routine path for contrast -->
+  <path d="M256 55 C357 55 439 137 439 238 C439 334 368 413 276 424" class="halo"/>
+  <path d="M236 424 C143 413 73 334 73 238 C73 142 146 63 239 56" class="halo"/>
+  <path d="M256 55 C357 55 439 137 439 238 C439 334 368 413 276 424" class="line"/>
+  <path d="M269 393 L276 424 L309 407" class="line"/>
+  <path d="M236 424 C143 413 73 334 73 238 C73 142 146 63 239 56" class="line"/>
+  <path d="M222 32 L254 56 L221 79" class="line"/>
+
+  <!-- Icon containers use white panels + black borders for separation -->
+  <circle cx="93" cy="111" r="48" class="panel"/>
+  <path d="M63 111 H123 M61 93 V129 M77 101 V121 M125 93 V129 M109 101 V121" class="thin"/>
+
+  <circle cx="419" cy="111" r="48" class="panel"/>
+  <circle cx="419" cy="111" r="31" class="thin"/>
+  <path d="M419 93 V113 L433 122 M419 78 V84 M419 138 V144 M386 111 H392 M446 111 H452" class="thin"/>
+
+  <circle cx="83" cy="343" r="49" class="panel"/>
+  <circle cx="83" cy="343" r="18" class="thin"/>
+  <path d="M83 306 V317 M83 369 V380 M46 343 H57 M109 343 H120 M57 317 L65 325 M101 361 L109 369 M109 317 L101 325 M65 361 L57 369" class="thin"/>
+
+  <circle cx="429" cy="343" r="49" class="panel"/>
+  <path d="M393 322 C407 315 420 318 429 329 V370 C417 360 405 357 393 363 Z" class="thin"/>
+  <path d="M465 322 C451 315 438 318 429 329 V370 C441 360 453 357 465 363 Z" class="thin"/>
+  <path d="M429 329 V370 M404 337 H418 M440 337 H454 M404 352 H416 M442 352 H454" class="thin"/>
+
+  <!-- Central person: white filled content panel prevents overlap with background lines -->
+  <path d="M169 359 C177 306 211 277 256 277 C301 277 335 306 343 359 C346 379 331 396 311 396 H201 C181 396 166 379 169 359 Z" class="panel"/>
+  <path d="M201 396 V342 C201 312 225 292 256 292 C287 292 311 312 311 342 V396" class="thin"/>
+  <path d="M235 258 V292 M277 258 V292" class="line"/>
+  <circle cx="256" cy="202" r="68" class="panel"/>
+  <path d="M205 181 C212 148 236 132 256 145 C278 130 306 149 311 181" class="line"/>
+  <path d="M219 169 C230 153 245 151 256 164 M260 163 C273 150 292 155 300 174" class="thin"/>
+  <circle cx="187" cy="205" r="15" class="panel"/>
+  <circle cx="325" cy="205" r="15" class="panel"/>
+  <circle cx="234" cy="204" r="5" class="dot"/>
+  <circle cx="278" cy="204" r="5" class="dot"/>
+  <path d="M249 213 C247 222 253 227 261 222 M229 235 C246 250 270 250 287 235" class="thin"/>
+  <path d="M199 334 C184 349 177 366 174 386 M313 334 C328 349 335 366 338 386" class="line"/>
+
+  <!-- Gear with white panel and shadow -->
+  <g transform="translate(256 431)" filter="url(#softShadow)">
+    <path d="M-8 -58 H8 L12 -39 C18 -37 24 -34 29 -30 L47 -37 L58 -22 L44 -9 C46 -3 46 3 44 9 L58 22 L47 37 L29 30 C24 34 18 37 12 39 L8 58 H-8 L-12 39 C-18 37 -24 34 -29 30 L-47 37 L-58 22 L-44 9 C-46 3 -46 -3 -44 -9 L-58 -22 L-47 -37 L-29 -30 C-24 -34 -18 -37 -12 -39 Z" fill="#fff" stroke="#000" stroke-width="10" stroke-linejoin="round"/>
+    <circle cx="0" cy="0" r="27" class="thin"/><circle cx="0" cy="0" r="11" class="thin"/>
+  </g>
+</svg>

@@ -10,7 +10,7 @@ import { logger } from "@/utils/logger";
 
 import { Typography } from "heroui-native/text";
 
-import AddHabitForm from "./components/AddHabitForm";
+import AddHabitModal from "./components/AddHabitModal";
 import CreateFirstHabit from "./components/CreateFirstHabit";
 
 function isTruthyParam(value: string | string[] | undefined): boolean {
@@ -71,7 +71,7 @@ export default function Habits() {
         </View>
       </CollapsingLargeHeader>
 
-      <AddHabitForm
+      <AddHabitModal
         isOpen={addHabitsModalOpen}
         onOpenChange={handleOpenChange}
       />

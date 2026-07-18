@@ -37,6 +37,18 @@ function getDevHostIp(): string | null {
   return null;
 }
 
+const DEFAULT_POCKETBASE_PORT = "8090";
+
+/**
+ * PocketBase must include an explicit port in local/dev URLs.
+ * `http://192.168.x.x` (no port) silently hits :80 and fails with ClientResponseError 0.
+ */
+function ensurePocketBasePort(url: URL): void {
+  if (!url.port) {
+    url.port = DEFAULT_POCKETBASE_PORT;
+  }
+}
+
 /**
  * Rewrite localhost so requests reach the machine running PocketBase.
  * - Android emulator → 10.0.2.2
@@ -45,11 +57,13 @@ function getDevHostIp(): string | null {
 function resolveForPlatform(apiUrl: string): string {
   try {
     const url = new URL(apiUrl);
+    ensurePocketBasePort(url);
+
     const isLoopback =
       url.hostname === "localhost" || url.hostname === "127.0.0.1";
 
     if (!isLoopback) {
-      return apiUrl.replace(/\/$/, "");
+      return url.toString().replace(/\/$/, "");
     }
 
     if (Platform.OS === "android") {
@@ -66,11 +80,11 @@ function resolveForPlatform(apiUrl: string): string {
         return url.toString().replace(/\/$/, "");
       }
     }
+
+    return url.toString().replace(/\/$/, "");
   } catch {
     return apiUrl.replace(/\/$/, "");
   }
-
-  return apiUrl.replace(/\/$/, "");
 }
 
 /**

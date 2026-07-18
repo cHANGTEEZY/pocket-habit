@@ -1,4 +1,3 @@
-import Constants from "expo-constants";
 import { router } from "expo-router";
 import { Alert, Linking, Platform, View } from "react-native";
 import { useUniwind } from "uniwind";
@@ -16,17 +15,16 @@ import {
 } from "@hugeicons/core-free-icons";
 import { Separator } from "heroui-native";
 import { Avatar } from "heroui-native/avatar";
-import { Typography } from "heroui-native/text";
 
 import { useSession } from "@/api";
 import GoBackButton from "@/components/GoBackButton";
 import CollapsedLargeHeader from "@/components/layouts/CollapsedLargeHeader";
 import { getInitials } from "@/features/today/lib/greeting";
 
+import SettingsFooter from "./components/settings-footer";
 import { SettingsRow } from "./components/settings-row";
 import { SettingsSection } from "./components/settings-section";
 import {
-  cycleAppearance,
   getAppearanceLabel,
   resolveAppearancePreference,
 } from "./lib/appearance";
@@ -50,6 +48,7 @@ function openSystemSettings() {
 export default function Settings() {
   const { session, signOut } = useSession();
   const { theme, hasAdaptiveThemes } = useUniwind();
+  const appearance = resolveAppearancePreference(theme, hasAdaptiveThemes);
 
   const name =
     typeof session?.record?.name === "string" && session.record.name.trim()
@@ -58,9 +57,6 @@ export default function Settings() {
   const email =
     typeof session?.record?.email === "string" ? session.record.email : null;
   const initials = getInitials(name === "Your profile" ? null : name);
-  const appearance = resolveAppearancePreference(theme, hasAdaptiveThemes);
-  const version =
-    Constants.expoConfig?.version ?? Constants.nativeAppVersion ?? "1.0.0";
 
   const confirmSignOut = () => {
     Alert.alert(
@@ -83,7 +79,7 @@ export default function Settings() {
   return (
     <View className="flex-1 bg-background">
       <CollapsedLargeHeader title="Settings" leading={<GoBackButton />}>
-        <View className="gap-6 px-4 pb-8">
+        <View className="gap-6 px-4 pb-8 mt-5">
           <SettingsSection>
             <SettingsRow
               title={name}
@@ -139,10 +135,7 @@ export default function Settings() {
               icon={AlarmClockIcon}
               iconBackground="#AF52DE"
               onPress={() =>
-                Alert.alert(
-                  "Reminders",
-                  "Habit reminder times will live here.",
-                )
+                Alert.alert("Reminders", "Habit reminder times will live here.")
               }
             />
           </SettingsSection>
@@ -168,7 +161,7 @@ export default function Settings() {
               icon={PaintBrush01Icon}
               iconBackground="#FF2D55"
               onPress={() => {
-                cycleAppearance(appearance);
+                router.navigate("/(screens)/appearance");
               }}
             />
           </SettingsSection>
@@ -179,6 +172,7 @@ export default function Settings() {
               icon={Mail01Icon}
               iconBackground="#007AFF"
               onPress={openSupport}
+              external
             />
             <Separator className="ml-14 mr-4" />
             <SettingsRow
@@ -201,10 +195,11 @@ export default function Settings() {
                   "Your habits stay in your account. A full privacy policy will be linked here.",
                 )
               }
+              external
             />
           </SettingsSection>
 
-          <SettingsSection>
+          <SettingsSection className="bg-danger-soft">
             <SettingsRow
               title="Sign Out"
               icon={Logout01Icon}
@@ -214,13 +209,7 @@ export default function Settings() {
             />
           </SettingsSection>
 
-          <Typography
-            type="body-xs"
-            className="text-center text-muted"
-            accessibilityLabel={`App version ${version}`}
-          >
-            Version {version}
-          </Typography>
+          <SettingsFooter />
         </View>
       </CollapsedLargeHeader>
     </View>

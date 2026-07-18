@@ -74,19 +74,25 @@ export function SettingsRow({
           <ListGroup.ItemContent>
             <ListGroup.ItemTitle>{title}</ListGroup.ItemTitle>
             {description ? (
-              <ListGroup.ItemDescription>{description}</ListGroup.ItemDescription>
+              <ListGroup.ItemDescription>
+                {description}
+              </ListGroup.ItemDescription>
             ) : null}
           </ListGroup.ItemContent>
           {suffix === null ? null : suffix !== undefined ? (
             <ListGroup.ItemSuffix>{suffix}</ListGroup.ItemSuffix>
           ) : (
-            <ListGroup.ItemSuffix
-              iconProps={{ size: 18, color: mutedColor }}
-            />
+            <ListGroup.ItemSuffix iconProps={{ size: 18, color: mutedColor }} />
           )}
         </ListGroup.Item>
       </PressableFeedback.Scale>
-      <PressableFeedback.Ripple />
+      <PressableFeedback.Ripple
+        animation={{
+          backgroundColor: { value: "#e0e7ff" },
+          opacity: { value: [0.2, 0.2, 0] },
+          progress: { baseDuration: 240 },
+        }}
+      />
     </PressableFeedback>
   );
 }

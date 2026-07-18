@@ -7,14 +7,19 @@ import { Typography } from "heroui-native/text";
 type SettingsSectionProps = {
   title?: string;
   children: ReactNode;
+  className?: string;
 };
 
-export function SettingsSection({ title, children }: SettingsSectionProps) {
+export function SettingsSection({
+  title,
+  children,
+  className,
+}: SettingsSectionProps) {
   return (
     <View className="gap-2">
       {title ? (
         <Typography
-          type="body-sm"
+          type="h5"
           weight="medium"
           className="px-3 text-muted"
           accessibilityRole="header"
@@ -22,7 +27,7 @@ export function SettingsSection({ title, children }: SettingsSectionProps) {
           {title}
         </Typography>
       ) : null}
-      <ListGroup className="overflow-hidden rounded-2xl">
+      <ListGroup className={"overflow-hidden rounded-2xl " + className}>
         {children}
       </ListGroup>
     </View>

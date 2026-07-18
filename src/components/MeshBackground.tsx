@@ -21,7 +21,7 @@ const DARK_BG = "#121214";
  * Cross-platform SVG radial glow. Full-screen solid base so the page never
  * shows a mismatched grey band under the mesh.
  */
-export default function TodayMeshBackground() {
+export default function MeshBackground() {
   const { height, width } = useWindowDimensions();
   const scheme = useAppColorScheme();
   const background = scheme === "dark" ? DARK_BG : LIGHT_BG;

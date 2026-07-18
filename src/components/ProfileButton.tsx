@@ -5,9 +5,9 @@ import { useSession } from "@/api";
 
 import { Avatar } from "heroui-native/avatar";
 
-import { getInitials } from "../lib/greeting";
+import { getInitials } from "../features/today/lib/greeting";
 
-export default function TodayProfileButton() {
+export default function ProfileButton() {
   const { session } = useSession();
   const initials = getInitials(session?.record?.name);
 

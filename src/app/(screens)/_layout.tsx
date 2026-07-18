@@ -9,6 +9,7 @@ export default function ScreensLayout() {
       }}
     >
       <Stack.Screen name="settings" />
+      <Stack.Screen name="appearance" />
     </Stack>
   );
 }

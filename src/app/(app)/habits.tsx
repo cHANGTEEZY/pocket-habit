@@ -1,11 +1,3 @@
-import { Text, View } from "react-native";
+import Habits from "@/features/habits";
 
-const habits = () => {
-  return (
-    <View>
-      <Text>habits</Text>
-    </View>
-  );
-};
-
-export default habits;
+export default Habits;

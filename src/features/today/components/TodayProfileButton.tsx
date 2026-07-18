@@ -17,7 +17,7 @@ export default function TodayProfileButton() {
       accessibilityLabel="Profile"
       hitSlop={8}
       onPress={() => {
-        router.navigate("/profile");
+        router.navigate("/(screens)/settings");
       }}
     >
       <Avatar size="sm" color="accent" variant="soft">

@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { type TextInput, View } from "react-native";
 
-import { pb } from "@/lib/pocketbase";
+import { signInWithEmail, signUpWithEmail } from "@/lib/pocketbase";
 import { logger } from "@/utils/logger";
 
 import { Alert } from "heroui-native/alert";
@@ -34,17 +34,12 @@ export function SignUpForm() {
     onSubmit: async ({ value }) => {
       setError(null);
       try {
-        const { getPocketBaseUrl } = await import("@/utils/env");
-        pb.baseUrl = getPocketBaseUrl();
-        await pb.collection("users").create({
-          email: value.email.trim(),
-          password: value.password,
-          passwordConfirm: value.password,
-          name: value.name.trim(),
-        });
-        await pb
-          .collection("users")
-          .authWithPassword(value.email.trim(), value.password);
+        await signUpWithEmail(
+          value.email.trim(),
+          value.password,
+          value.name.trim(),
+        );
+        await signInWithEmail(value.email.trim(), value.password);
         router.replace("/today");
       } catch (err) {
         logger.error("sign-up failed", err);

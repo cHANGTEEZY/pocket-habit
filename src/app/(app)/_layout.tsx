@@ -76,13 +76,6 @@ export default function AppLayout() {
           md={{ default: "bar_chart", selected: "bar_chart" }}
         />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="profile">
-        <NativeTabs.Trigger.Label>Profile</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          sf={{ default: "person", selected: "person.fill" }}
-          md={{ default: "person", selected: "account_circle" }}
-        />
-      </NativeTabs.Trigger>
     </NativeTabs>
   );
 }

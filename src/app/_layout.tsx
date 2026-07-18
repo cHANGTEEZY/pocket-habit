@@ -5,7 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import * as SystemUI from "expo-system-ui";
 import { useEffect } from "react";
-import { Uniwind, useCSSVariable } from "uniwind";
+import { useCSSVariable } from "uniwind";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { HeroUINativeProvider } from "heroui-native";
@@ -21,11 +21,6 @@ export default function RootLayout() {
   const colorScheme = useAppColorScheme();
   const backgroundColor = useCSSVariable("--color-background");
   const statusBarStyle = colorScheme === "dark" ? "light" : "dark";
-
-  useEffect(() => {
-    // Follow the device color scheme by default (Uniwind adaptive themes).
-    Uniwind.setTheme("system");
-  }, []);
 
   useEffect(() => {
     SplashScreen.hideAsync().catch(() => {

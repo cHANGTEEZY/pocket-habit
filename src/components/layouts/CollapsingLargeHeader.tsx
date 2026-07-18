@@ -85,12 +85,6 @@ export default function CollapsingLargeHeader({
             tint={scheme === "dark" ? "dark" : "light"}
             style={StyleSheet.absoluteFill}
           />
-          <View
-            style={[
-              styles.compactHairline,
-              scheme === "dark" ? styles.hairlineDark : styles.hairlineLight,
-            ]}
-          />
         </Animated.View>
 
         <View style={{ paddingTop: insets.top }} pointerEvents="none">
@@ -170,19 +164,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 16,
-  },
-  compactHairline: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    height: StyleSheet.hairlineWidth,
-  },
-  hairlineLight: {
-    backgroundColor: "rgba(0,0,0,0.12)",
-  },
-  hairlineDark: {
-    backgroundColor: "rgba(255,255,255,0.12)",
   },
   trailingSlot: {
     marginLeft: 8,

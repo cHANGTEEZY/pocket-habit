@@ -3,10 +3,13 @@ import { useCSSVariable } from "uniwind";
 
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
 import { FieldError } from "heroui-native/field-error";
-import { Typography } from "heroui-native/text";
+
+import { FieldLabel } from "./field-label";
 
 type HabitFormFieldProps = {
   label?: string;
+  /** Marks the field as required (asterisk + Required badge). */
+  required?: boolean;
   value: string;
   onChangeText: (value: string) => void;
   onBlur?: () => void;
@@ -22,6 +25,7 @@ type HabitFormFieldProps = {
 /** Borderless text field sized for inset grouped list rows. */
 export function HabitFormField({
   label,
+  required = false,
   value,
   onChangeText,
   onBlur,
@@ -38,11 +42,7 @@ export function HabitFormField({
 
   return (
     <View className="gap-1 px-4 py-3">
-      {label ? (
-        <Typography type="body-sm" weight="medium" className="text-muted">
-          {label}
-        </Typography>
-      ) : null}
+      {label ? <FieldLabel required={required}>{label}</FieldLabel> : null}
       <BottomSheetTextInput
         value={value}
         onChangeText={onChangeText}
@@ -54,6 +54,7 @@ export function HabitFormField({
         autoCapitalize={autoCapitalize}
         maxLength={maxLength}
         returnKeyType={returnKeyType}
+        accessibilityHint={required ? "Required" : "Optional"}
         className={
           multiline
             ? "min-h-[72px] py-1 text-[17px] leading-6 text-foreground"
@@ -61,7 +62,7 @@ export function HabitFormField({
         }
         style={{ textAlignVertical: multiline ? "top" : "center" }}
       />
-      {error ? <FieldError>{error}</FieldError> : null}
+      {error ? <FieldError isInvalid>{error}</FieldError> : null}
     </View>
   );
 }

@@ -1,6 +1,7 @@
 import { ClientResponseError } from "pocketbase";
 
 import { pb } from "@/lib/pocketbase";
+import { formatPocketBaseError } from "@/utils/errors";
 import { logger } from "@/utils/logger";
 
 import type { HabitFormValues } from "../schemas/habit-form";
@@ -50,32 +51,6 @@ export function toHabitsRecord(values: HabitFormValues) {
   }
 
   return record;
-}
-
-export function formatPocketBaseError(error: unknown): string {
-  if (!(error instanceof ClientResponseError)) {
-    return error instanceof Error ? error.message : "Request failed";
-  }
-
-  const fieldErrors = error.data ?? {};
-  const details = Object.entries(fieldErrors)
-    .filter(([, value]) => value && typeof value === "object")
-    .map(([key, value]) => {
-      const message =
-        typeof value === "object" &&
-        value !== null &&
-        "message" in value &&
-        typeof value.message === "string"
-          ? value.message
-          : JSON.stringify(value);
-      return `${key}: ${message}`;
-    });
-
-  if (details.length > 0) {
-    return `${error.message} (${details.join("; ")})`;
-  }
-
-  return error.message;
 }
 
 export async function createHabit(values: HabitFormValues) {

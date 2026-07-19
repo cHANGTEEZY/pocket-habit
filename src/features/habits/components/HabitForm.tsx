@@ -16,11 +16,11 @@ import { Typography } from "heroui-native/text";
 
 import { SettingsRow } from "@/features/settings/components/settings-row";
 import { SettingsSection } from "@/features/settings/components/settings-section";
+import { formatPocketBaseError, getFieldError } from "@/utils/errors";
 import { logger } from "@/utils/logger";
 
 import { FREQUENCIES, ROUTINES } from "../data/form-data";
-import { getFieldError } from "../field-error";
-import { createHabit, formatPocketBaseError } from "../lib/create-habit";
+import { createHabit } from "../lib/create-habit";
 import {
   habitFormSchema,
   todayIsoDate,
@@ -80,6 +80,13 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
     validators: {
       onSubmit: habitFormSchema,
     },
+    onSubmitInvalid: () => {
+      toast.show({
+        variant: "danger",
+        label: "Check the form",
+        description: "Fix the highlighted fields and try again.",
+      });
+    },
     onSubmit: async ({ value }) => {
       try {
         const parsed = habitFormSchema.parse(value);
@@ -106,11 +113,16 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
 
   return (
     <View className="gap-6">
-      <SettingsSection title="Basics">
+      <Typography type="body-xs" className="px-1 text-muted">
+        Fields marked with * are required. Everything else is optional.
+      </Typography>
+
+      <SettingsSection title="Basics" description="Name is required">
         <form.Field name="name">
           {(field) => (
             <HabitFormField
               label="Name"
+              required
               placeholder="e.g. Morning stretch"
               value={field.state.value}
               onChangeText={field.handleChange}
@@ -127,7 +139,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
           {(field) => (
             <HabitFormField
               label="Note"
-              placeholder="Optional context"
+              placeholder="Add context if you want"
               value={field.state.value ?? ""}
               onChangeText={field.handleChange}
               onBlur={field.handleBlur}
@@ -139,7 +151,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         </form.Field>
       </SettingsSection>
 
-      <SettingsSection title="Time of day">
+      <SettingsSection title="Time of day" description="Required · pick one">
         <form.Field name="routine">
           {(field) => (
             <>
@@ -163,7 +175,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
               ))}
               {getFieldError(field.state.meta.errors) ? (
                 <View className="px-4 pb-3">
-                  <FieldError>
+                  <FieldError isInvalid>
                     {getFieldError(field.state.meta.errors)}
                   </FieldError>
                 </View>
@@ -173,7 +185,10 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         </form.Field>
       </SettingsSection>
 
-      <SettingsSection title="Schedule">
+      <SettingsSection
+        title="Schedule"
+        description="Required · weekly/monthly need an extra choice"
+      >
         <form.Field name="frequency">
           {(field) => (
             <>
@@ -229,6 +244,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
                     <HabitDateTimePickerRow
                       title="Day of month"
                       description="Repeats on this day each month"
+                      required
                       mode="date"
                       value={dateFromMonthlyDay(field.state.value)}
                       valueLabel={formatMonthlyDay(field.state.value)}
@@ -264,12 +280,12 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         </form.Subscribe>
       </SettingsSection>
 
-      <SettingsSection title="Reminders">
+      <SettingsSection title="Reminders" description="Optional">
         <form.Field name="reminderEnabled">
           {(field) => (
             <SettingsRow
               title="Remind me"
-              description="A gentle nudge at the right time"
+              description="Optional · a gentle nudge at the right time"
               icon={AlarmClockIcon}
               iconBackground="#AF52DE"
               trailing={
@@ -294,6 +310,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
                     <HabitDateTimePickerRow
                       title="Time"
                       description="When to nudge you"
+                      required
                       mode="time"
                       value={dateFromReminderTime(field.state.value)}
                       valueLabel={formatReminderTime(field.state.value)}
@@ -315,7 +332,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         </form.Subscribe>
       </SettingsSection>
 
-      <SettingsSection title="Goal">
+      <SettingsSection title="Goal" description="Optional">
         <form.Field name="targetCount">
           {(field) => (
             <HabitFormField

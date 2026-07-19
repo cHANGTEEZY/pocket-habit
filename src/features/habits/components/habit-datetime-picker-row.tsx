@@ -19,6 +19,8 @@ import { HabitFormField } from "./habit-form-field";
 type HabitDateTimePickerRowProps = {
   title: string;
   description?: string;
+  /** Marks the control as required in the trailing affordance. */
+  required?: boolean;
   mode: "date" | "time";
   value: Date;
   valueLabel: string;
@@ -44,6 +46,7 @@ const MINUTES = Array.from({ length: 12 }, (_, i) => i * 5);
 export function HabitDateTimePickerRow({
   title,
   description,
+  required = false,
   mode,
   value,
   valueLabel,
@@ -90,6 +93,7 @@ export function HabitDateTimePickerRow({
     return (
       <HabitFormField
         label={title}
+        required={required}
         placeholder={webPlaceholder}
         value={webValue}
         onChangeText={onWebChangeText}
@@ -105,12 +109,18 @@ export function HabitDateTimePickerRow({
   const selectedHour = value.getHours();
   const selectedMinute = Math.round(value.getMinutes() / 5) * 5;
   const safeMinute = selectedMinute >= 60 ? 0 : selectedMinute;
+  const rowDescription = [
+    description,
+    required ? "Required" : "Optional",
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <View>
       <SettingsRow
         title={title}
-        description={description}
+        description={rowDescription}
         trailing={
           <Typography
             type="body"
@@ -213,7 +223,7 @@ export function HabitDateTimePickerRow({
 
       {error ? (
         <View className="px-4 pb-3">
-          <FieldError>{error}</FieldError>
+          <FieldError isInvalid>{error}</FieldError>
         </View>
       ) : null}
     </View>

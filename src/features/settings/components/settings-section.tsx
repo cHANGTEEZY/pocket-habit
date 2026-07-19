@@ -6,26 +6,38 @@ import { Typography } from "heroui-native/text";
 
 type SettingsSectionProps = {
   title?: string;
+  /** Supporting hint under the title (e.g. Required / Optional). */
+  description?: string;
   children: ReactNode;
   className?: string;
 };
 
 export function SettingsSection({
   title,
+  description,
   children,
   className,
 }: SettingsSectionProps) {
   return (
     <View className="gap-2">
-      {title ? (
-        <Typography
-          type="h5"
-          weight="medium"
-          className="px-3 text-muted"
-          accessibilityRole="header"
-        >
-          {title}
-        </Typography>
+      {title || description ? (
+        <View className="gap-0.5 px-3">
+          {title ? (
+            <Typography
+              type="h5"
+              weight="medium"
+              className="text-muted"
+              accessibilityRole="header"
+            >
+              {title}
+            </Typography>
+          ) : null}
+          {description ? (
+            <Typography type="body-xs" className="text-muted/80">
+              {description}
+            </Typography>
+          ) : null}
+        </View>
       ) : null}
       <ListGroup className={"overflow-hidden rounded-2xl " + className}>
         {children}

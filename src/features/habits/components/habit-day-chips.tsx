@@ -10,6 +10,8 @@ import {
   type WeeklyDay,
 } from "@/features/habits/schemas/habit-form";
 
+import { FieldLabel } from "./field-label";
+
 const DAY_LABELS: Record<WeeklyDay, string> = {
   monday: "Mon",
   tuesday: "Tue",
@@ -54,9 +56,7 @@ export function HabitDayChips({ value, onChange, error }: HabitDayChipsProps) {
 
   return (
     <View className="gap-2 px-4 py-3">
-      <Typography type="body-sm" weight="medium" className="text-muted">
-        Repeat on
-      </Typography>
+      <FieldLabel required>Repeat on</FieldLabel>
       <View className="flex-row flex-wrap gap-2">
         {WEEKLY_DAYS.map((day) => {
           const isSelected = selected.includes(day);
@@ -92,7 +92,7 @@ export function HabitDayChips({ value, onChange, error }: HabitDayChipsProps) {
           );
         })}
       </View>
-      {error ? <FieldError>{error}</FieldError> : null}
+      {error ? <FieldError isInvalid>{error}</FieldError> : null}
     </View>
   );
 }

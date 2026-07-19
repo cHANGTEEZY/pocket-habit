@@ -10,7 +10,8 @@ import { Alert } from "heroui-native/alert";
 import { Button } from "heroui-native/button";
 import { Spinner } from "heroui-native/spinner";
 
-import { getFieldError } from "../field-error";
+import { getFieldError } from "@/utils/errors";
+
 import { signInSchema } from "../schemas";
 import { AuthField, AuthPasswordField } from "./auth-field";
 import { AuthFooter } from "./auth-footer";

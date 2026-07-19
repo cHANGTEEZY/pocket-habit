@@ -5,16 +5,10 @@ import { useCSSVariable } from "uniwind";
 
 import {
   AlarmClockIcon,
-  Calendar03Icon,
   CheckmarkCircle02Icon,
-  Coffee01Icon,
-  Moon02Icon,
-  RepeatIcon,
-  SleepingIcon,
-  Sun03Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
-import { Separator, Switch } from "heroui-native";
+import { Separator, Switch, useToast } from "heroui-native";
 import { Button } from "heroui-native/button";
 import { FieldError } from "heroui-native/field-error";
 import { Spinner } from "heroui-native/spinner";
@@ -24,14 +18,15 @@ import { SettingsRow } from "@/features/settings/components/settings-row";
 import { SettingsSection } from "@/features/settings/components/settings-section";
 import { logger } from "@/utils/logger";
 
+import { FREQUENCIES, ROUTINES } from "../data/form-data";
 import { getFieldError } from "../field-error";
+import { createHabit, formatPocketBaseError } from "../lib/create-habit";
 import {
   habitFormSchema,
   todayIsoDate,
   type HabitFormInput,
   type HabitFormValues,
 } from "../schemas/habit-form";
-import { HabitDayChips } from "./habit-day-chips";
 import {
   dateFromMonthlyDay,
   dateFromReminderTime,
@@ -41,63 +36,8 @@ import {
   monthlyDayFromDate,
   reminderTimeFromDate,
 } from "./habit-datetime-picker-row";
+import { HabitDayChips } from "./habit-day-chips";
 import { HabitFormField } from "./habit-form-field";
-
-const ROUTINES = [
-  {
-    value: "morning" as const,
-    title: "Morning",
-    description: "Before noon",
-    icon: Sun03Icon,
-    iconBackground: "#FF9500",
-  },
-  {
-    value: "afternoon" as const,
-    title: "Afternoon",
-    description: "Midday focus",
-    icon: Coffee01Icon,
-    iconBackground: "#FFCC00",
-    iconColor: "#1C1C1E",
-  },
-  {
-    value: "evening" as const,
-    title: "Evening",
-    description: "Wind-down hours",
-    icon: Moon02Icon,
-    iconBackground: "#5856D6",
-  },
-  {
-    value: "night" as const,
-    title: "Night",
-    description: "Before sleep",
-    icon: SleepingIcon,
-    iconBackground: "#636366",
-  },
-];
-
-const FREQUENCIES = [
-  {
-    value: "daily" as const,
-    title: "Daily",
-    description: "Every day",
-    icon: RepeatIcon,
-    iconBackground: "#34C759",
-  },
-  {
-    value: "weekly" as const,
-    title: "Weekly",
-    description: "Pick specific days",
-    icon: Calendar03Icon,
-    iconBackground: "#007AFF",
-  },
-  {
-    value: "monthly" as const,
-    title: "Monthly",
-    description: "Once each month",
-    icon: Calendar03Icon,
-    iconBackground: "#AF52DE",
-  },
-];
 
 type HabitFormProps = {
   onSuccess?: (values: HabitFormValues) => void;
@@ -133,15 +73,34 @@ function createDefaultValues(): HabitFormInput {
 }
 
 export default function HabitForm({ onSuccess }: HabitFormProps) {
+  const { toast } = useToast();
+
   const form = useForm({
     defaultValues: createDefaultValues(),
     validators: {
       onSubmit: habitFormSchema,
     },
     onSubmit: async ({ value }) => {
-      const parsed = habitFormSchema.parse(value);
-      logger.info("habit form submitted", parsed);
-      onSuccess?.(parsed);
+      try {
+        const parsed = habitFormSchema.parse(value);
+        const record = await createHabit(parsed);
+        logger.info("habit form submitted", record);
+        form.reset();
+        toast.show({
+          variant: "success",
+          label: "Habit saved",
+          description: "Your habit was created successfully.",
+        });
+        onSuccess?.(parsed);
+      } catch (error) {
+        const description = formatPocketBaseError(error);
+        logger.error("habit form submission error", description);
+        toast.show({
+          variant: "danger",
+          label: "Couldn't save habit",
+          description,
+        });
+      }
     },
   });
 
@@ -404,7 +363,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         {(isSubmitting) => (
           <Button
             variant="primary"
-            size="lg"
+            size="md"
             className="rounded-4xl"
             isDisabled={isSubmitting}
             onPress={() => form.handleSubmit()}

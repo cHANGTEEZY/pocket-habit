@@ -26,7 +26,7 @@ export default function AddHabitModal({
       <BottomSheet.Portal>
         {/* <BottomSheet.Overlay /> */}
         <BottomSheet.Content
-          snapPoints={["92%"]}
+          snapPoints={["92%", "75%", "92%"]}
           enableDynamicSizing={false}
           enableOverDrag={false}
           contentContainerClassName="h-full px-0"

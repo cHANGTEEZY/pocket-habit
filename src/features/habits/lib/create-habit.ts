@@ -6,15 +6,8 @@ import { logger } from "@/utils/logger";
 
 import type { HabitFormValues } from "../schemas/habit-form";
 
-/** Matches the PocketBase collection name exactly (case-sensitive). */
 export const HABITS_COLLECTION = "Habits";
 
-/**
- * Map app form values → PocketBase `Habits` record fields.
- *
- * Note: in the current collection, `frequency` and `user_id` were saved with
- * maxSelect: 0 (multi). PocketBase then expects arrays, not bare strings.
- */
 export function toHabitsRecord(values: HabitFormValues) {
   const userId = pb.authStore.record?.id;
   if (!userId) {

@@ -113,11 +113,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
 
   return (
     <View className="gap-6">
-      <Typography type="body-xs" className="px-1 text-muted">
-        Fields marked with * are required. Everything else is optional.
-      </Typography>
-
-      <SettingsSection title="Basics" description="Name is required">
+      <SettingsSection title="Basics">
         <form.Field name="name">
           {(field) => (
             <HabitFormField
@@ -151,7 +147,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         </form.Field>
       </SettingsSection>
 
-      <SettingsSection title="Time of day" description="Required · pick one">
+      <SettingsSection title="Time of day">
         <form.Field name="routine">
           {(field) => (
             <>
@@ -185,10 +181,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         </form.Field>
       </SettingsSection>
 
-      <SettingsSection
-        title="Schedule"
-        description="Required · weekly/monthly need an extra choice"
-      >
+      <SettingsSection title="Schedule">
         <form.Field name="frequency">
           {(field) => (
             <>
@@ -280,12 +273,11 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         </form.Subscribe>
       </SettingsSection>
 
-      <SettingsSection title="Reminders" description="Optional">
+      <SettingsSection title="Reminders">
         <form.Field name="reminderEnabled">
           {(field) => (
             <SettingsRow
               title="Remind me"
-              description="Optional · a gentle nudge at the right time"
               icon={AlarmClockIcon}
               iconBackground="#AF52DE"
               trailing={

@@ -21,7 +21,7 @@ export default function Today() {
       <CollapsingLargeHeader
         title={greeting}
         trailing={<ProfileButton />}
-        contentContainerStyle={{ paddingHorizontal: 16 }}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 80 }}
       >
         <View className="mb-3 mt-3">
           <TodaysProgress />

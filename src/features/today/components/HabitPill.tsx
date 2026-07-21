@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { useCSSVariable } from "uniwind";
 
 import {
@@ -16,9 +16,11 @@ import {
   Tick02Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
+import * as Haptics from "expo-haptics";
 import { Typography } from "heroui-native/text";
 
 import type { Habit, HabitRoutine } from "@/api/types";
+import HapticPressable from "@/components/HapticButton";
 
 type IconData = ComponentProps<typeof HugeiconsIcon>["icon"];
 
@@ -98,7 +100,14 @@ export default function HabitPill({
     typeof progress === "number" && progress > 0 && progress < 100 && !completed;
 
   return (
-    <Pressable
+    <HapticPressable
+      haptic={{
+        type: "impact",
+        style: completed
+          ? Haptics.ImpactFeedbackStyle.Light
+          : Haptics.ImpactFeedbackStyle.Medium,
+      }}
+      hapticTrigger="onPressIn"
       onPress={() => onToggle?.(habit)}
       accessibilityRole="checkbox"
       accessibilityState={{ checked: completed }}
@@ -174,6 +183,6 @@ export default function HabitPill({
           />
         ) : null}
       </View>
-    </Pressable>
+    </HapticPressable>
   );
 }

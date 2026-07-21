@@ -14,13 +14,13 @@ import { FieldError } from "heroui-native/field-error";
 import { Spinner } from "heroui-native/spinner";
 import { Typography } from "heroui-native/text";
 
+import { useCreateHabit } from "@/api";
 import { SettingsRow } from "@/features/settings/components/settings-row";
 import { SettingsSection } from "@/features/settings/components/settings-section";
 import { formatPocketBaseError, getFieldError } from "@/utils/errors";
 import { logger } from "@/utils/logger";
 
 import { FREQUENCIES, ROUTINES } from "../data/form-data";
-import { createHabit } from "../lib/create-habit";
 import {
   habitFormSchema,
   todayIsoDate,
@@ -74,6 +74,7 @@ function createDefaultValues(): HabitFormInput {
 
 export default function HabitForm({ onSuccess }: HabitFormProps) {
   const { toast } = useToast();
+  const createHabit = useCreateHabit();
 
   const form = useForm({
     defaultValues: createDefaultValues(),
@@ -90,7 +91,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
     onSubmit: async ({ value }) => {
       try {
         const parsed = habitFormSchema.parse(value);
-        const record = await createHabit(parsed);
+        const record = await createHabit.mutateAsync(parsed);
         logger.info("habit form submitted", record);
         form.reset();
         toast.show({

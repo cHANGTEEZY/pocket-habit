@@ -1,6 +1,12 @@
-import { BlurView } from "expo-blur";
-import { type ReactNode } from "react";
-import { ScrollView, StyleSheet, View, type ViewStyle } from "react-native";
+import { BlurTargetView, BlurView } from "expo-blur";
+import { type ReactNode, useRef } from "react";
+import {
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useAppColorScheme } from "@/hooks/use-app-color-scheme";
@@ -9,6 +15,7 @@ import { Typography } from "heroui-native/text";
 
 const BAR_CONTENT_HEIGHT = 44;
 const SIDE_INSET = 56;
+const ANDROID_BLUR_METHOD = "dimezisBlurView" as const;
 
 type CollapsedLargeHeaderProps = {
   title: string;
@@ -27,15 +34,51 @@ export default function CollapsedLargeHeader({
 }: CollapsedLargeHeaderProps) {
   const insets = useSafeAreaInsets();
   const scheme = useAppColorScheme();
+  const blurTargetRef = useRef<View | null>(null);
   const barHeight = insets.top + BAR_CONTENT_HEIGHT;
+  const isDark = scheme === "dark";
 
   return (
     <View style={styles.root}>
+      <BlurTargetView ref={blurTargetRef} style={styles.scroll}>
+        <ScrollView
+          style={styles.scroll}
+          contentContainerStyle={[
+            {
+              flexGrow: 1,
+              paddingTop: barHeight + 8,
+              paddingBottom: 32,
+            },
+            contentContainerStyle,
+          ]}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          {children}
+        </ScrollView>
+      </BlurTargetView>
+
       <View style={[styles.sticky, { height: barHeight }]}>
         <BlurView
-          intensity={scheme === "dark" ? 20 : 28}
-          tint={scheme === "dark" ? "dark" : "light"}
+          intensity={isDark ? 18 : 24}
+          tint={
+            Platform.OS === "ios"
+              ? isDark
+                ? "systemUltraThinMaterialDark"
+                : "systemUltraThinMaterialLight"
+              : isDark
+                ? "dark"
+                : "light"
+          }
           style={StyleSheet.absoluteFill}
+          {...(Platform.OS === "android"
+            ? {
+                blurTarget: blurTargetRef,
+                blurMethod: ANDROID_BLUR_METHOD,
+                // Higher = softer blur on Android (intensity is divided by this).
+                blurReductionFactor: 8,
+              }
+            : null)}
         />
 
         <View style={{ paddingTop: insets.top }}>
@@ -67,22 +110,6 @@ export default function CollapsedLargeHeader({
           </View>
         </View>
       </View>
-
-      <ScrollView
-        style={styles.scroll}
-        contentContainerStyle={[
-          {
-            flexGrow: 1,
-            paddingTop: barHeight + 8,
-            paddingBottom: 32,
-          },
-          contentContainerStyle,
-        ]}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        {children}
-      </ScrollView>
     </View>
   );
 }

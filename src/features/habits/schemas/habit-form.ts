@@ -1,7 +1,16 @@
 import * as z from "zod";
 
+import {
+  HABIT_FREQUENCIES,
+  HABIT_ROUTINES,
+  HABIT_WEEKLY_DAYS,
+  type CreateHabitInput,
+  type HabitWeeklyDay,
+} from "@/api/types";
+
 const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
 
+/** Display order for day chips (Mon → Sun). Values match `HabitWeeklyDay`. */
 export const WEEKLY_DAYS = [
   "monday",
   "tuesday",
@@ -10,9 +19,9 @@ export const WEEKLY_DAYS = [
   "friday",
   "saturday",
   "sunday",
-] as const;
+] as const satisfies readonly HabitWeeklyDay[];
 
-export type WeeklyDay = (typeof WEEKLY_DAYS)[number];
+export type WeeklyDay = HabitWeeklyDay;
 
 export const habitFormSchema = z
   .object({
@@ -27,15 +36,15 @@ export const habitFormSchema = z
       .trim()
       .max(255, "Description must be less than 255 characters"),
 
-    routine: z.enum(["morning", "afternoon", "evening", "night"], {
+    routine: z.enum(HABIT_ROUTINES, {
       message: "Select a routine",
     }),
 
-    frequency: z.enum(["daily", "weekly", "monthly"], {
+    frequency: z.enum(HABIT_FREQUENCIES, {
       message: "Select a frequency",
     }),
 
-    weeklyDays: z.array(z.enum(WEEKLY_DAYS)).optional(),
+    weeklyDays: z.array(z.enum(HABIT_WEEKLY_DAYS)).optional(),
 
     monthlyDay: z
       .number()
@@ -117,6 +126,12 @@ export const habitFormSchema = z
 
 export type HabitFormValues = z.output<typeof habitFormSchema>;
 export type HabitFormInput = z.input<typeof habitFormSchema>;
+
+/** Ensures form output stays assignable to the API create input. */
+type AssertCreateHabitCompatible =
+  HabitFormValues extends CreateHabitInput ? true : never;
+const _createHabitCompatible: AssertCreateHabitCompatible = true;
+void _createHabitCompatible;
 
 export function todayIsoDate(): string {
   return new Date().toISOString().slice(0, 10);

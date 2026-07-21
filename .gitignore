@@ -46,3 +46,7 @@ example
 # PocketBase binary + local database (download with: npm run pocketbase:setup)
 /pocketbase
 /pb_data/
+
+# cursor files
+.cursor/
+.vscode/

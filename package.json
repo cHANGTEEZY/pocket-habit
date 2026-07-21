@@ -63,7 +63,8 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "pocketbase": "./pocketbase serve --http=0.0.0.0:8090",
-    "pocketbase:setup": "node ./scripts/setup-pocketbase.js"
+    "pocketbase:setup": "node ./scripts/setup-pocketbase.js",
+    "pocketbase:seed": "node ./scripts/seed-habits.js"
   },
   "private": true
 }

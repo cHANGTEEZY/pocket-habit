@@ -10,6 +10,7 @@ import { logger } from "@/utils/logger";
 
 import { Typography } from "heroui-native/text";
 
+import { useHabits } from "@/api";
 import AddHabitModal from "./components/AddHabitModal";
 import CreateFirstHabit from "./components/CreateFirstHabit";
 
@@ -22,6 +23,9 @@ export default function Habits() {
   const { openAddHabitForm } = useLocalSearchParams<{
     openAddHabitForm?: string | string[];
   }>();
+
+  const { data: habits, isPending, isError, error, isFetching } = useHabits();
+  console.log("All habits", habits);
 
   const [query, setQuery] = useState("");
   const [manualOpen, setManualOpen] = useState(false);

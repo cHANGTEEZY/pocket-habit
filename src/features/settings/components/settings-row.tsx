@@ -72,7 +72,9 @@ export function SettingsRow({
             <ListGroup.ItemPrefix>{prefix}</ListGroup.ItemPrefix>
           ) : null}
           <ListGroup.ItemContent>
-            <ListGroup.ItemTitle>{title}</ListGroup.ItemTitle>
+            <ListGroup.ItemTitle className="capitalize">
+              {title}
+            </ListGroup.ItemTitle>
             {description ? (
               <ListGroup.ItemDescription>
                 {description}

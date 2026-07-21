@@ -12,18 +12,12 @@ const SIDE_INSET = 56;
 
 type CollapsedLargeHeaderProps = {
   title: string;
-  /** Always pinned to the front (leading / left) edge. */
   leading?: ReactNode;
-  /** Always pinned to the trailing (right) edge. */
   trailing?: ReactNode;
   children: ReactNode;
   contentContainerStyle?: ViewStyle;
 };
 
-/**
- * Compact nav header: title stays centered; leading and trailing stay visible
- * at the edges and never shift the title.
- */
 export default function CollapsedLargeHeader({
   title,
   leading,

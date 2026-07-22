@@ -50,7 +50,7 @@ export default function AddHabitModal({
               keyboardShouldPersistTaps="handled"
               showsVerticalScrollIndicator={false}
             >
-              <HabitForm onSuccess={handleSuccess} />
+              <HabitForm insideBottomSheet onSuccess={handleSuccess} />
             </BottomSheetScrollView>
           </BottomSheet.Content>
         </QueryClientProvider>

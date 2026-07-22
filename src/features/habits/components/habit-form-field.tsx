@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { TextInput, View } from "react-native";
 import { useCSSVariable } from "uniwind";
 
 import { BottomSheetTextInput } from "@gorhom/bottom-sheet";
@@ -10,6 +10,8 @@ type HabitFormFieldProps = {
   label?: string;
   /** Marks the field as required (asterisk + Required badge). */
   required?: boolean;
+  /** Use Gorhom bottom-sheet input when rendered inside AddHabitModal. */
+  insideBottomSheet?: boolean;
   value: string;
   onChangeText: (value: string) => void;
   onBlur?: () => void;
@@ -26,6 +28,7 @@ type HabitFormFieldProps = {
 export function HabitFormField({
   label,
   required = false,
+  insideBottomSheet = false,
   value,
   onChangeText,
   onBlur,
@@ -39,11 +42,12 @@ export function HabitFormField({
 }: HabitFormFieldProps) {
   const muted = useCSSVariable("--color-muted");
   const placeholderColor = typeof muted === "string" ? muted : "#8A8A8F";
+  const Input = insideBottomSheet ? BottomSheetTextInput : TextInput;
 
   return (
     <View className="gap-1 px-4 py-3">
       {label ? <FieldLabel required={required}>{label}</FieldLabel> : null}
-      <BottomSheetTextInput
+      <Input
         value={value}
         onChangeText={onChangeText}
         onBlur={onBlur}

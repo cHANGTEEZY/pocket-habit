@@ -79,6 +79,7 @@ export type HabitPillProps = {
   onToggle?: (habit: Habit) => void;
   /** `today` shows completion checkbox; `library` is display-only for the habits screen */
   variant?: "today" | "library";
+  onPress?: (habit: Habit) => void;
 };
 
 export default function HabitPill({
@@ -87,6 +88,7 @@ export default function HabitPill({
   progress,
   onToggle,
   variant = "today",
+  onPress,
 }: HabitPillProps) {
   const success = useCSSVariable("--color-success");
   const muted = useCSSVariable("--color-muted");
@@ -190,6 +192,22 @@ export default function HabitPill({
   );
 
   if (isLibrary) {
+    if (onPress) {
+      return (
+        <HapticPressable
+          haptic={{ type: "selection" }}
+          hapticTrigger="onPressIn"
+          onPress={() => onPress(habit)}
+          accessibilityRole="button"
+          accessibilityLabel={`${habit.name}, edit habit${isPaused ? ", inactive" : ""}`}
+          className={rowClassName}
+          style={rowStyle}
+        >
+          {content}
+        </HapticPressable>
+      );
+    }
+
     return (
       <View
         className={rowClassName}

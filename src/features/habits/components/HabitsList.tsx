@@ -1,4 +1,5 @@
 import { FlashList, type ListRenderItemInfo } from "@shopify/flash-list";
+import { router } from "expo-router";
 import { useCallback, useMemo } from "react";
 import { View } from "react-native";
 
@@ -44,6 +45,10 @@ function buildListItems(habits: Habit[]): HabitsListItem[] {
 export default function HabitsList({ habits }: HabitsListProps) {
   const listItems = useMemo(() => buildListItems(habits), [habits]);
 
+  const handleHabitPress = useCallback((habit: Habit) => {
+    router.push(`/(screens)/habits/${habit.id}`);
+  }, []);
+
   const renderListItem = useCallback(
     ({ item, index }: ListRenderItemInfo<HabitsListItem>) => {
       if (item.type === "section") {
@@ -61,11 +66,15 @@ export default function HabitsList({ habits }: HabitsListProps) {
 
       return (
         <View className="pb-2.5">
-          <HabitPill habit={item.habit} variant="library" />
+          <HabitPill
+            habit={item.habit}
+            variant="library"
+            onPress={handleHabitPress}
+          />
         </View>
       );
     },
-    [],
+    [handleHabitPress],
   );
 
   const keyExtractor = useCallback((item: HabitsListItem) => item.id, []);

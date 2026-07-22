@@ -118,7 +118,7 @@ export default function Habits() {
           />
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <View className="flex-row gap-2 pl-4">
+            <View className="flex-row gap-2 px-4">
               <HabitFilterPills
                 iconName={HomeIcon}
                 text="All"

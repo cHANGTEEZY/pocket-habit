@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { View } from "react-native";
 import { useCSSVariable } from "uniwind";
 
@@ -14,7 +14,7 @@ import { FieldError } from "heroui-native/field-error";
 import { Spinner } from "heroui-native/spinner";
 import { Typography } from "heroui-native/text";
 
-import { useCreateHabit } from "@/api";
+import { useCreateHabit, useUpdateHabit } from "@/api";
 import { SettingsRow } from "@/features/settings/components/settings-row";
 import { SettingsSection } from "@/features/settings/components/settings-section";
 import { formatPocketBaseError, getFieldError } from "@/utils/errors";
@@ -40,6 +40,11 @@ import { HabitDayChips } from "./habit-day-chips";
 import { HabitFormField } from "./habit-form-field";
 
 type HabitFormProps = {
+  mode?: "create" | "edit";
+  habitId?: string;
+  initialValues?: HabitFormInput;
+  initialActive?: boolean;
+  insideBottomSheet?: boolean;
   onSuccess?: (values: HabitFormValues) => void;
 };
 
@@ -72,12 +77,22 @@ function createDefaultValues(): HabitFormInput {
   };
 }
 
-export default function HabitForm({ onSuccess }: HabitFormProps) {
+export default function HabitForm({
+  mode = "create",
+  habitId,
+  initialValues,
+  initialActive = true,
+  insideBottomSheet = false,
+  onSuccess,
+}: HabitFormProps) {
   const { toast } = useToast();
   const createHabit = useCreateHabit();
+  const updateHabit = useUpdateHabit();
+  const [active, setActive] = useState(initialActive);
+  const isEdit = mode === "edit";
 
   const form = useForm({
-    defaultValues: createDefaultValues(),
+    defaultValues: initialValues ?? createDefaultValues(),
     validators: {
       onSubmit: habitFormSchema,
     },
@@ -91,6 +106,26 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
     onSubmit: async ({ value }) => {
       try {
         const parsed = habitFormSchema.parse(value);
+
+        if (isEdit) {
+          if (!habitId) {
+            throw new Error("Habit id is required to save changes.");
+          }
+
+          const record = await updateHabit.mutateAsync({
+            id: habitId,
+            data: { ...parsed, active },
+          });
+          logger.info("habit form updated", record);
+          toast.show({
+            variant: "success",
+            label: "Changes saved",
+            description: "Your habit was updated successfully.",
+          });
+          onSuccess?.(parsed);
+          return;
+        }
+
         const record = await createHabit.mutateAsync(parsed);
         logger.info("habit form submitted", record);
         form.reset();
@@ -105,7 +140,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         logger.error("habit form submission error", description);
         toast.show({
           variant: "danger",
-          label: "Couldn't save habit",
+          label: isEdit ? "Couldn't save changes" : "Couldn't save habit",
           description,
         });
       }
@@ -118,6 +153,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         <form.Field name="name">
           {(field) => (
             <HabitFormField
+              insideBottomSheet={insideBottomSheet}
               label="Name"
               required
               placeholder="e.g. Morning stretch"
@@ -135,6 +171,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         <form.Field name="description">
           {(field) => (
             <HabitFormField
+              insideBottomSheet={insideBottomSheet}
               label="Note"
               placeholder="Add context if you want"
               value={field.state.value ?? ""}
@@ -329,6 +366,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         <form.Field name="targetCount">
           {(field) => (
             <HabitFormField
+              insideBottomSheet={insideBottomSheet}
               label="Target"
               placeholder="e.g. 10"
               value={field.state.value != null ? String(field.state.value) : ""}
@@ -352,6 +390,7 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         <form.Field name="unit">
           {(field) => (
             <HabitFormField
+              insideBottomSheet={insideBottomSheet}
               label="Unit"
               placeholder="pages, minutes, glasses…"
               value={field.state.value ?? ""}
@@ -365,9 +404,32 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
         </form.Field>
       </SettingsSection>
 
-      <Typography type="body-sm" className="px-1 text-muted">
-        Starts today. You can refine details later.
-      </Typography>
+      {isEdit ? (
+        <SettingsSection title="Status">
+          <SettingsRow
+            title="Active"
+            description={
+              active
+                ? "This habit appears in your library and today view when scheduled."
+                : "Paused habits stay saved but won't show as active."
+            }
+            trailing={
+              <Switch
+                isSelected={active}
+                onSelectedChange={setActive}
+                accessibilityLabel="Habit active"
+              />
+            }
+            onPress={() => setActive((current) => !current)}
+          />
+        </SettingsSection>
+      ) : null}
+
+      {!isEdit ? (
+        <Typography type="body-sm" className="px-1 text-muted">
+          Starts today. You can refine details later.
+        </Typography>
+      ) : null}
 
       <form.Subscribe selector={(state) => state.isSubmitting}>
         {(isSubmitting) => (
@@ -381,7 +443,9 @@ export default function HabitForm({ onSuccess }: HabitFormProps) {
             {isSubmitting ? (
               <Spinner size="sm" color="white" />
             ) : (
-              <Button.Label>Save habit</Button.Label>
+              <Button.Label>
+                {isEdit ? "Save changes" : "Save habit"}
+              </Button.Label>
             )}
           </Button>
         )}

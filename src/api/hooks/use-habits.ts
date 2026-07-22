@@ -12,6 +12,7 @@ import type {
   Habit,
   UpdateHabitInput,
 } from "@/api/types";
+import type { HabitsListFilters } from "@/api/habit-list-filters";
 import { ApiError, formatPocketBaseError } from "@/utils/errors";
 
 function normalizePocketBaseError(error: unknown): ApiError {
@@ -26,20 +27,39 @@ function normalizePocketBaseError(error: unknown): ApiError {
 export const habitKeys = {
   all: ["habits"] as const,
   lists: () => [...habitKeys.all, "list"] as const,
-  list: () => [...habitKeys.lists()] as const,
+  list: (filters: HabitsListFilters) =>
+    [...habitKeys.lists(), filters] as const,
+  hasAny: () => [...habitKeys.all, "hasAny"] as const,
   details: () => [...habitKeys.all, "detail"] as const,
   detail: (id: string) => [...habitKeys.details(), id] as const,
   today: () => [...habitKeys.all, "today"] as const,
 };
 
 export function useHabits(
+  filters: HabitsListFilters,
   options?: Omit<UseQueryOptions<Habit[], Error>, "queryKey" | "queryFn">,
 ) {
   return useQuery({
-    queryKey: habitKeys.list(),
+    queryKey: habitKeys.list(filters),
     queryFn: async () => {
       try {
-        return await habitsApi.list();
+        return await habitsApi.list(filters);
+      } catch (error) {
+        throw normalizePocketBaseError(error);
+      }
+    },
+    ...options,
+  });
+}
+
+export function useHasHabits(
+  options?: Omit<UseQueryOptions<boolean, Error>, "queryKey" | "queryFn">,
+) {
+  return useQuery({
+    queryKey: habitKeys.hasAny(),
+    queryFn: async () => {
+      try {
+        return await habitsApi.hasAny();
       } catch (error) {
         throw normalizePocketBaseError(error);
       }
@@ -95,6 +115,7 @@ export function useCreateHabit() {
     },
     onSuccess: (habit) => {
       void queryClient.invalidateQueries({ queryKey: habitKeys.lists() });
+      void queryClient.invalidateQueries({ queryKey: habitKeys.hasAny() });
       void queryClient.invalidateQueries({ queryKey: habitKeys.today() });
       queryClient.setQueryData(habitKeys.detail(habit.id), habit);
     },
@@ -120,6 +141,7 @@ export function useUpdateHabit() {
     },
     onSuccess: (habit) => {
       void queryClient.invalidateQueries({ queryKey: habitKeys.lists() });
+      void queryClient.invalidateQueries({ queryKey: habitKeys.hasAny() });
       void queryClient.invalidateQueries({ queryKey: habitKeys.today() });
       queryClient.setQueryData(habitKeys.detail(habit.id), habit);
     },
@@ -139,6 +161,7 @@ export function useDeleteHabit() {
     },
     onSuccess: (_data, id) => {
       void queryClient.invalidateQueries({ queryKey: habitKeys.lists() });
+      void queryClient.invalidateQueries({ queryKey: habitKeys.hasAny() });
       void queryClient.invalidateQueries({ queryKey: habitKeys.today() });
       queryClient.removeQueries({ queryKey: habitKeys.detail(id) });
     },

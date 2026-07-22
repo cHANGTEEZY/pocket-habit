@@ -1,5 +1,8 @@
 import { ClientResponseError } from "pocketbase";
 
+import type { HabitsListFilters } from "@/api/habit-list-filters";
+import { buildHabitsListFilter } from "@/api/habit-list-filters";
+
 import type {
   CreateHabitInput,
   Habit,
@@ -154,10 +157,23 @@ function toHabitUpdateRecord(
 }
 
 export const habitsApi = {
-  list: async (): Promise<Habit[]> => {
+  hasAny: async (): Promise<boolean> => {
+    requireUserId();
+    const result = await pb.collection(HABITS_COLLECTION).getList<Habit>(1, 1, {
+      fields: "id",
+    });
+    return result.totalItems > 0;
+  },
+
+  list: async (filters: HabitsListFilters): Promise<Habit[]> => {
     // Ownership is enforced by collection listRule (user_id.id ?= @request.auth.id).
     requireUserId();
+    const filter = buildHabitsListFilter(filters);
+
+    logger.info("habitsApi.list filter", { filter });
+
     return pb.collection(HABITS_COLLECTION).getFullList<Habit>({
+      filter,
       sort: "-created",
     });
   },

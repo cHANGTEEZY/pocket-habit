@@ -77,6 +77,8 @@ export type HabitPillProps = {
   /** 0–100 optional progress for multi-count habits */
   progress?: number;
   onToggle?: (habit: Habit) => void;
+  /** `today` shows completion checkbox; `library` is display-only for the habits screen */
+  variant?: "today" | "library";
 };
 
 export default function HabitPill({
@@ -84,6 +86,7 @@ export default function HabitPill({
   completed = false,
   progress,
   onToggle,
+  variant = "today",
 }: HabitPillProps) {
   const success = useCSSVariable("--color-success");
   const muted = useCSSVariable("--color-muted");
@@ -98,31 +101,23 @@ export default function HabitPill({
   const subtitle = habitSubtitle(habit);
   const showProgress =
     typeof progress === "number" && progress > 0 && progress < 100 && !completed;
+  const isLibrary = variant === "library";
+  const isPaused = isLibrary && !habit.active;
 
-  return (
-    <HapticPressable
-      haptic={{
-        type: "impact",
-        style: completed
-          ? Haptics.ImpactFeedbackStyle.Light
-          : Haptics.ImpactFeedbackStyle.Medium,
-      }}
-      hapticTrigger="onPressIn"
-      onPress={() => onToggle?.(habit)}
-      accessibilityRole="checkbox"
-      accessibilityState={{ checked: completed }}
-      accessibilityLabel={`${habit.name}${completed ? ", completed" : ""}`}
-      className="flex-row items-center gap-3.5 rounded-4xl bg-surface px-3.5 py-3"
-      style={{
-        borderCurve: "continuous",
-        // Soft surface lift — light mode only feel; dark relies on tonal bg-surface.
-        shadowColor: "#000",
-        shadowOpacity: 0.04,
-        shadowRadius: 8,
-        shadowOffset: { width: 0, height: 2 },
-        elevation: 1,
-      }}
-    >
+  const rowClassName =
+    "flex-row items-center gap-3.5 rounded-4xl bg-surface px-3.5 py-3";
+  const rowStyle = {
+    borderCurve: "continuous" as const,
+    shadowColor: "#000",
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 1,
+    opacity: isPaused ? 0.72 : 1,
+  };
+
+  const content = (
+    <>
       <View
         className="h-11 w-11 items-center justify-center rounded-full"
         style={{
@@ -164,25 +159,66 @@ export default function HabitPill({
         </Typography>
       ) : null}
 
+      {isLibrary ? (
+        isPaused ? (
+          <Typography type="body-xs" weight="medium" color="muted">
+            Inactive
+          </Typography>
+        ) : null
+      ) : (
+        <View
+          className="h-8 w-8 items-center justify-center rounded-full"
+          style={{
+            borderCurve: "continuous",
+            backgroundColor: completed ? successColor : "transparent",
+            borderWidth: completed ? 0 : 1.5,
+            borderColor: mutedColor,
+          }}
+          accessible={false}
+        >
+          {completed ? (
+            <HugeiconsIcon
+              icon={Tick02Icon}
+              size={16}
+              color={checkIconColor}
+              strokeWidth={2.25}
+            />
+          ) : null}
+        </View>
+      )}
+    </>
+  );
+
+  if (isLibrary) {
+    return (
       <View
-        className="h-8 w-8 items-center justify-center rounded-full"
-        style={{
-          borderCurve: "continuous",
-          backgroundColor: completed ? successColor : "transparent",
-          borderWidth: completed ? 0 : 1.5,
-          borderColor: mutedColor,
-        }}
-        accessible={false}
+        className={rowClassName}
+        style={rowStyle}
+        accessibilityRole="summary"
+        accessibilityLabel={`${habit.name}${isPaused ? ", inactive" : ""}`}
       >
-        {completed ? (
-          <HugeiconsIcon
-            icon={Tick02Icon}
-            size={16}
-            color={checkIconColor}
-            strokeWidth={2.25}
-          />
-        ) : null}
+        {content}
       </View>
+    );
+  }
+
+  return (
+    <HapticPressable
+      haptic={{
+        type: "impact",
+        style: completed
+          ? Haptics.ImpactFeedbackStyle.Light
+          : Haptics.ImpactFeedbackStyle.Medium,
+      }}
+      hapticTrigger="onPressIn"
+      onPress={() => onToggle?.(habit)}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked: completed }}
+      accessibilityLabel={`${habit.name}${completed ? ", completed" : ""}`}
+      className={rowClassName}
+      style={rowStyle}
+    >
+      {content}
     </HapticPressable>
   );
 }

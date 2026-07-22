@@ -3,44 +3,17 @@ import { View } from "react-native";
 
 import { Typography } from "heroui-native/text";
 
-import type { Habit, HabitRoutine } from "@/api/types";
-import { HABIT_ROUTINES } from "@/api/types";
+import type { Habit } from "@/api/types";
+import {
+  groupByRoutine,
+  ROUTINE_LABEL,
+} from "@/features/habits/lib/group-by-routine";
 
 import HabitPill from "./HabitPill";
-
-const ROUTINE_LABEL: Record<HabitRoutine, string> = {
-  morning: "Morning",
-  afternoon: "Afternoon",
-  evening: "Evening",
-  night: "Night",
-};
 
 type TodayHabitsListProps = {
   habits: Habit[];
 };
-
-function groupByRoutine(habits: Habit[]): {
-  routine: HabitRoutine;
-  habits: Habit[];
-}[] {
-  const buckets = Object.fromEntries(
-    HABIT_ROUTINES.map((routine) => [routine, [] as Habit[]]),
-  ) as Record<HabitRoutine, Habit[]>;
-
-  for (const habit of habits) {
-    const routine = HABIT_ROUTINES.includes(habit.routine)
-      ? habit.routine
-      : "morning";
-    buckets[routine].push(habit);
-  }
-
-  return HABIT_ROUTINES.filter((routine) => buckets[routine].length > 0).map(
-    (routine) => ({
-      routine,
-      habits: buckets[routine],
-    }),
-  );
-}
 
 export default function TodayHabitsList({ habits }: TodayHabitsListProps) {
   const [completedIds, setCompletedIds] = useState<Set<string>>(() => new Set());

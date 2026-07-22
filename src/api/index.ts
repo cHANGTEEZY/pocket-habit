@@ -32,6 +32,7 @@ export {
   useCreateHabit,
   useDeleteHabit,
   useHabit,
+  useHasHabits,
   useHabits,
   useTodayHabits,
   useUpdateHabit,

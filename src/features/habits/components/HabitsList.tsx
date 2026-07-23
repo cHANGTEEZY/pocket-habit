@@ -6,7 +6,12 @@ import { View } from "react-native";
 import { Typography } from "heroui-native/text";
 
 import type { Habit, HabitRoutine } from "@/api/types";
-import HabitPill from "@/features/today/components/HabitPill";
+import HabitPill from "@/components/HabitPill";
+import {
+  HabitRowIcon,
+  HabitRowInactiveLabel,
+  HabitRowTitle,
+} from "@/features/habits/components/habit-row-parts";
 
 import { groupByRoutine, ROUTINE_LABEL } from "../lib/group-by-routine";
 
@@ -64,13 +69,27 @@ export default function HabitsList({ habits }: HabitsListProps) {
         );
       }
 
+      const habit = item.habit;
+
       return (
         <View className="pb-2.5">
           <HabitPill
-            habit={item.habit}
-            variant="library"
-            onPress={handleHabitPress}
-          />
+            onPress={() => handleHabitPress(habit)}
+            haptic={{ type: "selection" }}
+            style={{ opacity: !habit.active ? 0.72 : 1 }}
+            accessibilityRole="button"
+            accessibilityLabel={`${habit.name}, edit habit${!habit.active ? ", inactive" : ""}`}
+          >
+            <HabitPill.Leading>
+              <HabitRowIcon habit={habit} />
+            </HabitPill.Leading>
+            <HabitPill.Body>
+              <HabitRowTitle habit={habit} />
+            </HabitPill.Body>
+            <HabitPill.Trailing>
+              {!habit.active ? <HabitRowInactiveLabel /> : null}
+            </HabitPill.Trailing>
+          </HabitPill>
         </View>
       );
     },

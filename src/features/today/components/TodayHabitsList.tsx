@@ -1,15 +1,20 @@
 import { useMemo, useState } from "react";
 import { View } from "react-native";
 
+import * as Haptics from "expo-haptics";
 import { Typography } from "heroui-native/text";
 
 import type { Habit } from "@/api/types";
+import HabitPill from "@/components/HabitPill";
+import {
+  HabitRowCheckbox,
+  HabitRowIcon,
+  HabitRowTitle,
+} from "@/features/habits/components/habit-row-parts";
 import {
   groupByRoutine,
   ROUTINE_LABEL,
 } from "@/features/habits/lib/group-by-routine";
-
-import HabitPill from "./HabitPill";
 
 type TodayHabitsListProps = {
   habits: Habit[];
@@ -56,14 +61,35 @@ export default function TodayHabitsList({ habits }: TodayHabitsListProps) {
             {ROUTINE_LABEL[routine]}
           </Typography>
           <View className="gap-2.5">
-            {sectionHabits.map((habit) => (
-              <HabitPill
-                key={habit.id}
-                habit={habit}
-                completed={completedIds.has(habit.id)}
-                onToggle={toggle}
-              />
-            ))}
+            {sectionHabits.map((habit) => {
+              const completed = completedIds.has(habit.id);
+
+              return (
+                <HabitPill
+                  key={habit.id}
+                  onPress={() => toggle(habit)}
+                  haptic={{
+                    type: "impact",
+                    style: completed
+                      ? Haptics.ImpactFeedbackStyle.Light
+                      : Haptics.ImpactFeedbackStyle.Medium,
+                  }}
+                  accessibilityRole="checkbox"
+                  accessibilityState={{ checked: completed }}
+                  accessibilityLabel={`${habit.name}${completed ? ", completed" : ""}`}
+                >
+                  <HabitPill.Leading>
+                    <HabitRowIcon habit={habit} completed={completed} />
+                  </HabitPill.Leading>
+                  <HabitPill.Body>
+                    <HabitRowTitle habit={habit} completed={completed} />
+                  </HabitPill.Body>
+                  <HabitPill.Trailing>
+                    <HabitRowCheckbox completed={completed} />
+                  </HabitPill.Trailing>
+                </HabitPill>
+              );
+            })}
           </View>
         </View>
       ))}

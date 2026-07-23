@@ -3,7 +3,12 @@ import { View } from "react-native";
 import { Typography } from "heroui-native/text";
 
 import type { Habit } from "@/api/types";
-import HabitPill from "@/features/today/components/HabitPill";
+import HabitPill from "@/components/HabitPill";
+import {
+  HabitRowIcon,
+  HabitRowInactiveLabel,
+  HabitRowTitle,
+} from "@/features/habits/components/habit-row-parts";
 
 import { FREQUENCIES } from "../data/form-data";
 import { ROUTINE_LABEL } from "../lib/group-by-routine";
@@ -33,7 +38,21 @@ function formatStartDate(startDate: string): string {
 export function HabitDetailSummary({ habit }: HabitDetailSummaryProps) {
   return (
     <View className="gap-3">
-      <HabitPill habit={habit} variant="library" />
+      <HabitPill
+        style={{ opacity: !habit.active ? 0.72 : 1 }}
+        accessibilityRole="summary"
+        accessibilityLabel={`${habit.name}${!habit.active ? ", inactive" : ""}`}
+      >
+        <HabitPill.Leading>
+          <HabitRowIcon habit={habit} />
+        </HabitPill.Leading>
+        <HabitPill.Body>
+          <HabitRowTitle habit={habit} />
+        </HabitPill.Body>
+        <HabitPill.Trailing>
+          {!habit.active ? <HabitRowInactiveLabel /> : null}
+        </HabitPill.Trailing>
+      </HabitPill>
 
       <View
         className="gap-3 rounded-4xl bg-surface px-4 py-4"

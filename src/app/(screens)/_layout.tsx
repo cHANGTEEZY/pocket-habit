@@ -11,6 +11,8 @@ export default function ScreensLayout() {
       <Stack.Screen name="settings" />
       <Stack.Screen name="appearance" />
       <Stack.Screen name="habits/[id]" />
+      <Stack.Screen name="settings/profile" />
+      <Stack.Screen name="settings/edit-profile" />
     </Stack>
   );
 }

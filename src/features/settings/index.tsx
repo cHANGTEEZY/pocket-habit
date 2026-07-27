@@ -103,14 +103,11 @@ export default function Settings() {
                 Alert.alert("Profile", "Profile details are coming soon.")
               }
             />
-            <Separator className="ml-[68px] mr-4" />
+            <Separator className="ml-17 mr-4" />
             <SettingsRow
               title="Edit Profile"
               onPress={() =>
-                Alert.alert(
-                  "Edit Profile",
-                  "Editing your profile is coming soon.",
-                )
+                router.navigate("/(screens)/settings/edit-profile")
               }
             />
           </SettingsSection>
@@ -161,7 +158,7 @@ export default function Settings() {
               icon={PaintBrush01Icon}
               iconBackground="#FF2D55"
               onPress={() => {
-                router.navigate("/(screens)/appearance");
+                router.navigate("/(screens)/settings/appearance");
               }}
             />
           </SettingsSection>

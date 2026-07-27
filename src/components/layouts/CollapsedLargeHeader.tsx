@@ -1,5 +1,5 @@
 import { BlurTargetView, BlurView } from "expo-blur";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useRef } from "react";
 import {
   Platform,
   ScrollView,
@@ -7,7 +7,6 @@ import {
   View,
   type ViewStyle,
 } from "react-native";
-import { EaseView } from "react-native-ease/uniwind";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useAppColorScheme } from "@/hooks/use-app-color-scheme";
@@ -36,16 +35,8 @@ export default function CollapsedLargeHeader({
   const insets = useSafeAreaInsets();
   const scheme = useAppColorScheme();
   const blurTargetRef = useRef<View | null>(null);
-  const [ready, setReady] = useState(false);
   const barHeight = insets.top + BAR_CONTENT_HEIGHT;
   const isDark = scheme === "dark";
-
-  useEffect(() => {
-    const frame = requestAnimationFrame(() => {
-      setReady(true);
-    });
-    return () => cancelAnimationFrame(frame);
-  }, []);
 
   return (
     <View style={styles.root}>
@@ -67,18 +58,7 @@ export default function CollapsedLargeHeader({
         </ScrollView>
       </BlurTargetView>
 
-      {/* Prefer EaseView for enter/exit; use Reanimated for scroll/gesture-driven motion. */}
-      <EaseView
-        animate={{
-          opacity: ready ? 1 : 0,
-          translateY: ready ? 0 : -8,
-        }}
-        transition={{
-          opacity: { type: "timing", duration: 220, easing: "easeOut" },
-          transform: { type: "spring", damping: 18, stiffness: 220 },
-        }}
-        style={[styles.sticky, { height: barHeight }]}
-      >
+      <View style={[styles.sticky, { height: barHeight }]}>
         <BlurView
           intensity={isDark ? 18 : 24}
           tint={
@@ -129,7 +109,7 @@ export default function CollapsedLargeHeader({
             </View>
           </View>
         </View>
-      </EaseView>
+      </View>
     </View>
   );
 }

@@ -1,12 +1,11 @@
 import { type ComponentProps } from "react";
-import { View } from "react-native";
+import { Pressable, View } from "react-native";
 import { useCSSVariable, useUniwind } from "uniwind";
 
 import { Moon02Icon, Sun03Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { Typography } from "heroui-native/text";
 
-import { PressableFeedback } from "heroui-native";
 import {
   type AppearancePreference,
   resolveAppearancePreference,
@@ -88,13 +87,13 @@ export default function CycleTheme() {
         const accent = isSelected ? selectedColor : idleColor;
 
         return (
-          <PressableFeedback
+          <Pressable
             key={option}
             accessibilityRole="button"
             accessibilityState={{ selected: isSelected }}
             accessibilityLabel={`${LABELS[option]} color scheme`}
             onPress={() => setAppearance(option)}
-            className="min-h-[110px] flex-1 justify-between rounded-xl px-3.5 py-3.5"
+            className="min-h-27.5 flex-1 justify-between rounded-xl px-3.5 py-3.5"
             style={{
               borderCurve: "continuous",
               borderWidth: isSelected ? 1.5 : 1,
@@ -109,14 +108,14 @@ export default function CycleTheme() {
             >
               {LABELS[option]}
             </Typography>
-            <PressableFeedback.Ripple
+            {/* <PressableFeedback.Ripple
               animation={{
                 backgroundColor: { value: accent },
                 opacity: { value: [0.2, 0.2, 0] },
-                progress: { baseDuration: 200 },
+                progress: { baseDuration: rippleAnimationMs },
               }}
-            />
-          </PressableFeedback>
+            /> */}
+          </Pressable>
         );
       })}
     </View>

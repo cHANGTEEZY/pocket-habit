@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { useMemo, useState } from "react";
+import { startTransition, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { useCSSVariable } from "uniwind";
 
@@ -123,7 +123,9 @@ export default function Habits() {
                 iconName={HomeIcon}
                 text="All"
                 isSelected={routineFilter === "all"}
-                onSelectedChange={() => setRoutineFilter("all")}
+                onSelectedChange={() =>
+                  startTransition(() => setRoutineFilter("all"))
+                }
               />
               {ROUTINE_PILLS.map(({ value, label, icon }) => (
                 <HabitFilterPills
@@ -131,7 +133,9 @@ export default function Habits() {
                   iconName={icon}
                   text={label}
                   isSelected={routineFilter === value}
-                  onSelectedChange={() => setRoutineFilter(value)}
+                  onSelectedChange={() =>
+                    startTransition(() => setRoutineFilter(value))
+                  }
                 />
               ))}
             </View>
@@ -142,13 +146,17 @@ export default function Habits() {
               iconName={Tick02Icon}
               text="Active"
               isSelected={statusFilter === "active"}
-              onSelectedChange={() => setStatusFilter("active")}
+              onSelectedChange={() =>
+                startTransition(() => setStatusFilter("active"))
+              }
             />
             <HabitFilterPills
               iconName={Cancel01Icon}
               text="Inactive"
               isSelected={statusFilter === "inactive"}
-              onSelectedChange={() => setStatusFilter("inactive")}
+              onSelectedChange={() =>
+                startTransition(() => setStatusFilter("inactive"))
+              }
             />
           </View>
 

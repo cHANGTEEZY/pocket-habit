@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { useCSSVariable } from "uniwind";
 
 import HapticPressable from "@/components/HapticButton";
+import { useAfterRipplePress } from "@/hooks/use-after-ripple-press";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { PressableFeedback } from "heroui-native";
 import { Typography } from "heroui-native/text";
@@ -36,6 +37,11 @@ const HabitFilterPills = ({
   const iconColor = isSelected ? accentTextColor : mutedColor;
   const rippleColor = isSelected ? accentTextColor : accentColor;
 
+  const { onPress, rippleSettleMs } = useAfterRipplePress(
+    () => onSelectedChange?.(true),
+    { enabled: !isSelected },
+  );
+
   return (
     <PressableFeedback
       asChild
@@ -43,7 +49,7 @@ const HabitFilterPills = ({
       accessibilityRole="button"
       accessibilityState={{ selected: isSelected }}
       accessibilityLabel={text}
-      onPress={() => onSelectedChange?.(true)}
+      onPress={onPress}
     >
       <HapticPressable
         haptic={{ type: "selection" }}
@@ -74,7 +80,7 @@ const HabitFilterPills = ({
           animation={{
             backgroundColor: { value: rippleColor },
             opacity: { value: [0.18, 0.18, 0] },
-            progress: { baseDuration: 200 },
+            progress: { baseDuration: rippleSettleMs },
           }}
         />
       </HapticPressable>

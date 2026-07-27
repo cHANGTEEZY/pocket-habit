@@ -6,6 +6,7 @@ import MeshBackground from "@/components/MeshBackground";
 import ProfileButton from "@/components/ProfileButton";
 import { Typography } from "heroui-native/text";
 
+import { router } from "expo-router";
 import TodayHabitsList from "./components/TodayHabitsList";
 import TodaysProgress from "./components/TodaysProgress";
 import WeeklyInsight from "./components/WeeklyInsight";
@@ -20,7 +21,14 @@ export default function Today() {
       <MeshBackground />
       <CollapsingLargeHeader
         title={greeting}
-        trailing={<ProfileButton />}
+        trailing={
+          <ProfileButton
+            onPress={() => router.navigate("/(screens)/settings")}
+            size="sm"
+            color="accent"
+            variant="default"
+          />
+        }
         contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 80 }}
       >
         <View className="mb-3 mt-3">

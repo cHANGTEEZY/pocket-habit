@@ -21,7 +21,9 @@ type TodayHabitsListProps = {
 };
 
 export default function TodayHabitsList({ habits }: TodayHabitsListProps) {
-  const [completedIds, setCompletedIds] = useState<Set<string>>(() => new Set());
+  const [completedIds, setCompletedIds] = useState<Set<string>>(
+    () => new Set(),
+  );
 
   const sections = useMemo(() => groupByRoutine(habits), [habits]);
 
@@ -36,11 +38,18 @@ export default function TodayHabitsList({ habits }: TodayHabitsListProps) {
 
   if (habits.length === 0) {
     return (
-      <View className="rounded-4xl bg-surface px-4 py-5" style={{ borderCurve: "continuous" }}>
+      <View
+        className="rounded-4xl bg-surface px-4 py-5"
+        style={{ borderCurve: "continuous" }}
+      >
         <Typography type="body" weight="semibold" className="text-foreground">
           Nothing scheduled today
         </Typography>
-        <Typography type="body-sm" color="muted" className="mt-1 leading-relaxed">
+        <Typography
+          type="body-sm"
+          color="muted"
+          className="mt-1 leading-relaxed"
+        >
           Habits due today will show up here, grouped by time of day.
         </Typography>
       </View>

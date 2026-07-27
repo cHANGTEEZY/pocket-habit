@@ -3,22 +3,17 @@ import { View } from "react-native";
 import { Typography } from "heroui-native/text";
 
 import type { Habit } from "@/api/types";
-import HabitPill from "@/components/HabitPill";
-import {
-  HabitRowIcon,
-  HabitRowInactiveLabel,
-  HabitRowTitle,
-} from "@/features/habits/components/habit-row-parts";
 
 import { FREQUENCIES } from "../data/form-data";
 import { ROUTINE_LABEL } from "../lib/group-by-routine";
+import { normalizeFrequency } from "../lib/habit-form-mapper";
 
 type HabitDetailSummaryProps = {
   habit: Habit;
 };
 
 function formatFrequency(habit: Habit): string {
-  const primary = habit.frequency[0] ?? "daily";
+  const primary = normalizeFrequency(habit.frequency);
   const match = FREQUENCIES.find((item) => item.value === primary);
   return match?.title ?? primary;
 }
@@ -38,21 +33,9 @@ function formatStartDate(startDate: string): string {
 export function HabitDetailSummary({ habit }: HabitDetailSummaryProps) {
   return (
     <View className="gap-3">
-      <HabitPill
-        style={{ opacity: !habit.active ? 0.72 : 1 }}
-        accessibilityRole="summary"
-        accessibilityLabel={`${habit.name}${!habit.active ? ", inactive" : ""}`}
-      >
-        <HabitPill.Leading>
-          <HabitRowIcon habit={habit} />
-        </HabitPill.Leading>
-        <HabitPill.Body>
-          <HabitRowTitle habit={habit} />
-        </HabitPill.Body>
-        <HabitPill.Trailing>
-          {!habit.active ? <HabitRowInactiveLabel /> : null}
-        </HabitPill.Trailing>
-      </HabitPill>
+      <Typography type="h5" weight="semibold">
+        Details
+      </Typography>
 
       <View
         className="gap-3 rounded-4xl bg-surface px-4 py-4"

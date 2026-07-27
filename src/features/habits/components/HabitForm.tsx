@@ -248,6 +248,13 @@ export default function HabitForm({
                   />
                 </Fragment>
               ))}
+              {getFieldError(field.state.meta.errors) ? (
+                <View className="px-4 pb-3">
+                  <FieldError isInvalid>
+                    {getFieldError(field.state.meta.errors)}
+                  </FieldError>
+                </View>
+              ) : null}
             </>
           )}
         </form.Field>

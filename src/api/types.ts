@@ -54,8 +54,9 @@ export type Habit = {
   name: string;
   note?: string;
   routine: HabitRoutine;
-  frequency: HabitFrequency[];
-  weekly_days: HabitWeeklyDay[];
+  /** PB select may return a string or a single-item array. */
+  frequency: HabitFrequency[] | HabitFrequency;
+  weekly_days: HabitWeeklyDay[] | string;
   monthly_day?: number;
   reminder_enabled: boolean;
   reminder_time: string;

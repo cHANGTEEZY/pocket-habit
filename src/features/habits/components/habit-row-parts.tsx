@@ -86,9 +86,7 @@ export function HabitRowIcon({ habit, completed = false }: HabitRowIconProps) {
     <View
       className="h-11 w-11 items-center justify-center rounded-full"
       style={{
-        backgroundColor: completed
-          ? "rgba(52, 199, 89, 0.12)"
-          : accent.iconBg,
+        backgroundColor: completed ? "rgba(52, 199, 89, 0.12)" : accent.iconBg,
         borderCurve: "continuous",
       }}
       accessible={false}
@@ -108,7 +106,10 @@ type HabitRowTitleProps = {
   completed?: boolean;
 };
 
-export function HabitRowTitle({ habit, completed = false }: HabitRowTitleProps) {
+export function HabitRowTitle({
+  habit,
+  completed = false,
+}: HabitRowTitleProps) {
   const subtitle = habitSubtitle(habit);
 
   return (
@@ -145,7 +146,7 @@ export function HabitRowCheckbox({ completed = false }: HabitRowCheckboxProps) {
 
   return (
     <View
-      className="h-8 w-8 items-center justify-center rounded-full"
+      className="h-6.5 w-6.5 items-center justify-center rounded-full"
       style={{
         borderCurve: "continuous",
         backgroundColor: completed ? successColor : "transparent",

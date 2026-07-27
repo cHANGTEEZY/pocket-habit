@@ -2,6 +2,7 @@ import { FlashList, type ListRenderItemInfo } from "@shopify/flash-list";
 import { router } from "expo-router";
 import { useCallback, useMemo } from "react";
 import { View } from "react-native";
+import { useCSSVariable } from "uniwind";
 
 import { Typography } from "heroui-native/text";
 
@@ -13,6 +14,8 @@ import {
   HabitRowTitle,
 } from "@/features/habits/components/habit-row-parts";
 
+import { ChevronRightIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react-native";
 import { groupByRoutine, ROUTINE_LABEL } from "../lib/group-by-routine";
 
 type HabitsListProps = {
@@ -49,6 +52,8 @@ function buildListItems(habits: Habit[]): HabitsListItem[] {
 
 export default function HabitsList({ habits }: HabitsListProps) {
   const listItems = useMemo(() => buildListItems(habits), [habits]);
+  const muted = useCSSVariable("--color-muted");
+  const mutedColor = typeof muted === "string" ? muted : "#8E8E93";
 
   const handleHabitPress = useCallback((habit: Habit) => {
     router.push(`/(screens)/habits/${habit.id}`);
@@ -87,21 +92,27 @@ export default function HabitsList({ habits }: HabitsListProps) {
               <HabitRowTitle habit={habit} />
             </HabitPill.Body>
             <HabitPill.Trailing>
-              {!habit.active ? <HabitRowInactiveLabel /> : null}
+              {!habit.active ? (
+                <HabitRowInactiveLabel />
+              ) : (
+                <HugeiconsIcon
+                  icon={ChevronRightIcon}
+                  size={18}
+                  color={mutedColor}
+                  strokeWidth={1.75}
+                />
+              )}
             </HabitPill.Trailing>
           </HabitPill>
         </View>
       );
     },
-    [handleHabitPress],
+    [handleHabitPress, mutedColor],
   );
 
   const keyExtractor = useCallback((item: HabitsListItem) => item.id, []);
 
-  const getItemType = useCallback(
-    (item: HabitsListItem) => item.type,
-    [],
-  );
+  const getItemType = useCallback((item: HabitsListItem) => item.type, []);
 
   if (habits.length === 0) {
     return (

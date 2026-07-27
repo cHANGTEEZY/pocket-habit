@@ -23,6 +23,23 @@ export const WEEKLY_DAYS = [
 
 export type WeeklyDay = HabitWeeklyDay;
 
+/** Treat PocketBase empty placeholders as unset before number validation. */
+function emptyToUndefined(value: unknown): unknown {
+  if (value === null || value === "" || value === 0) return undefined;
+  return value;
+}
+
+const optionalPositiveInt = (minMessage: string, max: number, maxMessage: string) =>
+  z.preprocess(
+    emptyToUndefined,
+    z
+      .number()
+      .int()
+      .min(1, minMessage)
+      .max(max, maxMessage)
+      .optional(),
+  );
+
 export const habitFormSchema = z
   .object({
     name: z
@@ -44,14 +61,18 @@ export const habitFormSchema = z
       message: "Select a frequency",
     }),
 
-    weeklyDays: z.array(z.enum(HABIT_WEEKLY_DAYS)).optional(),
+    weeklyDays: z.preprocess((value) => {
+      if (value == null || value === "") return undefined;
+      if (typeof value === "string") return [value];
+      if (Array.isArray(value) && value.length === 0) return undefined;
+      return value;
+    }, z.array(z.enum(HABIT_WEEKLY_DAYS)).optional()),
 
-    monthlyDay: z
-      .number()
-      .int()
-      .min(1, "Monthly day must be between 1 and 31")
-      .max(31, "Monthly day must be between 1 and 31")
-      .optional(),
+    monthlyDay: optionalPositiveInt(
+      "Monthly day must be between 1 and 31",
+      31,
+      "Monthly day must be between 1 and 31",
+    ),
 
     startDate: z.string().min(1, "Start date is required"),
 
@@ -59,12 +80,11 @@ export const habitFormSchema = z
 
     reminderTime: z.string(),
 
-    targetCount: z
-      .number()
-      .int()
-      .min(1, "Target must be at least 1")
-      .max(1000, "Target is too large")
-      .optional(),
+    targetCount: optionalPositiveInt(
+      "Target must be at least 1",
+      1000,
+      "Target is too large",
+    ),
 
     unit: z
       .string()

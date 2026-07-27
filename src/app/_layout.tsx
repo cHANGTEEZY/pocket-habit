@@ -4,14 +4,14 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import * as SystemUI from "expo-system-ui";
+import { HeroUINativeProvider } from "heroui-native";
 import { useEffect } from "react";
-import { useCSSVariable } from "uniwind";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { HeroUINativeProvider } from "heroui-native";
+import { useCSSVariable } from "uniwind";
 
-import { AppProviders } from "@/providers/app-providers";
 import { useAppColorScheme } from "@/hooks/use-app-color-scheme";
+import { AppProviders } from "@/providers/app-providers";
 
 SplashScreen.preventAutoHideAsync().catch(() => {
   // Ignore if splash was already hidden.
@@ -49,7 +49,13 @@ export default function RootLayout() {
             <Stack
               screenOptions={{
                 headerShown: false,
-                contentStyle: { flex: 1 },
+                contentStyle: {
+                  flex: 1,
+                  backgroundColor:
+                    typeof backgroundColor === "string"
+                      ? backgroundColor
+                      : undefined,
+                },
               }}
             >
               <Stack.Screen name="index" />

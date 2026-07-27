@@ -1,4 +1,8 @@
 import { BlurTargetView, BlurView } from "expo-blur";
+import {
+  setMinimized,
+  useMinimizeState,
+} from "expo-glass-tabs/build/minimize-context";
 import { type ReactNode, useRef } from "react";
 import {
   Platform,
@@ -41,6 +45,8 @@ export default function CollapsingLargeHeader({
   const insets = useSafeAreaInsets();
   const scheme = useAppColorScheme();
   const scrollY = useSharedValue(0);
+  const previousY = useSharedValue(0);
+  const minimizeState = useMinimizeState();
   const blurTargetRef = useRef<View | null>(null);
 
   const compactBarHeight = insets.top + COMPACT_BAR_CONTENT_HEIGHT;
@@ -49,6 +55,23 @@ export default function CollapsingLargeHeader({
   const onScroll = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollY.value = event.contentOffset.y;
+
+      // Drive floating glass tab bar minimize (same rules as useMinimizeOnScroll).
+      const maxY = Math.max(
+        event.contentSize.height - event.layoutMeasurement.height,
+        0,
+      );
+      const y = Math.min(Math.max(event.contentOffset.y, 0), maxY);
+      const dy = y - previousY.value;
+      previousY.value = y;
+
+      if (y < 24) {
+        setMinimized(minimizeState, 0);
+      } else if (dy > 3) {
+        setMinimized(minimizeState, 1);
+      } else if (dy < -3) {
+        setMinimized(minimizeState, 0);
+      }
     },
   });
 
@@ -98,6 +121,7 @@ export default function CollapsingLargeHeader({
           scrollEventThrottle={16}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
         >
           <Animated.View style={[styles.expandedRow, largeTitleStyle]}>
             <View style={styles.largeTitleWrap}>

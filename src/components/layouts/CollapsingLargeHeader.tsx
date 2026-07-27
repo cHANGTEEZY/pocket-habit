@@ -1,8 +1,4 @@
 import { BlurTargetView, BlurView } from "expo-blur";
-import {
-  setMinimized,
-  useMinimizeState,
-} from "expo-glass-tabs/build/minimize-context";
 import { type ReactNode, useRef } from "react";
 import {
   Platform,
@@ -20,6 +16,7 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useAppColorScheme } from "@/hooks/use-app-color-scheme";
+import { setMinimized, useMinimizeState } from "@/lib/expo-glass-tabs";
 
 import { Typography } from "heroui-native/text";
 

@@ -73,6 +73,28 @@ export async function signUpWithEmail(
   });
 }
 
+export type UpdateProfileInput = {
+  name: string;
+  email: string;
+  bio: string;
+};
+
+export async function updateCurrentUserProfile(
+  data: UpdateProfileInput,
+): Promise<RecordModel> {
+  ensureBaseUrl();
+  const id = pb.authStore.record?.id;
+  if (!id) {
+    throw new Error("You need to be signed in to update your profile.");
+  }
+
+  return pb.collection("users").update(id, {
+    name: data.name.trim(),
+    email: data.email.trim(),
+    bio: data.bio.trim(),
+  });
+}
+
 export function signOut(): void {
   pb.authStore.clear();
 }

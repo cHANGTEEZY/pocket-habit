@@ -2,6 +2,7 @@ export type User = {
   id: string;
   name: string;
   email: string;
+  bio?: string | null;
   image?: string | null;
   createdAt?: string;
   updatedAt?: string;
@@ -15,6 +16,7 @@ export type CreateUserRequest = {
 export type UpdateUserRequest = {
   name?: string;
   email?: string;
+  bio?: string | null;
   image?: string | null;
 };
 

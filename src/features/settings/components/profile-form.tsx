@@ -1,103 +1,144 @@
-import ProfileButton from "@/components/ProfileButton";
-import { AiImageIcon, Camera01Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react-native";
-import { Popover, PressableFeedback, useThemeColor } from "heroui-native";
-import { Typography } from "heroui-native/text";
-import { Pressable, View } from "react-native";
+import { useForm } from "@tanstack/react-form";
+import { useRef } from "react";
+import { View, type TextInput } from "react-native";
 
-const ProfileForm = () => {
-  const accentForeground = useThemeColor("accent-foreground");
+import { Separator, useToast } from "heroui-native";
 
-  return (
-    <View className="items-center gap-4">
-      <View className="relative">
-        <ProfileButton size="xlg" color="default" variant="soft" />
-        <View className="absolute -bottom-1 -right-2 z-10">
-          <Popover>
-            <Popover.Trigger asChild>
-              <Pressable
-                accessibilityLabel="Change profile picture"
-                accessibilityRole="button"
-                hitSlop={8}
-                className="size-8 items-center justify-center rounded-full bg-accent"
-                style={{ borderCurve: "continuous" }}
-              >
-                <HugeiconsIcon
-                  icon={AiImageIcon}
-                  size={16}
-                  color={accentForeground}
-                />
-              </Pressable>
-            </Popover.Trigger>
-            <Popover.Portal>
-              <Popover.Overlay />
-              <Popover.Content
-                presentation="popover"
-                placement="bottom"
-                className="min-w-56 gap-1 rounded-xl p-1.5"
-              >
-                <PressableFeedback
-                  animation={false}
-                  accessibilityRole="button"
-                  accessibilityLabel="Take picture"
-                  onPress={() => {
-                    console.log("take picture");
-                  }}
-                  className="rounded-lg"
-                >
-                  <PressableFeedback.Scale className="px-3.5 py-2.5 flex-row items-center gap-2">
-                    <HugeiconsIcon
-                      icon={Camera01Icon}
-                      size={22}
-                      color={accentForeground}
-                    />
-                    <Typography type="body-sm" weight="medium">
-                      Take picture
-                    </Typography>
-                  </PressableFeedback.Scale>
-                  <PressableFeedback.Ripple
-                    animation={{
-                      backgroundColor: { value: "#e0e7ff" },
-                      opacity: { value: [0.2, 0.2, 0] },
-                      progress: { baseDuration: 240 },
-                    }}
-                  />
-                </PressableFeedback>
+import { useSession } from "@/api";
+import { updateCurrentUserProfile } from "@/lib/pocketbase";
+import { formatPocketBaseError, getFieldError } from "@/utils/errors";
+import { logger } from "@/utils/logger";
 
-                <PressableFeedback
-                  animation={false}
-                  accessibilityRole="button"
-                  accessibilityLabel="Choose from gallery"
-                  onPress={() => {
-                    console.log("choose from gallery");
-                  }}
-                  className="rounded-lg"
-                >
-                  <PressableFeedback.Scale className="px-3.5 py-2.5 flex-row items-center gap-2">
-                    <HugeiconsIcon
-                      icon={AiImageIcon}
-                      size={22}
-                      color={accentForeground}
-                    />
-                    <Typography type="body-sm" weight="medium">
-                      Choose from gallery
-                    </Typography>
-                  </PressableFeedback.Scale>
-                  <PressableFeedback.Ripple
-                    animation={{
-                      backgroundColor: { value: "#e0e7ff" },
-                      opacity: { value: [0.2, 0.2, 0] },
-                      progress: { baseDuration: 240 },
-                    }}
-                  />
-                </PressableFeedback>
-              </Popover.Content>
-            </Popover.Portal>
-          </Popover>
-        </View>
-      </View>
-    </View>
-  );
+import {
+  profileFormSchema,
+  type ProfileFormInput,
+} from "../schemas/profile-form";
+import { ProfileFormField } from "./profile-form-field";
+import { SettingsSection } from "./settings-section";
+
+function readString(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
+function getDefaultValues(
+  record: Record<string, unknown> | null | undefined,
+): ProfileFormInput {
+  return {
+    name: readString(record?.name),
+    email: readString(record?.email),
+    bio: readString(record?.bio),
+  };
+}
+
+export function useProfileForm() {
+  const { session } = useSession();
+  const { toast } = useToast();
+  const record = session?.record as Record<string, unknown> | null | undefined;
+
+  const form = useForm({
+    defaultValues: getDefaultValues(record),
+    validators: {
+      onSubmit: profileFormSchema,
+    },
+    onSubmitInvalid: () => {
+      toast.show({
+        variant: "danger",
+        label: "Check the form",
+        description: "Fix the highlighted fields and try again.",
+      });
+    },
+    onSubmit: async ({ value }) => {
+      try {
+        const parsed = profileFormSchema.parse(value);
+        const updated = await updateCurrentUserProfile(parsed);
+        logger.info("profile updated", updated.id);
+        form.reset(parsed);
+        toast.show({
+          variant: "success",
+          label: "Profile saved",
+          description: "Your changes were updated successfully.",
+        });
+      } catch (error) {
+        const description = formatPocketBaseError(error);
+        logger.error("profile update failed", description);
+        toast.show({
+          variant: "danger",
+          label: "Couldn't save profile",
+          description,
+        });
+      }
+    },
+  });
+
+  return form;
+}
+
+type ProfileFormProps = {
+  form: ReturnType<typeof useProfileForm>;
 };
 
-export default ProfileForm;
+export default function ProfileForm({ form }: ProfileFormProps) {
+  const emailRef = useRef<TextInput>(null);
+
+  return (
+    <View className="gap-6">
+      <SettingsSection>
+        <form.Field name="name">
+          {(field) => (
+            <ProfileFormField
+              label="Name"
+              placeholder="Your name"
+              value={field.state.value}
+              onChangeText={field.handleChange}
+              onBlur={field.handleBlur}
+              error={getFieldError(field.state.meta.errors)}
+              autoCapitalize="words"
+              autoComplete="name"
+              textContentType="name"
+              maxLength={100}
+              returnKeyType="next"
+              onSubmitEditing={() => emailRef.current?.focus()}
+            />
+          )}
+        </form.Field>
+        <Separator className="mx-4" />
+        <form.Field name="email">
+          {(field) => (
+            <ProfileFormField
+              ref={emailRef}
+              label="Email"
+              placeholder="you@example.com"
+              value={field.state.value}
+              onChangeText={field.handleChange}
+              onBlur={field.handleBlur}
+              error={getFieldError(field.state.meta.errors)}
+              autoCapitalize="none"
+              autoComplete="email"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+              maxLength={255}
+              returnKeyType="done"
+            />
+          )}
+        </form.Field>
+      </SettingsSection>
+
+      <SettingsSection title="Bio">
+        <form.Field name="bio">
+          {(field) => (
+            <ProfileFormField
+              label="Bio"
+              placeholder="A short bio"
+              value={field.state.value}
+              onChangeText={field.handleChange}
+              onBlur={field.handleBlur}
+              error={getFieldError(field.state.meta.errors)}
+              multiline
+              maxLength={500}
+            />
+          )}
+        </form.Field>
+      </SettingsSection>
+    </View>
+  );
+}

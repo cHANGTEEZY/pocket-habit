@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/images/logo-glow.png" alt="Bloom" width="120" />
+  <img src="assets/icons/bloom-logo.svg" alt="Bloom" width="320" />
 </p>
 
 <h1 align="center">Bloom</h1>
@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/images/icon.png" alt="App icon" width="72" height="72" style="border-radius: 16px;" />
+  <img src="assets/images/icon.png" alt="App icon" width="72" height="72" />
 </p>
 
 <p align="center">
@@ -283,20 +283,25 @@ Assets live under [`assets/`](assets/) and are re-exported from TypeScript where
 
 ```tsx
 import { AppIcon, HabitsIcon, HabitCycleIcon } from "@/assets/images";
-import { HabitDoodle, BloomDoodle } from "@/assets/icons";
+import { BloomDoodle, HabitDoodle } from "@/assets/icons";
 ```
+
+The wordmark is the [`BloomDoodle`](assets/icons/BloomDoodle.tsx) component — a React Native SVG used in-app and exported as [`bloom-logo.svg`](assets/icons/bloom-logo.svg) for docs.
 
 | Asset | Path | Use |
 |-------|------|-----|
+| **Bloom wordmark** | `assets/icons/bloom-logo.svg` | README / marketing (from `BloomDoodle.tsx`) |
+| **BloomDoodle (RN)** | `assets/icons/BloomDoodle.tsx` | In-app logo component |
 | App icon | `assets/images/icon.png` | Store / launcher icon |
-| Logo glow | `assets/images/logo-glow.png` | Brand mark |
 | Splash | `assets/images/splash-icon.png` | Splash screen |
 | Habits illustration | `assets/images/noun-habits-4735592.png` | Marketing / empty states |
 | Habit doodle (SVG) | `assets/icons/habit-doodle.svg` | Empty state illustration |
 | Habit cycle | `assets/images/icons8-habit-64.png` | UI accent icon |
 
 <p align="center">
-  <img src="assets/icons/habit-doodle.svg" alt="Habit doodle" width="128" />
+  <img src="assets/icons/bloom-logo.svg" alt="Bloom wordmark" width="240" />
+  &nbsp;&nbsp;&nbsp;
+  <img src="assets/icons/habit-doodle.svg" alt="Habit doodle" width="96" />
 </p>
 
 Android adaptive icons: `assets/images/android-icon-foreground.png`, `android-icon-background.png`, `android-icon-monochrome.png`.
@@ -379,7 +384,7 @@ This project is licensed under the **MIT License** — see [LICENSE](LICENSE).
 ---
 
 <p align="center">
-  <img src="assets/images/splash-icon.png" alt="Bloom splash icon" width="48" />
+  <img src="assets/icons/bloom-logo.svg" alt="Bloom" width="160" />
   <br />
   <sub>Built with Expo · PocketBase · HeroUI Native</sub>
 </p>

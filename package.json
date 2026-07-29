@@ -2,6 +2,17 @@
   "name": "expo-boiler-plate",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "description": "Calm, premium habit and routine tracker built with Expo, React Native, and PocketBase.",
+  "keywords": [
+    "expo",
+    "react-native",
+    "habit-tracker",
+    "routine-tracker",
+    "productivity",
+    "pocketbase",
+    "ios",
+    "android"
+  ],
   "dependencies": {
     "@expo/ui": "~57.0.7",
     "@gorhom/bottom-sheet": "^5.2.14",

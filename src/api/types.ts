@@ -104,3 +104,31 @@ export type HabitWriteRecord = {
   monthly_day?: number;
   target_count?: number;
 };
+
+/** Daily completion record for a habit. */
+export type HabitLog = {
+  id: string;
+  collectionId: string;
+  collectionName: string;
+  user: string;
+  habit: string;
+  /** Calendar day YYYY-MM-DD (PocketBase may include time suffix). */
+  date: string;
+  completed: boolean;
+  count?: number;
+  completed_at?: string;
+  note?: string;
+  created: string;
+  updated: string;
+  expand?: {
+    habit?: Habit;
+  };
+};
+
+export type UpsertHabitLogInput = {
+  habitId: string;
+  date: string;
+  completed?: boolean;
+  count?: number;
+  completedAt?: string;
+};

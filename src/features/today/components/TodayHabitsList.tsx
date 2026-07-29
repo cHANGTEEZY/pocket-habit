@@ -1,9 +1,14 @@
-import { useMemo, useState } from "react";
+import * as Haptics from "expo-haptics";
+import { useMemo } from "react";
 import { View } from "react-native";
 
-import * as Haptics from "expo-haptics";
 import { Typography } from "heroui-native/text";
 
+import {
+  todayDateKey,
+  useTodayHabitLogs,
+  useToggleHabitLog,
+} from "@/api";
 import type { Habit } from "@/api/types";
 import HabitPill from "@/components/HabitPill";
 import {
@@ -15,25 +20,37 @@ import {
   groupByRoutine,
   ROUTINE_LABEL,
 } from "@/features/habits/lib/group-by-routine";
+import { logger } from "@/utils/logger";
 
 type TodayHabitsListProps = {
   habits: Habit[];
 };
 
 export default function TodayHabitsList({ habits }: TodayHabitsListProps) {
-  const [completedIds, setCompletedIds] = useState<Set<string>>(
-    () => new Set(),
-  );
+  const { data: todayLogs = [] } = useTodayHabitLogs();
+  const toggleLog = useToggleHabitLog();
+
+  const completedIds = useMemo(() => {
+    const ids = new Set<string>();
+    for (const log of todayLogs) {
+      if (log.completed) ids.add(log.habit);
+    }
+    return ids;
+  }, [todayLogs]);
 
   const sections = useMemo(() => groupByRoutine(habits), [habits]);
 
   const toggle = (habit: Habit) => {
-    setCompletedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(habit.id)) next.delete(habit.id);
-      else next.add(habit.id);
-      return next;
-    });
+    const completed = completedIds.has(habit.id);
+    void toggleLog
+      .mutateAsync({
+        habitId: habit.id,
+        date: todayDateKey(),
+        completed: !completed,
+      })
+      .catch((error) => {
+        logger.error("Failed to toggle habit log", error);
+      });
   };
 
   if (habits.length === 0) {

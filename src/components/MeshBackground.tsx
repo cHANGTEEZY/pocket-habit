@@ -17,11 +17,16 @@ const DARK_COLORS = ["#6B453C", "#4A3F68", "#2F4A5E"] as const;
 const LIGHT_BG = "#F7F7F7";
 const DARK_BG = "#121214";
 
+type MeshBackgroundProps = {
+  /** When true, fills parent instead of positioning against the window. */
+  embedded?: boolean;
+};
+
 /**
- * Cross-platform SVG radial glow. Full-screen solid base so the page never
- * shows a mismatched grey band under the mesh.
+ * Soft mesh glow. Prefer `embedded` inside the tab ScrollView content so it
+ * paints behind children without zIndex (which breaks NativeTabs minimize).
  */
-export default function MeshBackground() {
+export default function MeshBackground({ embedded = false }: MeshBackgroundProps) {
   const { height, width } = useWindowDimensions();
   const scheme = useAppColorScheme();
   const background = scheme === "dark" ? DARK_BG : LIGHT_BG;
@@ -32,84 +37,77 @@ export default function MeshBackground() {
     <View
       pointerEvents="none"
       accessible={false}
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        width,
-        zIndex: 0,
-        backgroundColor: background,
-      }}
+      style={
+        embedded
+          ? { width, height: meshHeight }
+          : {
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              width,
+              height: meshHeight,
+            }
+      }
     >
-      <View style={{ height: meshHeight, width, overflow: "hidden" }}>
-        <Svg width={width} height={meshHeight} style={StyleSheet.absoluteFill}>
-          <Defs>
-            <RadialGradient id="todayPeach" cx="10%" cy="-5%" rx="58%" ry="78%">
-              <Stop offset="0%" stopColor={colors[0]} stopOpacity="0.95" />
-              <Stop offset="55%" stopColor={colors[0]} stopOpacity="0.35" />
-              <Stop offset="100%" stopColor={colors[0]} stopOpacity="0" />
-            </RadialGradient>
-            <RadialGradient
-              id="todayLavender"
-              cx="48%"
-              cy="5%"
-              rx="52%"
-              ry="82%"
-            >
-              <Stop offset="0%" stopColor={colors[1]} stopOpacity="0.9" />
-              <Stop offset="50%" stopColor={colors[1]} stopOpacity="0.3" />
-              <Stop offset="100%" stopColor={colors[1]} stopOpacity="0" />
-            </RadialGradient>
-            <RadialGradient id="todaySky" cx="92%" cy="-5%" rx="58%" ry="78%">
-              <Stop offset="0%" stopColor={colors[2]} stopOpacity="0.95" />
-              <Stop offset="55%" stopColor={colors[2]} stopOpacity="0.35" />
-              <Stop offset="100%" stopColor={colors[2]} stopOpacity="0" />
-            </RadialGradient>
-            <LinearGradient id="todayFade" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0%" stopColor={background} stopOpacity="0" />
-              <Stop offset="45%" stopColor={background} stopOpacity="0.2" />
-              <Stop offset="100%" stopColor={background} stopOpacity="1" />
-            </LinearGradient>
-          </Defs>
-          <Rect
-            x={0}
-            y={0}
-            width={width}
-            height={meshHeight}
-            fill={background}
-          />
-          <Rect
-            x={0}
-            y={0}
-            width={width}
-            height={meshHeight}
-            fill="url(#todayPeach)"
-          />
-          <Rect
-            x={0}
-            y={0}
-            width={width}
-            height={meshHeight}
-            fill="url(#todayLavender)"
-          />
-          <Rect
-            x={0}
-            y={0}
-            width={width}
-            height={meshHeight}
-            fill="url(#todaySky)"
-          />
-          <Rect
-            x={0}
-            y={0}
-            width={width}
-            height={meshHeight}
-            fill="url(#todayFade)"
-          />
-        </Svg>
-      </View>
+      <Svg width={width} height={meshHeight} style={StyleSheet.absoluteFill}>
+        <Defs>
+          <RadialGradient id="todayPeach" cx="10%" cy="-5%" rx="58%" ry="78%">
+            <Stop offset="0%" stopColor={colors[0]} stopOpacity="0.95" />
+            <Stop offset="55%" stopColor={colors[0]} stopOpacity="0.35" />
+            <Stop offset="100%" stopColor={colors[0]} stopOpacity="0" />
+          </RadialGradient>
+          <RadialGradient
+            id="todayLavender"
+            cx="48%"
+            cy="5%"
+            rx="52%"
+            ry="82%"
+          >
+            <Stop offset="0%" stopColor={colors[1]} stopOpacity="0.9" />
+            <Stop offset="50%" stopColor={colors[1]} stopOpacity="0.3" />
+            <Stop offset="100%" stopColor={colors[1]} stopOpacity="0" />
+          </RadialGradient>
+          <RadialGradient id="todaySky" cx="92%" cy="-5%" rx="58%" ry="78%">
+            <Stop offset="0%" stopColor={colors[2]} stopOpacity="0.95" />
+            <Stop offset="55%" stopColor={colors[2]} stopOpacity="0.35" />
+            <Stop offset="100%" stopColor={colors[2]} stopOpacity="0" />
+          </RadialGradient>
+          <LinearGradient id="todayFade" x1="0" y1="0" x2="0" y2="1">
+            <Stop offset="0%" stopColor={background} stopOpacity="0" />
+            <Stop offset="55%" stopColor={background} stopOpacity="0" />
+            <Stop offset="100%" stopColor={background} stopOpacity="0.85" />
+          </LinearGradient>
+        </Defs>
+        <Rect
+          x={0}
+          y={0}
+          width={width}
+          height={meshHeight}
+          fill="url(#todayPeach)"
+        />
+        <Rect
+          x={0}
+          y={0}
+          width={width}
+          height={meshHeight}
+          fill="url(#todayLavender)"
+        />
+        <Rect
+          x={0}
+          y={0}
+          width={width}
+          height={meshHeight}
+          fill="url(#todaySky)"
+        />
+        <Rect
+          x={0}
+          y={0}
+          width={width}
+          height={meshHeight}
+          fill="url(#todayFade)"
+        />
+      </Svg>
     </View>
   );
 }

@@ -1,6 +1,6 @@
+import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { Redirect } from "expo-router";
 import { useCSSVariable } from "uniwind";
 
 import { useAuth } from "@/api/hooks/use-auth";
@@ -13,7 +13,10 @@ export default function Index() {
   const backgroundColor = useCSSVariable("--color-background");
 
   useEffect(() => {
-    const timer = setTimeout(() => setBootTimedOut(true), SESSION_BOOT_TIMEOUT_MS);
+    const timer = setTimeout(
+      () => setBootTimedOut(true),
+      SESSION_BOOT_TIMEOUT_MS,
+    );
     return () => clearTimeout(timer);
   }, []);
 

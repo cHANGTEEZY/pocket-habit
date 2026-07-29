@@ -33,6 +33,8 @@ export default function AppLayout() {
 
   return (
     <NativeTabs
+      minimizeBehavior="onScrollDown"
+      disableTransparentOnScrollEdge
       tintColor={typeof accentColor === "string" ? accentColor : undefined}
       iconColor={
         typeof mutedColor === "string"
@@ -50,16 +52,23 @@ export default function AppLayout() {
             }
           : undefined
       }
-      minimizeBehavior="onScrollDown"
     >
-      <NativeTabs.Trigger name="today">
+      <NativeTabs.Trigger
+        name="today"
+        disableTransparentOnScrollEdge
+        disableAutomaticContentInsets
+      >
         <NativeTabs.Trigger.Label>Today</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf={{ default: "sun.max", selected: "sun.max.fill" }}
           md={{ default: "today", selected: "calendar_today" }}
         />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="habits">
+      <NativeTabs.Trigger
+        name="habits"
+        disableTransparentOnScrollEdge
+        disableAutomaticContentInsets
+      >
         <NativeTabs.Trigger.Label>Habits</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf={{
@@ -69,7 +78,7 @@ export default function AppLayout() {
           md={{ default: "checklist", selected: "checklist" }}
         />
       </NativeTabs.Trigger>
-      <NativeTabs.Trigger name="progress">
+      <NativeTabs.Trigger name="progress" disableTransparentOnScrollEdge>
         <NativeTabs.Trigger.Label>Progress</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
           sf={{ default: "chart.bar", selected: "chart.bar.fill" }}

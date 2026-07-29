@@ -2,7 +2,6 @@ import { View } from "react-native";
 
 import { useTodayHabits } from "@/api";
 import CollapsingLargeHeader from "@/components/layouts/CollapsingLargeHeader";
-import MeshBackground from "@/components/MeshBackground";
 import ProfileButton from "@/components/ProfileButton";
 import { Typography } from "heroui-native/text";
 
@@ -17,8 +16,7 @@ export default function Today() {
   const { data: habits = [], isPending, isError, error } = useTodayHabits();
 
   return (
-    <View className="flex-1 bg-background">
-      <MeshBackground />
+    <View collapsable={false} className="flex-1 bg-background">
       <CollapsingLargeHeader
         title={greeting}
         trailing={

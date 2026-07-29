@@ -47,8 +47,10 @@ const Screen = ({
       style={{ flex: 1, backgroundColor }}
       edges={edges}
       testID={testID}
+      collapsable={false}
     >
       <View
+        collapsable={false}
         className={cn("flex-1 bg-background", className)}
         style={{
           flex: 1,

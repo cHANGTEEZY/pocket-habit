@@ -13,7 +13,6 @@ import {
 } from "@/api";
 import EmptyComponent from "@/components/EmptyComponent";
 import CollapsingLargeHeader from "@/components/layouts/CollapsingLargeHeader";
-import MeshBackground from "@/components/MeshBackground";
 import ProfileButton from "@/components/ProfileButton";
 
 import { ProgressConsistencyCard } from "./components/ProgressConsistencyCard";
@@ -63,8 +62,7 @@ export default function Progress() {
   const showEmptyLibrary = !isLoading && !isError && !hasAnyHabits;
 
   return (
-    <View className="flex-1 bg-background">
-      <MeshBackground />
+    <View collapsable={false} className="flex-1 bg-background">
       <CollapsingLargeHeader
         title="Progress"
         trailing={

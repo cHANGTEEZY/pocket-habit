@@ -1,18 +1,24 @@
 import { BlurTargetView, BlurView } from "expo-blur";
 import { type ReactNode, useRef, useState } from "react";
-import { Platform, StyleSheet, View, type ViewStyle } from "react-native";
+import {
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+  type ViewStyle,
+} from "react-native";
 import { EaseView } from "react-native-ease/uniwind";
 import Animated, {
   Extrapolation,
   interpolate,
-  runOnJS,
-  useAnimatedReaction,
-  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import MeshBackground from "@/components/MeshBackground";
 import { useAppColorScheme } from "@/hooks/use-app-color-scheme";
 
 import { Typography } from "heroui-native/text";
@@ -47,20 +53,14 @@ export default function CollapsingLargeHeader({
   const compactBarHeight = insets.top + COMPACT_BAR_CONTENT_HEIGHT;
   const isDark = scheme === "dark";
 
-  const onScroll = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollY.value = event.contentOffset.y;
-    },
-  });
-
-  useAnimatedReaction(
-    () => scrollY.value >= COMPACT_TITLE_THRESHOLD,
-    (visible, previous) => {
-      if (visible !== previous) {
-        runOnJS(setCompactTitleVisible)(visible);
-      }
-    },
-  );
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const y = event.nativeEvent.contentOffset.y;
+    scrollY.value = y;
+    const nextVisible = y >= COMPACT_TITLE_THRESHOLD;
+    setCompactTitleVisible((prev) =>
+      prev === nextVisible ? prev : nextVisible,
+    );
+  };
 
   const largeTitleStyle = useAnimatedStyle(() => {
     const hidden = scrollY.value >= COMPACT_TITLE_THRESHOLD;
@@ -95,45 +95,75 @@ export default function CollapsingLargeHeader({
     ),
   }));
 
-  return (
-    <View style={styles.root}>
-      {/* Content first so Android BlurView can sample updates (expo-blur known issue). */}
-      <BlurTargetView ref={blurTargetRef} style={styles.scroll}>
-        <Animated.ScrollView
-          style={styles.scroll}
-          contentContainerStyle={[
-            {
-              flexGrow: 1,
-              paddingTop: insets.top + 8,
-              paddingBottom: 32,
-            },
-            contentContainerStyle,
-          ]}
-          onScroll={onScroll}
-          scrollEventThrottle={16}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-        >
-          <Animated.View style={[styles.expandedRow, largeTitleStyle]}>
-            <View style={styles.largeTitleWrap}>
-              <Typography
-                type="h1"
-                weight="semibold"
-                className="text-foreground"
-                accessibilityRole="header"
-              >
-                {title}
-              </Typography>
-            </View>
-            {trailing ? (
-              <View style={styles.trailingSlot}>{trailing}</View>
-            ) : null}
-          </Animated.View>
+  const scrollView = (
+    <ScrollView
+      style={styles.scroll}
+      contentContainerStyle={[
+        {
+          flexGrow: 1,
+          paddingTop: insets.top + 8,
+          paddingBottom: 32,
+        },
+        contentContainerStyle,
+      ]}
+      // NativeTabs otherwise auto-adjusts the first ScrollView (rest y ≈ -insets.top),
+      // which doubles our manual safe-area padding and breaks minimize restore on scroll-up.
+      contentInsetAdjustmentBehavior="never"
+      onScroll={handleScroll}
+      scrollEventThrottle={16}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+    >
+      {/*
+        Mesh lives inside ScrollView content (not a screen-level sibling) so it
+        paints behind title/children without zIndex — keeps NativeTabs minimize.
+      */}
+      <View
+        pointerEvents="none"
+        style={[
+          styles.meshLayer,
+          { top: -(insets.top + 8) },
+        ]}
+      >
+        <MeshBackground embedded />
+      </View>
 
-          {children}
-        </Animated.ScrollView>
-      </BlurTargetView>
+      <Animated.View style={[styles.expandedRow, largeTitleStyle]}>
+        <View style={styles.largeTitleWrap}>
+          <Typography
+            type="h1"
+            weight="semibold"
+            className="text-foreground"
+            accessibilityRole="header"
+          >
+            {title}
+          </Typography>
+        </View>
+        {trailing ? <View style={styles.trailingSlot}>{trailing}</View> : null}
+      </Animated.View>
+
+      {children}
+    </ScrollView>
+  );
+
+  return (
+    <View collapsable={false} style={styles.root}>
+      {/*
+        Plain RN ScrollView so NativeTabs minimizeBehavior can discover it.
+        BlurTargetView only on Android (needed for header blur sampling).
+      */}
+      {Platform.OS === "android" ? (
+        <BlurTargetView
+          collapsable={false}
+          ref={blurTargetRef}
+          style={styles.scroll}
+        >
+          {scrollView}
+        </BlurTargetView>
+      ) : (
+        scrollView
+      )}
 
       <View
         pointerEvents="box-none"
@@ -159,7 +189,6 @@ export default function CollapsingLargeHeader({
               ? {
                   blurTarget: blurTargetRef,
                   blurMethod: ANDROID_BLUR_METHOD,
-                  // Higher = softer blur on Android (intensity is divided by this).
                   blurReductionFactor: 8,
                 }
               : null)}
@@ -201,6 +230,7 @@ export default function CollapsingLargeHeader({
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    // No zIndex — sibling zIndex reordering breaks NativeTabs ScrollView discovery.
     backgroundColor: "transparent",
   },
   sticky: {
@@ -231,6 +261,11 @@ const styles = StyleSheet.create({
   scroll: {
     flex: 1,
     backgroundColor: "transparent",
+  },
+  meshLayer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
   },
   expandedRow: {
     flexDirection: "row",

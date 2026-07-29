@@ -1,14 +1,12 @@
 import { BlurTargetView, BlurView } from "expo-blur";
-import { type ReactNode, useRef } from "react";
-import {
-  Platform,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from "react-native";
+import { type ReactNode, useRef, useState } from "react";
+import { Platform, StyleSheet, View, type ViewStyle } from "react-native";
+import { EaseView } from "react-native-ease/uniwind";
 import Animated, {
   Extrapolation,
   interpolate,
+  runOnJS,
+  useAnimatedReaction,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
@@ -21,6 +19,8 @@ import { Typography } from "heroui-native/text";
 
 const COLLAPSE_DISTANCE = 56;
 const COMPACT_BAR_CONTENT_HEIGHT = 44;
+/** Large title is fully hidden once compact title begins appearing. */
+const COMPACT_TITLE_THRESHOLD = COLLAPSE_DISTANCE * 0.35;
 
 /** Android SDK 55+: real blur requires BlurTargetView + dimezis method. */
 const ANDROID_BLUR_METHOD = "dimezisBlurView" as const;
@@ -42,6 +42,7 @@ export default function CollapsingLargeHeader({
   const scheme = useAppColorScheme();
   const scrollY = useSharedValue(0);
   const blurTargetRef = useRef<View | null>(null);
+  const [compactTitleVisible, setCompactTitleVisible] = useState(false);
 
   const compactBarHeight = insets.top + COMPACT_BAR_CONTENT_HEIGHT;
   const isDark = scheme === "dark";
@@ -52,29 +53,43 @@ export default function CollapsingLargeHeader({
     },
   });
 
-  const largeTitleStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(
-      scrollY.value,
-      [0, COLLAPSE_DISTANCE * 0.7],
-      [1, 0],
-      Extrapolation.CLAMP,
-    ),
-    transform: [
-      {
-        translateY: interpolate(
-          scrollY.value,
-          [0, COLLAPSE_DISTANCE],
-          [0, -10],
-          Extrapolation.CLAMP,
-        ),
-      },
-    ],
-  }));
+  useAnimatedReaction(
+    () => scrollY.value >= COMPACT_TITLE_THRESHOLD,
+    (visible, previous) => {
+      if (visible !== previous) {
+        runOnJS(setCompactTitleVisible)(visible);
+      }
+    },
+  );
+
+  const largeTitleStyle = useAnimatedStyle(() => {
+    const hidden = scrollY.value >= COMPACT_TITLE_THRESHOLD;
+    return {
+      opacity: hidden
+        ? 0
+        : interpolate(
+            scrollY.value,
+            [0, COMPACT_TITLE_THRESHOLD],
+            [1, 0],
+            Extrapolation.CLAMP,
+          ),
+      transform: [
+        {
+          translateY: interpolate(
+            scrollY.value,
+            [0, COMPACT_TITLE_THRESHOLD],
+            [0, -8],
+            Extrapolation.CLAMP,
+          ),
+        },
+      ],
+    };
+  });
 
   const compactChromeStyle = useAnimatedStyle(() => ({
     opacity: interpolate(
       scrollY.value,
-      [COLLAPSE_DISTANCE * 0.35, COLLAPSE_DISTANCE],
+      [COMPACT_TITLE_THRESHOLD, COLLAPSE_DISTANCE],
       [0, 1],
       Extrapolation.CLAMP,
     ),
@@ -153,19 +168,29 @@ export default function CollapsingLargeHeader({
 
         <View style={{ paddingTop: insets.top }} pointerEvents="none">
           <View style={styles.compactRow}>
-            <Animated.View
-              style={[styles.compactTitleWrap, compactChromeStyle]}
+            <EaseView
+              style={styles.compactTitleWrap}
+              animate={{
+                opacity: compactTitleVisible ? 1 : 0,
+                translateY: compactTitleVisible ? 0 : 8,
+              }}
+              transition={{
+                type: "timing",
+                duration: 200,
+                easing: "easeOut",
+              }}
             >
               <Typography
                 type="h4"
                 weight="semibold"
-                className="text-foreground"
-                align="center"
+                className="text-center text-foreground"
                 truncate
+                accessibilityRole="header"
+                style={styles.compactTitleText}
               >
                 {title}
               </Typography>
-            </Animated.View>
+            </EaseView>
           </View>
         </View>
       </View>
@@ -188,13 +213,17 @@ const styles = StyleSheet.create({
   },
   compactRow: {
     height: COMPACT_BAR_CONTENT_HEIGHT,
-    alignItems: "center",
     justifyContent: "center",
   },
   compactTitleWrap: {
+    ...StyleSheet.absoluteFill,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 16,
+    paddingHorizontal: 56,
+  },
+  compactTitleText: {
+    width: "100%",
+    textAlign: "center",
   },
   trailingSlot: {
     marginLeft: 8,

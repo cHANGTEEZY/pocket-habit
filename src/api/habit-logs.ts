@@ -92,10 +92,6 @@ export const habitLogsApi = {
     }
   },
 
-  /**
-   * Mark complete (upsert) or remove the log on uncheck.
-   * Unique (user, habit, date) keeps one row per day.
-   */
   toggle: async (
     habitId: string,
     date: string,

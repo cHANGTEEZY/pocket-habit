@@ -10,7 +10,6 @@ export type HabitsListFilters = {
   query?: string;
 };
 
-/** PocketBase filter for the habits library list. */
 export function buildHabitsListFilter({
   status,
   routine,

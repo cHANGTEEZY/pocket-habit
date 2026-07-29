@@ -40,7 +40,7 @@ export function HabitDayChips({ value, onChange, error }: HabitDayChipsProps) {
       ? accent
       : typeof foreground === "string"
         ? foreground
-        : "#007AFF";
+        : "#8B6FC7";
   const idleBorder = typeof border === "string" ? border : "#3A3A3C";
   const selectedText =
     typeof foreground === "string" ? foreground : "#FFFFFF";

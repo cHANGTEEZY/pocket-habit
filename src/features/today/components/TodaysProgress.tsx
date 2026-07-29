@@ -1,7 +1,7 @@
 import { CalendarSyncIcon, ChevronRightIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
-import { Typography } from "heroui-native";
 import { router } from "expo-router";
+import { Typography } from "heroui-native";
 import { useMemo } from "react";
 import { type ColorValue, View } from "react-native";
 import { useCSSVariable } from "uniwind";
@@ -13,11 +13,10 @@ import { isDueOn } from "@/features/progress/lib/schedule";
 import StatCard from "./StatCard";
 
 const TodaysProgress = () => {
-  const accent = useCSSVariable("--color-accent");
   const border = useCSSVariable("--color-border");
   const muted = useCSSVariable("--color-muted");
 
-  const accentColor = typeof accent === "string" ? accent : "#007AFF";
+  const accentColor = "#8851c2";
   const trackColor = typeof border === "string" ? border : "#E5E5EA";
   const mutedColor =
     typeof muted === "string" ? (muted as ColorValue) : undefined;

@@ -103,7 +103,14 @@ export default function Habits() {
       <MeshBackground />
       <CollapsingLargeHeader
         title="Habits"
-        trailing={<ProfileButton onPress={() => router.push("/settings")} />}
+        trailing={
+          <ProfileButton
+            onPress={() => router.navigate("/(screens)/settings")}
+            size="sm"
+            color="accent"
+            variant="default"
+          />
+        }
         contentContainerStyle={{ paddingBottom: 110 }}
       >
         <View className="gap-4 ">

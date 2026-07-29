@@ -18,7 +18,6 @@ import ProfileButton from "@/components/ProfileButton";
 
 import { ProgressConsistencyCard } from "./components/ProgressConsistencyCard";
 import { ProgressRecentActivity } from "./components/ProgressRecentActivity";
-import { ProgressTodayCard } from "./components/ProgressTodayCard";
 import { ProgressUpNext } from "./components/ProgressUpNext";
 import { ProgressWeekCard } from "./components/ProgressWeekCard";
 import { addDays, startOfLocalDay } from "./lib/schedule";
@@ -101,20 +100,18 @@ export default function Progress() {
             />
           ) : (
             <>
-              <ProgressWeekCard
-                weekDays={stats.weekDays}
-                currentStreak={stats.currentStreak}
-                bestStreak={stats.bestStreak}
-              />
-              <ProgressTodayCard
+              <ProgressWeekCard weekDays={stats.weekDays} />
+              {/* <ProgressTodayCard
                 completed={stats.todayCompleted}
                 total={stats.todayTotal}
                 percent={stats.todayPercent}
-              />
+              /> */}
               <ProgressConsistencyCard
                 percent={stats.consistencyPercent}
                 completed={stats.consistencyCompleted}
                 scheduled={stats.consistencyScheduled}
+                currentStreak={stats.currentStreak}
+                bestStreak={stats.bestStreak}
               />
               <ProgressUpNext items={upNext} />
               <ProgressRecentActivity logs={recentLogs} />

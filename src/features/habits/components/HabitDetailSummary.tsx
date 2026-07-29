@@ -1,11 +1,8 @@
 import { View } from "react-native";
 
-import { Typography } from "heroui-native/text";
-
 import type { Habit } from "@/api/types";
 
 import { FREQUENCIES } from "../data/form-data";
-import { ROUTINE_LABEL } from "../lib/group-by-routine";
 import { normalizeFrequency } from "../lib/habit-form-mapper";
 
 type HabitDetailSummaryProps = {
@@ -33,11 +30,11 @@ function formatStartDate(startDate: string): string {
 export function HabitDetailSummary({ habit }: HabitDetailSummaryProps) {
   return (
     <View className="gap-3">
-      <Typography type="h5" weight="semibold">
+      {/* <Typography type="h5" weight="semibold">
         Details
-      </Typography>
+      </Typography> */}
 
-      <View
+      {/* <View
         className="gap-3 rounded-4xl bg-surface px-4 py-4"
         style={{ borderCurve: "continuous" }}
       >
@@ -91,7 +88,7 @@ export function HabitDetailSummary({ habit }: HabitDetailSummaryProps) {
             </Typography>
           </View>
         ) : null}
-      </View>
+      </View> */}
     </View>
   );
 }

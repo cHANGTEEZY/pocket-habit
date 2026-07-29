@@ -1,11 +1,13 @@
 import { Tick02Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { View } from "react-native";
-import { useCSSVariable } from "uniwind";
 
 import type { HabitLog } from "@/api/types";
 import { toDateKey } from "@/api/habit-logs";
+import ProgressCard from "@/components/ProgressCard";
 import { Typography } from "heroui-native/text";
+
+import { accentTint, CARD_ACCENT } from "../lib/card-colors";
 
 type ProgressRecentActivityProps = {
   logs: HabitLog[];
@@ -39,33 +41,28 @@ function formatTime(value?: string): string | null {
 }
 
 export function ProgressRecentActivity({ logs }: ProgressRecentActivityProps) {
-  const muted = useCSSVariable("--color-muted");
-  const mutedColor = typeof muted === "string" ? muted : "#8A8A8F";
+  const color = CARD_ACCENT.recent;
 
   if (logs.length === 0) {
     return (
-      <View
-        className="gap-2 rounded-4xl bg-surface px-4 py-5"
-        style={{ borderCurve: "continuous" }}
+      <ProgressCard
+        leadingTitle="Recent activity"
+        accentColor={color}
+        contentClassName="gap-1"
       >
-        <Typography type="h5" weight="semibold" className="text-foreground">
-          Recent activity
-        </Typography>
         <Typography type="body-sm" className="text-muted">
           Check off habits on Today and they’ll show up here.
         </Typography>
-      </View>
+      </ProgressCard>
     );
   }
 
   return (
-    <View
-      className="gap-1 rounded-4xl bg-surface px-4 py-5"
-      style={{ borderCurve: "continuous" }}
+    <ProgressCard
+      leadingTitle="Recent activity"
+      accentColor={color}
+      contentClassName="gap-0"
     >
-      <Typography type="h5" weight="semibold" className="mb-2 text-foreground">
-        Recent activity
-      </Typography>
       {logs.map((log) => {
         const name = log.expand?.habit?.name ?? "Habit";
         const day = relativeDayLabel(toDateKey(log.date));
@@ -77,11 +74,14 @@ export function ProgressRecentActivity({ logs }: ProgressRecentActivityProps) {
             className="flex-row items-center gap-3 py-3"
             accessibilityLabel={`${name}, ${day}${time ? `, ${time}` : ""}`}
           >
-            <View className="size-10 items-center justify-center rounded-full bg-surface-secondary">
+            <View
+              className="size-10 items-center justify-center rounded-full"
+              style={{ backgroundColor: accentTint(color) }}
+            >
               <HugeiconsIcon
                 icon={Tick02Icon}
                 size={18}
-                color={mutedColor}
+                color={color}
                 strokeWidth={1.75}
               />
             </View>
@@ -102,6 +102,6 @@ export function ProgressRecentActivity({ logs }: ProgressRecentActivityProps) {
           </View>
         );
       })}
-    </View>
+    </ProgressCard>
   );
 }

@@ -1,31 +1,34 @@
-import { Tick02Icon } from "@hugeicons/core-free-icons";
+import { Tick01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { View } from "react-native";
 import { useCSSVariable } from "uniwind";
 
+import ProgressCard from "@/components/ProgressCard";
 import { Typography } from "heroui-native/text";
 
+import { CARD_ACCENT } from "../lib/card-colors";
 import type { WeekDayStat } from "../lib/stats";
+import { weekCopy } from "../lib/stats";
 
 type ProgressWeekCardProps = {
   weekDays: WeekDayStat[];
-  currentStreak: number;
-  bestStreak: number;
 };
 
-function DayDot({ day }: { day: WeekDayStat }) {
-  const accent = useCSSVariable("--color-accent");
+function DayDot({
+  day,
+  accentColor,
+}: {
+  day: WeekDayStat;
+  accentColor: string;
+}) {
   const border = useCSSVariable("--color-border");
   const muted = useCSSVariable("--color-muted");
   const surface = useCSSVariable("--color-surface-secondary");
-  const accentFg = useCSSVariable("--color-accent-foreground");
 
-  const accentColor = typeof accent === "string" ? accent : "#007AFF";
   const borderColor = typeof border === "string" ? border : "#E5E5EA";
   const mutedColor = typeof muted === "string" ? muted : "#8A8A8F";
   const surfaceColor =
     typeof surface === "string" ? surface : "rgba(128,128,128,0.15)";
-  const checkColor = typeof accentFg === "string" ? accentFg : "#FFFFFF";
 
   let backgroundColor = "transparent";
   let borderWidth = 1.5;
@@ -68,10 +71,10 @@ function DayDot({ day }: { day: WeekDayStat }) {
       >
         {day.status === "done" ? (
           <HugeiconsIcon
-            icon={Tick02Icon}
-            size={16}
-            color={checkColor}
-            strokeWidth={2}
+            icon={Tick01Icon}
+            size={20}
+            color="#FFFFFF"
+            strokeWidth={3}
           />
         ) : day.status === "partial" ? (
           <Typography
@@ -86,58 +89,23 @@ function DayDot({ day }: { day: WeekDayStat }) {
   );
 }
 
-export function ProgressWeekCard({
-  weekDays,
-  currentStreak,
-  bestStreak,
-}: ProgressWeekCardProps) {
-  const accent = useCSSVariable("--color-accent");
-  const accentColor = typeof accent === "string" ? accent : "#007AFF";
+export function ProgressWeekCard({ weekDays }: ProgressWeekCardProps) {
+  const color = CARD_ACCENT.week;
 
   return (
-    <View
-      className="gap-5 rounded-4xl bg-surface px-4 py-5"
-      style={{ borderCurve: "continuous" }}
+    <ProgressCard
+      leadingTitle="This week"
+      accentColor={color}
+      trailingTitle="Mon–Sun"
+      subtitle={weekCopy(weekDays)}
+      separator
+      contentClassName="gap-5"
     >
-      <View className="flex-row items-center justify-between px-1">
-        <Typography type="h5" weight="semibold" className="text-foreground">
-          This week
-        </Typography>
-        <Typography type="body-xs" weight="medium" className="text-muted">
-          Mon–Sun
-        </Typography>
-      </View>
-
       <View className="flex-row">
         {weekDays.map((day) => (
-          <DayDot key={day.dateKey} day={day} />
+          <DayDot key={day.dateKey} day={day} accentColor={color} />
         ))}
       </View>
-
-      <View className="flex-row gap-4 px-1">
-        <View className="flex-1 gap-0.5">
-          <Typography type="h2" weight="semibold" className="text-foreground">
-            {currentStreak}
-          </Typography>
-          <Typography type="body-xs" className="text-muted">
-            Current streak
-          </Typography>
-          <Typography type="body-xs" className="text-muted">
-            days
-          </Typography>
-        </View>
-        <View className="flex-1 gap-0.5">
-          <Typography type="h2" weight="semibold" style={{ color: accentColor }}>
-            {bestStreak}
-          </Typography>
-          <Typography type="body-xs" className="text-muted">
-            Best streak
-          </Typography>
-          <Typography type="body-xs" className="text-muted">
-            days
-          </Typography>
-        </View>
-      </View>
-    </View>
+    </ProgressCard>
   );
 }

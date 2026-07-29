@@ -3,9 +3,8 @@ import { View } from "react-native";
 
 import type { Habit } from "@/api/types";
 
-import { HabitDetailSummary } from "./HabitDetailSummary";
-import HabitForm from "./HabitForm";
 import { habitToFormValues } from "../lib/habit-form-mapper";
+import HabitForm from "./HabitForm";
 
 type HabitEditorProps = {
   habit: Habit;
@@ -22,7 +21,7 @@ export default function HabitEditor({ habit, onSaved }: HabitEditorProps) {
 
   return (
     <View className="gap-6">
-      <HabitDetailSummary habit={habit} />
+      {/* <HabitDetailSummary habit={habit} /> */}
       <HabitForm
         mode="edit"
         habitId={habit.id}

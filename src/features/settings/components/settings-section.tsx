@@ -1,12 +1,11 @@
 import { type ReactNode } from "react";
 import { View } from "react-native";
 
-import { ListGroup } from "heroui-native";
+import { ListGroup } from "heroui-native/list-group";
 import { Typography } from "heroui-native/text";
 
 type SettingsSectionProps = {
   title?: string;
-  /** Supporting hint under the title (e.g. Required / Optional). */
   description?: string;
   children: ReactNode;
   className?: string;
@@ -39,7 +38,7 @@ export function SettingsSection({
           ) : null}
         </View>
       ) : null}
-      <ListGroup className={"overflow-hidden rounded-2xl " + className}>
+      <ListGroup className={"overflow-hidden rounded-4xl " + className}>
         {children}
       </ListGroup>
     </View>

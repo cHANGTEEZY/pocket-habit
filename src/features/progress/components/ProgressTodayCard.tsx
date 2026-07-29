@@ -1,8 +1,9 @@
-import { View } from "react-native";
-import { useCSSVariable } from "uniwind";
-
-import CircularProgress from "@/components/CircularProgress";
 import { Typography } from "heroui-native/text";
+
+import PercentRing from "@/components/PercentRing";
+import ProgressCard from "@/components/ProgressCard";
+
+import { CARD_ACCENT } from "../lib/card-colors";
 
 type ProgressTodayCardProps = {
   completed: number;
@@ -15,39 +16,25 @@ export function ProgressTodayCard({
   total,
   percent,
 }: ProgressTodayCardProps) {
-  const accent = useCSSVariable("--color-accent");
-  const border = useCSSVariable("--color-border");
-  const progressColor = typeof accent === "string" ? accent : "#007AFF";
-  const trackColor = typeof border === "string" ? border : "#E5E5EA";
+  const color = CARD_ACCENT.today;
 
   return (
-    <View
-      className="items-center gap-4 rounded-4xl bg-surface px-5 py-6"
-      style={{ borderCurve: "continuous" }}
-      accessibilityRole="summary"
+    <ProgressCard
+      leadingTitle="Today"
+      accentColor={color}
+      contentClassName="items-center gap-3"
       accessibilityLabel={`${completed} of ${total} habits completed today, ${percent} percent`}
     >
-      <Typography type="body-sm" weight="medium" className="text-muted">
-        Today
-      </Typography>
-      <CircularProgress
+      <PercentRing
         value={percent}
-        size={128}
-        strokeWidth={10}
-        progressColor={progressColor}
-        trackColor={trackColor}
-      >
-        <View className="items-center">
-          <Typography type="h1" weight="semibold" className="text-foreground">
-            {percent}%
-          </Typography>
-        </View>
-      </CircularProgress>
-      <Typography type="body" className="text-muted">
+        progressColor={color}
+        accessibilityLabel={`${percent} percent complete today`}
+      />
+      <Typography type="body-sm" className="text-center text-muted">
         {total === 0
           ? "Nothing scheduled today"
           : `${completed} of ${total} done`}
       </Typography>
-    </View>
+    </ProgressCard>
   );
 }

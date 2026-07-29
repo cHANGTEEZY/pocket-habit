@@ -1,65 +1,128 @@
 import { View } from "react-native";
 import { useCSSVariable } from "uniwind";
 
-import CircularProgress from "@/components/CircularProgress";
+import PercentRing from "@/components/PercentRing";
+import ProgressCard from "@/components/ProgressCard";
 import { Typography } from "heroui-native/text";
 
+import { CARD_ACCENT } from "../lib/card-colors";
 import { momentumCopy } from "../lib/stats";
 
 type ProgressConsistencyCardProps = {
   percent: number;
   completed: number;
   scheduled: number;
+  currentStreak: number;
+  bestStreak: number;
 };
+
+function StreakColumn({
+  label,
+  value,
+  unit,
+  accent,
+  muted = false,
+}: {
+  label: string;
+  value: number;
+  unit: string;
+  accent: string;
+  muted?: boolean;
+}) {
+  const themeMuted = useCSSVariable("--color-muted");
+  const dotColor = muted
+    ? typeof themeMuted === "string"
+      ? themeMuted
+      : "#8A8A8F"
+    : accent;
+
+  return (
+    <View className="flex-1">
+      <View className="flex-row items-center gap-1.5">
+        <View
+          className="size-2.5 rounded-full"
+          style={{ backgroundColor: dotColor }}
+        />
+        <Typography
+          type="body-sm"
+          weight="semibold"
+          className={muted ? "text-muted" : undefined}
+          style={muted ? undefined : { color: accent }}
+        >
+          {label}
+        </Typography>
+      </View>
+      <View className="flex-row items-baseline gap-1">
+        <Typography
+          type="h2"
+          weight="semibold"
+          className={muted ? "text-muted" : undefined}
+          style={muted ? undefined : { color: accent }}
+        >
+          {value}
+        </Typography>
+        <Typography
+          type="body-sm"
+          weight="semibold"
+          className={muted ? "text-muted" : undefined}
+          style={muted ? undefined : { color: accent, opacity: 0.85 }}
+        >
+          {unit}
+        </Typography>
+      </View>
+    </View>
+  );
+}
 
 export function ProgressConsistencyCard({
   percent,
   completed,
   scheduled,
+  currentStreak,
+  bestStreak,
 }: ProgressConsistencyCardProps) {
-  const accent = useCSSVariable("--color-accent");
-  const border = useCSSVariable("--color-border");
-  const progressColor = typeof accent === "string" ? accent : "#007AFF";
-  const trackColor = typeof border === "string" ? border : "#E5E5EA";
+  const color = CARD_ACCENT.consistency;
 
   return (
-    <View
-      className="gap-4 rounded-4xl bg-surface px-4 py-5"
-      style={{ borderCurve: "continuous" }}
-      accessibilityRole="summary"
-      accessibilityLabel={`${percent} percent consistency over the last 30 days`}
+    <ProgressCard
+      leadingTitle="Consistency"
+      accentColor={color}
+      trailingTitle="Last 30 days"
+      subtitle={momentumCopy(percent)}
+      contentClassName="gap-3"
+      separator={true}
+      accessibilityLabel={`${percent} percent consistency over the last 30 days. 
+      ${momentumCopy(percent)}. Current streak ${currentStreak} ${currentStreak > 1 ? "days" : "day"}, 
+      best streak ${bestStreak} ${bestStreak > 1 ? "days" : "day"}.`}
     >
-      <Typography type="h5" weight="semibold" className="text-foreground">
-        Consistency
-      </Typography>
+      <View className="flex-row gap-6 mb-3">
+        <StreakColumn
+          label="Current streak"
+          value={currentStreak}
+          unit={currentStreak > 1 ? "days" : "day"}
+          accent={color}
+        />
+        <StreakColumn
+          label="Best streak"
+          value={bestStreak}
+          unit={bestStreak > 1 ? "days" : "day"}
+          accent={color}
+          muted
+        />
+      </View>
 
-      <View className="items-center gap-3 py-2">
-        <CircularProgress
+      <View className="items-center gap-3 pt-1">
+        <PercentRing
           value={percent}
-          size={112}
-          strokeWidth={9}
-          progressColor={progressColor}
-          trackColor={trackColor}
-        >
-          <Typography type="h2" weight="semibold" className="text-foreground">
-            {percent}%
-          </Typography>
-        </CircularProgress>
-        <Typography type="body-sm" className="text-muted">
+          progressColor={color}
+          accessibilityLabel={`${percent} percent consistency`}
+        />
+        <Typography type="body-sm" className="text-center text-muted">
           {scheduled === 0
             ? "No scheduled habits in the last 30 days"
             : `${completed} of ${scheduled} scheduled check-ins`}
         </Typography>
       </View>
-
-      <View
-        className="rounded-2xl bg-accent/10 px-3.5 py-3"
-        style={{ borderCurve: "continuous" }}
-      >
-        <Typography type="body-sm" className="text-center text-foreground">
-          {momentumCopy(percent)}
-        </Typography>
-      </View>
-    </View>
+    </ProgressCard>
   );
 }

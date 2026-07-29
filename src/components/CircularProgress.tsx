@@ -35,7 +35,7 @@ export default function CircularProgress({
 
   const progressColor =
     progressColorProp ??
-    (typeof accent === "string" ? accent : "#007AFF");
+    (typeof accent === "string" ? accent : "#8B6FC7");
   const trackColor =
     trackColorProp ?? (typeof border === "string" ? border : "#E5E5EA");
 

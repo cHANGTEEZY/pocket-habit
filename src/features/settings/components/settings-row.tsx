@@ -15,11 +15,8 @@ type SettingsRowProps = {
   icon?: IconData;
   iconBackground?: string;
   iconColor?: string;
-  /** Leading content when not using the colored icon tile (e.g. avatar). */
   leading?: ReactNode;
-  /** Override trailing content. Pass `null` to hide the chevron. */
   trailing?: ReactNode | null;
-  /** Use an external-link arrow instead of the chevron. */
   external?: boolean;
   onPress?: () => void;
 };
@@ -65,7 +62,7 @@ export function SettingsRow({
   }
 
   return (
-    <PressableFeedback animation={false} onPress={onPress}>
+    <PressableFeedback animation={false} onPress={onPress} className="px-1">
       <PressableFeedback.Scale>
         <ListGroup.Item disabled>
           {prefix ? (

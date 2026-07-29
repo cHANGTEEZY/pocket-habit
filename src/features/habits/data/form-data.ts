@@ -52,7 +52,7 @@ export const FREQUENCIES = [
     title: "Weekly",
     description: "Pick specific days",
     icon: Calendar03Icon,
-    iconBackground: "#007AFF",
+    iconBackground: "#8B6FC7",
   },
   {
     value: "monthly" as const,

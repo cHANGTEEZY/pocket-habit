@@ -66,7 +66,7 @@ export function HabitDateTimePickerRow({
   const foreground = useCSSVariable("--color-foreground");
   const border = useCSSVariable("--color-border");
 
-  const accentColor = typeof accent === "string" ? accent : "#007AFF";
+  const accentColor = typeof accent === "string" ? accent : "#8B6FC7";
   const mutedColor = typeof muted === "string" ? muted : "#8A8A8F";
   const selectedText =
     typeof foreground === "string" ? foreground : "#FFFFFF";

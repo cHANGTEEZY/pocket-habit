@@ -1,5 +1,5 @@
-import type { Habit, HabitLog } from "@/api/types";
 import { toDateKey } from "@/api/habit-logs";
+import type { Habit, HabitLog } from "@/api/types";
 
 import {
   addDays,
@@ -62,7 +62,7 @@ function mondayOfWeek(now: Date): Date {
   return addDays(day, -offset);
 }
 
-const WEEK_LABELS = ["M", "T", "W", "T", "F", "S", "S"] as const;
+const WEEK_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const;
 
 function dayStatus(
   rate: number,
@@ -243,6 +243,51 @@ export function momentumCopy(percent: number): string {
     return "Every check-in counts. Start with one habit today.";
   }
   return "Complete habits on Today to build your consistency picture.";
+}
+
+export function weekCopy(weekDays: WeekDayStat[], now = new Date()): string {
+  const todayKey = toDateKey(now);
+  const daysWithProgress = weekDays.filter((d) => d.completed > 0).length;
+  const perfectDays = weekDays.filter((d) => d.status === "done").length;
+  const today = weekDays.find((d) => d.dateKey === todayKey);
+
+  if (daysWithProgress === 0) {
+    return "Check off habits on Today to start filling in your week.";
+  }
+
+  if (
+    today &&
+    today.scheduled > 0 &&
+    today.completed < today.scheduled &&
+    today.dateKey <= todayKey
+  ) {
+    const left = today.scheduled - today.completed;
+    const dayLabel =
+      daysWithProgress === 1 ? "1 day active" : `${daysWithProgress} days active`;
+    if (left === 1) {
+      return `${dayLabel} this week — one habit left today.`;
+    }
+    return `${dayLabel} this week — ${left} habits left today.`;
+  }
+
+  if (perfectDays > 0) {
+    const label = perfectDays === 1 ? "1 perfect day" : `${perfectDays} perfect days`;
+    return `${label} so far this week.`;
+  }
+
+  const label =
+    daysWithProgress === 1 ? "1 day with progress" : `${daysWithProgress} days with progress`;
+  return `${label} this week.`;
+}
+
+export function upNextCopy(items: UpNextItem[]): string {
+  if (items.length === 0) {
+    return "Nothing scheduled ahead — you’re caught up for now.";
+  }
+  if (items.length === 1) {
+    return "One habit on deck — tap through on Today when it’s due.";
+  }
+  return `${items.length} habits coming up on your schedule.`;
 }
 
 export function addDaysSafe(date: Date, days: number): Date {

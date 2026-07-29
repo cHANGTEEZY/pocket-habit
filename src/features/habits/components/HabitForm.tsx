@@ -50,7 +50,7 @@ type HabitFormProps = {
 
 function SelectedCheck() {
   const accent = useCSSVariable("--color-accent");
-  const color = typeof accent === "string" ? accent : "#007AFF";
+  const color = typeof accent === "string" ? accent : "#8B6FC7";
   return (
     <HugeiconsIcon
       icon={CheckmarkCircle02Icon}

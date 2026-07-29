@@ -29,7 +29,7 @@ const HabitFilterPills = ({
   const accentForeground = useCSSVariable("--color-accent-foreground");
   const muted = useCSSVariable("--color-muted");
 
-  const accentColor = typeof accent === "string" ? accent : "#007AFF";
+  const accentColor = typeof accent === "string" ? accent : "#8B6FC7";
   const accentTextColor =
     typeof accentForeground === "string" ? accentForeground : "#FFFFFF";
   const mutedColor = typeof muted === "string" ? muted : "#8A8A8F";

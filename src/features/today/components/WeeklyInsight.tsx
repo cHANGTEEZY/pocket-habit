@@ -2,11 +2,7 @@ import { ChartBarIncreasingIcon } from "@hugeicons/core-free-icons";
 import { useMemo } from "react";
 import { useCSSVariable } from "uniwind";
 
-import {
-  toDateKey,
-  useHabitLogsInRange,
-  useHabits,
-} from "@/api";
+import { toDateKey, useHabitLogsInRange, useHabits } from "@/api";
 import { addDays, startOfLocalDay } from "@/features/progress/lib/schedule";
 import { computeProgressStats } from "@/features/progress/lib/stats";
 
@@ -14,9 +10,7 @@ import StatCard from "./StatCard";
 import WeeklyBars, { type WeeklyBar } from "./WeeklyBars";
 
 const WeeklyInsight = () => {
-  const accent = useCSSVariable("--color-accent");
   const border = useCSSVariable("--color-border");
-  const accentColor = typeof accent === "string" ? accent : "#007AFF";
   const inactiveColor = typeof border === "string" ? border : "#e5e5ea";
 
   const range = useMemo(() => {
@@ -46,22 +40,22 @@ const WeeklyInsight = () => {
     active: day.dateKey === todayKey,
   }));
 
-  const daysCompleted = stats.weekDays.filter(
-    (day) => day.status === "done",
+  const daysWithProgress = stats.weekDays.filter(
+    (day) => day.completed > 0,
   ).length;
 
   return (
     <StatCard
       title="Week"
       icon={ChartBarIncreasingIcon}
-      accentColor={accentColor}
-      value={daysCompleted}
+      accentColor={"#db6237"}
+      value={daysWithProgress}
       unit="of 7 days"
-      accessibilityLabel={`${daysCompleted} of 7 days with full habit completion`}
+      accessibilityLabel={`${daysWithProgress} of 7 days with at least one habit completed`}
       graphic={
         <WeeklyBars
           bars={bars}
-          activeColor={accentColor}
+          activeColor={"#db6237"}
           inactiveColor={inactiveColor}
         />
       }

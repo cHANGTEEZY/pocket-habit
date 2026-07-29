@@ -167,7 +167,7 @@ export default function Settings() {
             <SettingsRow
               title="Contact Support"
               icon={Mail01Icon}
-              iconBackground="#007AFF"
+              iconBackground="#8B6FC7"
               onPress={openSupport}
               external
             />

@@ -3,8 +3,6 @@
   <img src="assets/icons/bloom-logo-dark.svg#gh-dark-mode-only" alt="Bloom" width="320" />
 </p>
 
-<h1 align="center">Bloom</h1>
-
 <p align="center">
   A calm, premium habit &amp; routine tracker for iOS and Android — built with Expo and PocketBase.
 </p>
@@ -76,13 +74,13 @@ Design north star: **Calm Focus** — the task is the hero, chrome stays quiet, 
 
 ## Screens & navigation
 
-| Tab / area | Route | Description |
-|------------|-------|-------------|
-| **Today** | `/(app)/today` | Daily checklist + stat cards |
-| **Habits** | `/(app)/habits` | Habit library, search, filters |
-| **Progress** | `/(app)/progress` | Streaks, rings, up-next, history |
-| **Settings** | `/(screens)/settings` | Profile, appearance, account |
-| **Sign in** | `/(auth)/sign-in` | Auth entry |
+| Tab / area   | Route                 | Description                      |
+| ------------ | --------------------- | -------------------------------- |
+| **Today**    | `/(app)/today`        | Daily checklist + stat cards     |
+| **Habits**   | `/(app)/habits`       | Habit library, search, filters   |
+| **Progress** | `/(app)/progress`     | Streaks, rings, up-next, history |
+| **Settings** | `/(screens)/settings` | Profile, appearance, account     |
+| **Sign in**  | `/(auth)/sign-in`     | Auth entry                       |
 
 Native tab bar uses SF Symbols on iOS and Material icons on Android.
 
@@ -90,16 +88,16 @@ Native tab bar uses SF Symbols on iOS and Material icons on Android.
 
 ## Tech stack
 
-| Layer | Technology |
-|-------|------------|
-| **Framework** | [Expo SDK 57](https://docs.expo.dev/) + [Expo Router 7](https://docs.expo.dev/router/introduction/) |
-| **UI** | React Native 0.86, [HeroUI Native](https://heroui.com/docs/native), [Uniwind](https://docs.uniwind.dev/) (Tailwind v4) |
-| **Icons** | [Hugeicons](https://hugeicons.com/) (free set) |
-| **Forms** | [TanStack Form](https://tanstack.com/form) + [Zod](https://zod.dev/) |
-| **Data fetching** | [TanStack Query](https://tanstack.com/query) |
-| **Backend** | [PocketBase](https://pocketbase.io/) (self-hosted) |
-| **Animation** | [Reanimated 4](https://docs.swmansion.com/react-native-reanimated/), [react-native-ease](https://github.com/appandflow/react-native-ease) |
-| **Lists / sheets** | FlashList, Gorhom Bottom Sheet |
+| Layer              | Technology                                                                                                                                |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Framework**      | [Expo SDK 57](https://docs.expo.dev/) + [Expo Router 7](https://docs.expo.dev/router/introduction/)                                       |
+| **UI**             | React Native 0.86, [HeroUI Native](https://heroui.com/docs/native), [Uniwind](https://docs.uniwind.dev/) (Tailwind v4)                    |
+| **Icons**          | [Hugeicons](https://hugeicons.com/) (free set)                                                                                            |
+| **Forms**          | [TanStack Form](https://tanstack.com/form) + [Zod](https://zod.dev/)                                                                      |
+| **Data fetching**  | [TanStack Query](https://tanstack.com/query)                                                                                              |
+| **Backend**        | [PocketBase](https://pocketbase.io/) (self-hosted)                                                                                        |
+| **Animation**      | [Reanimated 4](https://docs.swmansion.com/react-native-reanimated/), [react-native-ease](https://github.com/appandflow/react-native-ease) |
+| **Lists / sheets** | FlashList, Gorhom Bottom Sheet                                                                                                            |
 
 ---
 
@@ -138,10 +136,10 @@ flowchart TB
 
 **Data model (summary)**
 
-| Collection | Purpose |
-|------------|---------|
-| `users` | Auth + profile (`name`, `email`, `bio`, …) |
-| `Habits` | Habit definitions — schedule, routine, reminders |
+| Collection   | Purpose                                                                  |
+| ------------ | ------------------------------------------------------------------------ |
+| `users`      | Auth + profile (`name`, `email`, `bio`, …)                               |
+| `Habits`     | Habit definitions — schedule, routine, reminders                         |
 | `habit_logs` | Daily completions (`user`, `habit`, `date`, `completed`, `completed_at`) |
 
 Schedule logic (daily / weekly / monthly) lives in [`src/features/progress/lib/schedule.ts`](src/features/progress/lib/schedule.ts) and mirrors the PocketBase “due today” filter.
@@ -184,17 +182,17 @@ Copy the example env file and adjust if needed:
 cp .env.example .env.local
 ```
 
-| Variable | Description |
-|----------|-------------|
+| Variable                     | Description                                                                                                                                    |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | `EXPO_PUBLIC_POCKETBASE_URL` | PocketBase base URL (no trailing slash). Default `http://127.0.0.1:8090` — the app rewrites loopback to your Metro LAN IP on physical devices. |
 
 Optional seed credentials (for `npm run pocketbase:seed`):
 
-| Variable | Description |
-|----------|-------------|
-| `SEED_EMAIL` | Seed user email |
-| `SEED_PASSWORD` | Seed user password |
-| `SEED_NAME` | Seed user display name |
+| Variable        | Description            |
+| --------------- | ---------------------- |
+| `SEED_EMAIL`    | Seed user email        |
+| `SEED_PASSWORD` | Seed user password     |
+| `SEED_NAME`     | Seed user display name |
 
 > Restart Metro after changing env vars: `npx expo start --clear`
 
@@ -233,16 +231,16 @@ npm run pocketbase:seed
 
 ## Available scripts
 
-| Script | Description |
-|--------|-------------|
-| `npm start` | Start Expo dev server |
-| `npm run ios` | Run on iOS |
-| `npm run android` | Run on Android |
-| `npm run web` | Run in web browser |
-| `npm run lint` | ESLint |
-| `npm run pocketbase` | Start PocketBase on port 8090 |
-| `npm run pocketbase:setup` | Download PocketBase binary |
-| `npm run pocketbase:seed` | Seed demo user + habits |
+| Script                     | Description                   |
+| -------------------------- | ----------------------------- |
+| `npm start`                | Start Expo dev server         |
+| `npm run ios`              | Run on iOS                    |
+| `npm run android`          | Run on Android                |
+| `npm run web`              | Run in web browser            |
+| `npm run lint`             | ESLint                        |
+| `npm run pocketbase`       | Start PocketBase on port 8090 |
+| `npm run pocketbase:setup` | Download PocketBase binary    |
+| `npm run pocketbase:seed`  | Seed demo user + habits       |
 
 ---
 
@@ -289,16 +287,16 @@ import { BloomDoodle, HabitDoodle } from "@/assets/icons";
 
 The wordmark is the [`BloomDoodle`](assets/icons/BloomDoodle.tsx) component — a React Native SVG used in-app and exported as static SVGs for docs. README uses GitHub’s [`#gh-light-mode-only` / `#gh-dark-mode-only`](https://github.blog/changelog/2021-11-24-specify-theme-context-for-images-in-markdown/) fragments so the ink stays visible in both themes.
 
-| Asset | Path | Use |
-|-------|------|-----|
-| **Bloom wordmark (light bg)** | `assets/icons/bloom-logo.svg` | README / marketing — Ink fill |
-| **Bloom wordmark (dark bg)** | `assets/icons/bloom-logo-dark.svg` | README / marketing — Snow fill |
-| **BloomDoodle (RN)** | `assets/icons/BloomDoodle.tsx` | In-app logo (`color` prop) |
-| App icon | `assets/images/icon.png` | Store / launcher icon |
-| Splash | `assets/images/splash-icon.png` | Splash screen |
-| Habits illustration | `assets/images/noun-habits-4735592.png` | Marketing / empty states |
-| Habit doodle (SVG) | `assets/icons/habit-doodle.svg` | Empty state illustration |
-| Habit cycle | `assets/images/icons8-habit-64.png` | UI accent icon |
+| Asset                         | Path                                    | Use                            |
+| ----------------------------- | --------------------------------------- | ------------------------------ |
+| **Bloom wordmark (light bg)** | `assets/icons/bloom-logo.svg`           | README / marketing — Ink fill  |
+| **Bloom wordmark (dark bg)**  | `assets/icons/bloom-logo-dark.svg`      | README / marketing — Snow fill |
+| **BloomDoodle (RN)**          | `assets/icons/BloomDoodle.tsx`          | In-app logo (`color` prop)     |
+| App icon                      | `assets/images/icon.png`                | Store / launcher icon          |
+| Splash                        | `assets/images/splash-icon.png`         | Splash screen                  |
+| Habits illustration           | `assets/images/noun-habits-4735592.png` | Marketing / empty states       |
+| Habit doodle (SVG)            | `assets/icons/habit-doodle.svg`         | Empty state illustration       |
+| Habit cycle                   | `assets/images/icons8-habit-64.png`     | UI accent icon                 |
 
 <p align="center">
   <img src="assets/icons/bloom-logo.svg#gh-light-mode-only" alt="Bloom wordmark" width="240" />
@@ -333,10 +331,10 @@ Before UI work, read [`PRODUCT.md`](PRODUCT.md) and [`DESIGN.md`](DESIGN.md). Ex
 
 ### Habit schedules
 
-| Frequency | Due when |
-|-----------|----------|
-| **Daily** | Every day after `start_date` |
-| **Weekly** | Selected weekdays in `weekly_days` |
+| Frequency   | Due when                                                |
+| ----------- | ------------------------------------------------------- |
+| **Daily**   | Every day after `start_date`                            |
+| **Weekly**  | Selected weekdays in `weekly_days`                      |
 | **Monthly** | Day of month in `monthly_day` (clamped to month length) |
 
 ### Progress metrics

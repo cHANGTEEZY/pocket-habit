@@ -1,5 +1,6 @@
 <p align="center">
-  <img src="assets/icons/bloom-logo.svg" alt="Bloom" width="320" />
+  <img src="assets/icons/bloom-logo.svg#gh-light-mode-only" alt="Bloom" width="320" />
+  <img src="assets/icons/bloom-logo-dark.svg#gh-dark-mode-only" alt="Bloom" width="320" />
 </p>
 
 <h1 align="center">Bloom</h1>
@@ -286,12 +287,13 @@ import { AppIcon, HabitsIcon, HabitCycleIcon } from "@/assets/images";
 import { BloomDoodle, HabitDoodle } from "@/assets/icons";
 ```
 
-The wordmark is the [`BloomDoodle`](assets/icons/BloomDoodle.tsx) component — a React Native SVG used in-app and exported as [`bloom-logo.svg`](assets/icons/bloom-logo.svg) for docs.
+The wordmark is the [`BloomDoodle`](assets/icons/BloomDoodle.tsx) component — a React Native SVG used in-app and exported as static SVGs for docs. README uses GitHub’s [`#gh-light-mode-only` / `#gh-dark-mode-only`](https://github.blog/changelog/2021-11-24-specify-theme-context-for-images-in-markdown/) fragments so the ink stays visible in both themes.
 
 | Asset | Path | Use |
 |-------|------|-----|
-| **Bloom wordmark** | `assets/icons/bloom-logo.svg` | README / marketing (from `BloomDoodle.tsx`) |
-| **BloomDoodle (RN)** | `assets/icons/BloomDoodle.tsx` | In-app logo component |
+| **Bloom wordmark (light bg)** | `assets/icons/bloom-logo.svg` | README / marketing — Ink fill |
+| **Bloom wordmark (dark bg)** | `assets/icons/bloom-logo-dark.svg` | README / marketing — Snow fill |
+| **BloomDoodle (RN)** | `assets/icons/BloomDoodle.tsx` | In-app logo (`color` prop) |
 | App icon | `assets/images/icon.png` | Store / launcher icon |
 | Splash | `assets/images/splash-icon.png` | Splash screen |
 | Habits illustration | `assets/images/noun-habits-4735592.png` | Marketing / empty states |
@@ -299,7 +301,8 @@ The wordmark is the [`BloomDoodle`](assets/icons/BloomDoodle.tsx) component — 
 | Habit cycle | `assets/images/icons8-habit-64.png` | UI accent icon |
 
 <p align="center">
-  <img src="assets/icons/bloom-logo.svg" alt="Bloom wordmark" width="240" />
+  <img src="assets/icons/bloom-logo.svg#gh-light-mode-only" alt="Bloom wordmark" width="240" />
+  <img src="assets/icons/bloom-logo-dark.svg#gh-dark-mode-only" alt="Bloom wordmark" width="240" />
   &nbsp;&nbsp;&nbsp;
   <img src="assets/icons/habit-doodle.svg" alt="Habit doodle" width="96" />
 </p>
@@ -384,7 +387,8 @@ This project is licensed under the **MIT License** — see [LICENSE](LICENSE).
 ---
 
 <p align="center">
-  <img src="assets/icons/bloom-logo.svg" alt="Bloom" width="160" />
+  <img src="assets/icons/bloom-logo.svg#gh-light-mode-only" alt="Bloom" width="160" />
+  <img src="assets/icons/bloom-logo-dark.svg#gh-dark-mode-only" alt="Bloom" width="160" />
   <br />
   <sub>Built with Expo · PocketBase · HeroUI Native</sub>
 </p>

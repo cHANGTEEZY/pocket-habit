@@ -1,6 +1,7 @@
-import { Pressable } from "react-native";
+import { Pressable, View } from "react-native";
 
 import { useSession } from "@/api";
+import { Image } from "expo-image";
 import {
   Avatar,
   type AvatarColor,
@@ -18,6 +19,7 @@ type ProfileButtonProps = {
   size?: ProfileButtonSize;
   color?: AvatarColor;
   variant?: AvatarVariant;
+  imageUri?: string | null;
   onPress?: () => void;
 };
 
@@ -57,6 +59,7 @@ export default function ProfileButton({
   size = "sm",
   color = "accent",
   variant = "default",
+  imageUri,
   onPress,
 }: ProfileButtonProps) {
   const { session } = useSession();
@@ -84,24 +87,38 @@ export default function ProfileButton({
         onPress?.();
       }}
     >
-      <Avatar
-        size={avatarSize}
-        color={color}
-        variant={variant}
-        className={rootClasses || undefined}
-      >
-        {initials ? (
-          <Avatar.Fallback
-            classNames={{
-              text: fallbackTextClasses || undefined,
-            }}
-          >
-            {initials}
-          </Avatar.Fallback>
-        ) : (
-          <Avatar.Fallback />
-        )}
-      </Avatar>
+      {imageUri ? (
+        <View
+          className={`overflow-hidden rounded-full ${rootClasses}`}
+          style={{ borderCurve: "continuous" }}
+        >
+          <Image
+            source={{ uri: imageUri }}
+            style={{ width: "100%", height: "100%" }}
+            contentFit="cover"
+            transition={150}
+          />
+        </View>
+      ) : (
+        <Avatar
+          size={avatarSize}
+          color={color}
+          variant={variant}
+          className={rootClasses || undefined}
+        >
+          {initials ? (
+            <Avatar.Fallback
+              classNames={{
+                text: fallbackTextClasses || undefined,
+              }}
+            >
+              {initials}
+            </Avatar.Fallback>
+          ) : (
+            <Avatar.Fallback />
+          )}
+        </Avatar>
+      )}
     </Pressable>
   );
 }

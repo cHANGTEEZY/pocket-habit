@@ -1,57 +1,58 @@
-import { type ComponentProps, type ReactNode } from "react";
-import { Pressable, View } from "react-native";
+import { type ReactNode } from "react";
+import {
+  ActionSheetIOS,
+  Alert,
+  Platform,
+  Pressable,
+  View,
+} from "react-native";
 import { useCSSVariable } from "uniwind";
 
-import { AiImageIcon, Camera01Icon } from "@hugeicons/core-free-icons";
+import { AiImageIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
-import { Popover, PressableFeedback } from "heroui-native";
-import { Typography } from "heroui-native/text";
-
-type IconData = ComponentProps<typeof HugeiconsIcon>["icon"];
-
-type ProfileAvatarMenuItemProps = {
-  icon: IconData;
-  label: string;
-  onPress: () => void;
-  iconColor: string;
-};
-
-function ProfileAvatarMenuItem({
-  icon,
-  label,
-  onPress,
-  iconColor,
-}: ProfileAvatarMenuItemProps) {
-  return (
-    <PressableFeedback
-      animation={false}
-      accessibilityRole="button"
-      accessibilityLabel={label}
-      onPress={onPress}
-      className="rounded-lg"
-    >
-      <PressableFeedback.Scale className="flex-row items-center gap-2 px-3.5 py-2.5">
-        <HugeiconsIcon icon={icon} size={22} color={iconColor} />
-        <Typography type="body-sm" weight="medium">
-          {label}
-        </Typography>
-      </PressableFeedback.Scale>
-      <PressableFeedback.Ripple
-        animation={{
-          backgroundColor: { value: "#e0e7ff" },
-          opacity: { value: [0.2, 0.2, 0] },
-          progress: { baseDuration: 240 },
-        }}
-      />
-    </PressableFeedback>
-  );
-}
 
 type ProfileAvatarPickerProps = {
-  onTakePhoto?: () => void;
-  onChooseFromLibrary?: () => void;
+  onTakePhoto?: () => void | Promise<void>;
+  onChooseFromLibrary?: () => void | Promise<void>;
   children: ReactNode;
 };
+
+function runPickerAction(action?: () => void | Promise<void>) {
+  if (!action) return;
+
+  // Defer until after the action sheet / alert has fully dismissed.
+  setTimeout(() => {
+    void action();
+  }, Platform.OS === "ios" ? 350 : 100);
+}
+
+function showAvatarPickerOptions(
+  onTakePhoto?: () => void | Promise<void>,
+  onChooseFromLibrary?: () => void | Promise<void>,
+) {
+  if (Platform.OS === "ios") {
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        options: ["Cancel", "Take a photo", "Choose from library"],
+        cancelButtonIndex: 0,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 1) runPickerAction(onTakePhoto);
+        if (buttonIndex === 2) runPickerAction(onChooseFromLibrary);
+      },
+    );
+    return;
+  }
+
+  Alert.alert("Change profile picture", undefined, [
+    { text: "Take a photo", onPress: () => runPickerAction(onTakePhoto) },
+    {
+      text: "Choose from library",
+      onPress: () => runPickerAction(onChooseFromLibrary),
+    },
+    { text: "Cancel", style: "cancel" },
+  ]);
+}
 
 export function ProfileAvatarPicker({
   onTakePhoto,
@@ -67,44 +68,16 @@ export function ProfileAvatarPicker({
       <View className="relative size-20">
         {children}
         <View className="absolute -bottom-1 -right-1 z-10">
-          <Popover>
-            <Popover.Trigger asChild>
-              <Pressable
-                accessibilityLabel="Change profile picture"
-                accessibilityRole="button"
-                hitSlop={8}
-                className="size-8 items-center justify-center rounded-full bg-background"
-                style={{ borderCurve: "continuous" }}
-              >
-                <HugeiconsIcon
-                  icon={AiImageIcon}
-                  size={22}
-                  color={foreground}
-                />
-              </Pressable>
-            </Popover.Trigger>
-            <Popover.Portal>
-              <Popover.Overlay />
-              <Popover.Content
-                presentation="popover"
-                placement="bottom"
-                className="min-w-56 gap-1 rounded-xl p-1.5"
-              >
-                <ProfileAvatarMenuItem
-                  icon={Camera01Icon}
-                  label="Take a photo"
-                  iconColor={foreground}
-                  onPress={() => onTakePhoto?.()}
-                />
-                <ProfileAvatarMenuItem
-                  icon={AiImageIcon}
-                  label="Choose from library"
-                  iconColor={foreground}
-                  onPress={() => onChooseFromLibrary?.()}
-                />
-              </Popover.Content>
-            </Popover.Portal>
-          </Popover>
+          <Pressable
+            accessibilityLabel="Change profile picture"
+            accessibilityRole="button"
+            hitSlop={8}
+            onPress={() => showAvatarPickerOptions(onTakePhoto, onChooseFromLibrary)}
+            className="size-8 items-center justify-center rounded-full bg-background"
+            style={{ borderCurve: "continuous" }}
+          >
+            <HugeiconsIcon icon={AiImageIcon} size={22} color={foreground} />
+          </Pressable>
         </View>
       </View>
     </View>

@@ -7,9 +7,11 @@ import ProfileButton from "@/components/ProfileButton";
 import { ProfileAvatarPicker } from "../components/profile-avatar-picker";
 import ProfileForm, { useProfileForm } from "../components/profile-form";
 import { ProfileSaveButton } from "../components/profile-save-button";
+import { useProfileAvatarPicker } from "../hooks/use-profile-avatar-picker";
 
 export default function EditProfile() {
   const form = useProfileForm();
+  const { avatar, pickFromLibrary, takePhoto } = useProfileAvatarPicker();
 
   return (
     <View className="flex-1 bg-background">
@@ -34,10 +36,10 @@ export default function EditProfile() {
       >
         <View className="my-5">
           <ProfileAvatarPicker
-            onTakePhoto={() => console.log("take photo")}
-            onChooseFromLibrary={() => console.log("choose from library")}
+            onTakePhoto={takePhoto}
+            onChooseFromLibrary={pickFromLibrary}
           >
-            <ProfileButton size="xlg" />
+            <ProfileButton size="xlg" imageUri={avatar?.uri ?? null} />
           </ProfileAvatarPicker>
         </View>
 

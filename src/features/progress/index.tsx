@@ -11,8 +11,8 @@ import {
   useHasHabits,
   useRecentHabitLogs,
 } from "@/api";
-import CollapsingLargeHeader from "@/components/layouts/CollapsingLargeHeader";
 import EmptyComponent from "@/components/EmptyComponent";
+import CollapsingLargeHeader from "@/components/layouts/CollapsingLargeHeader";
 import MeshBackground from "@/components/MeshBackground";
 import ProfileButton from "@/components/ProfileButton";
 
@@ -59,10 +59,7 @@ export default function Progress() {
     () => computeProgressStats(habits, logs),
     [habits, logs],
   );
-  const upNext = useMemo(
-    () => computeUpNext(habits, logs, 5),
-    [habits, logs],
-  );
+  const upNext = useMemo(() => computeUpNext(habits, logs, 5), [habits, logs]);
 
   const showEmptyLibrary = !isLoading && !isError && !hasAnyHabits;
 
@@ -104,15 +101,15 @@ export default function Progress() {
             />
           ) : (
             <>
-              <ProgressTodayCard
-                completed={stats.todayCompleted}
-                total={stats.todayTotal}
-                percent={stats.todayPercent}
-              />
               <ProgressWeekCard
                 weekDays={stats.weekDays}
                 currentStreak={stats.currentStreak}
                 bestStreak={stats.bestStreak}
+              />
+              <ProgressTodayCard
+                completed={stats.todayCompleted}
+                total={stats.todayTotal}
+                percent={stats.todayPercent}
               />
               <ProgressConsistencyCard
                 percent={stats.consistencyPercent}

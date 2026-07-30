@@ -123,7 +123,10 @@ export function getCurrentUserAvatarUrl(
   if (!record || typeof filename !== "string" || !filename) {
     return null;
   }
-  return pb.files.getURL(record, filename, { thumb });
+  return pb.files.getURL(record, filename, {
+    thumb,
+    token: pb.authStore.token,
+  });
 }
 
 const AVATAR_MIME_TYPES = new Set([

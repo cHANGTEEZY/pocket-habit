@@ -2,8 +2,7 @@ import { useCallback, useState } from "react";
 
 import { useToast } from "heroui-native";
 
-import { updateCurrentUserProfileAvatar } from "@/lib/pocketbase";
-import { formatPocketBaseError } from "@/utils/errors";
+import { useUpdateProfileAvatar } from "@/api";
 import { logger } from "@/utils/logger";
 
 import {
@@ -14,16 +13,17 @@ import {
 
 export function useProfileAvatarPicker() {
   const [avatar, setAvatar] = useState<ProfileAvatarAsset | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
+  const { mutateAsync: updateAvatar, isPending: isUploading } =
+    useUpdateProfileAvatar();
   const { toast } = useToast();
 
   const uploadAvatar = useCallback(
     async (asset: ProfileAvatarAsset) => {
-      setIsUploading(true);
+      // Optimistic local preview while the file uploads.
+      setAvatar(asset);
       try {
-        // Optimistic local preview while the file uploads.
-        setAvatar(asset);
-        await updateCurrentUserProfileAvatar(asset);
+        await updateAvatar(asset);
+        setAvatar(null);
         toast.show({
           variant: "success",
           label: "Avatar updated",
@@ -31,7 +31,8 @@ export function useProfileAvatarPicker() {
         });
       } catch (error) {
         setAvatar(null);
-        const description = formatPocketBaseError(error);
+        const description =
+          error instanceof Error ? error.message : "Upload failed.";
         logger.error("[profile-avatar] upload failed:", description);
         toast.show({
           variant: "danger",
@@ -39,11 +40,9 @@ export function useProfileAvatarPicker() {
           description,
         });
         throw error;
-      } finally {
-        setIsUploading(false);
       }
     },
-    [toast],
+    [toast, updateAvatar],
   );
 
   const pickFromLibrary = useCallback(async () => {

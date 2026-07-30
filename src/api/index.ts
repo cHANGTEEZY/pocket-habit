@@ -60,3 +60,8 @@ export {
   useToggleHabitLog,
 } from "@/api/hooks/use-habit-logs";
 export { useAuthSession, useSession } from "@/api/hooks/use-session";
+export {
+  profileKeys,
+  useCurrentUserAvatarUrl,
+  useUpdateProfileAvatar,
+} from "@/api/hooks/use-profile";

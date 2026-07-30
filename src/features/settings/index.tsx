@@ -14,14 +14,13 @@ import {
   StarIcon,
 } from "@hugeicons/core-free-icons";
 import { Separator } from "heroui-native";
-import { Avatar } from "heroui-native/avatar";
 
 import { useSession } from "@/api";
 import GoBackButton from "@/components/GoBackButton";
 import CollapsedLargeHeader from "@/components/layouts/CollapsedLargeHeader";
-import { getInitials } from "@/features/today/lib/greeting";
 
 import MeshBackground from "@/components/MeshBackground";
+import ProfileButton from "@/components/ProfileButton";
 import SettingsFooter from "./components/settings-footer";
 import { SettingsRow } from "./components/settings-row";
 import { SettingsSection } from "./components/settings-section";
@@ -57,8 +56,6 @@ export default function Settings() {
       : "Your profile";
   const email =
     typeof session?.record?.email === "string" ? session.record.email : null;
-  const initials = getInitials(name === "Your profile" ? null : name);
-
   const confirmSignOut = () => {
     Alert.alert(
       "Sign out?",
@@ -86,21 +83,7 @@ export default function Settings() {
             <SettingsRow
               title={name}
               description="View Profile"
-              leading={
-                <Avatar size="md" color="accent" variant="soft">
-                  {initials ? (
-                    <Avatar.Fallback
-                      styles={{
-                        text: { color: "white" },
-                      }}
-                    >
-                      {initials}
-                    </Avatar.Fallback>
-                  ) : (
-                    <Avatar.Fallback />
-                  )}
-                </Avatar>
-              }
+              leading={<ProfileButton size="md" />}
               onPress={() =>
                 Alert.alert("Profile", "Profile details are coming soon.")
               }

@@ -4,6 +4,7 @@ import { ScrollView, View } from "react-native";
 import { useCSSVariable } from "uniwind";
 
 import CollapsingLargeHeader from "@/components/layouts/CollapsingLargeHeader";
+import MeshBackground from "@/components/MeshBackground";
 import ProfileButton from "@/components/ProfileButton";
 import Search from "@/components/Search";
 
@@ -99,6 +100,7 @@ export default function Habits() {
 
   return (
     <View collapsable={false} className="flex-1 bg-background">
+      <MeshBackground />
       <CollapsingLargeHeader
         title="Habits"
         trailing={

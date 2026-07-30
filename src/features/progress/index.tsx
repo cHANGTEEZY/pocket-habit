@@ -13,6 +13,7 @@ import {
 } from "@/api";
 import EmptyComponent from "@/components/EmptyComponent";
 import CollapsingLargeHeader from "@/components/layouts/CollapsingLargeHeader";
+import MeshBackground from "@/components/MeshBackground";
 import ProfileButton from "@/components/ProfileButton";
 
 import { ProgressConsistencyCard } from "./components/ProgressConsistencyCard";
@@ -63,6 +64,7 @@ export default function Progress() {
 
   return (
     <View collapsable={false} className="flex-1 bg-background">
+      <MeshBackground />
       <CollapsingLargeHeader
         title="Progress"
         trailing={
@@ -73,9 +75,9 @@ export default function Progress() {
             variant="default"
           />
         }
-        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 110 }}
+        contentContainerStyle={{ paddingBottom: 110 }}
       >
-        <View className="mt-3 gap-4">
+        <View className="mt-3 gap-4 px-4">
           {isLoading ? (
             <Typography type="body-sm" color="muted" className="px-1">
               Loading progress…

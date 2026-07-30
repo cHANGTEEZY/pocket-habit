@@ -53,6 +53,7 @@ export {
 } from "@/api/hooks/use-habits";
 export {
   habitLogKeys,
+  isHabitCompletedToday,
   useHabitLogsInRange,
   useRecentHabitLogs,
   useTodayHabitLogs,

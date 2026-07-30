@@ -21,6 +21,7 @@ import GoBackButton from "@/components/GoBackButton";
 import CollapsedLargeHeader from "@/components/layouts/CollapsedLargeHeader";
 import { getInitials } from "@/features/today/lib/greeting";
 
+import MeshBackground from "@/components/MeshBackground";
 import SettingsFooter from "./components/settings-footer";
 import { SettingsRow } from "./components/settings-row";
 import { SettingsSection } from "./components/settings-section";
@@ -78,6 +79,7 @@ export default function Settings() {
 
   return (
     <View className="flex-1 bg-background">
+      <MeshBackground />
       <CollapsedLargeHeader title="Settings" leading={<GoBackButton />}>
         <View className="gap-6 px-4 pb-8 mt-5">
           <SettingsSection>

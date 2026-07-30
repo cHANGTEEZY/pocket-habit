@@ -1,14 +1,22 @@
 import {
-  useMutation,
   useQuery,
   useQueryClient,
+  type QueryClient,
   type UseQueryOptions,
 } from "@tanstack/react-query";
 import { ClientResponseError } from "pocketbase";
+import { useCallback, useRef, useState } from "react";
 
 import { habitLogsApi, toDateKey, todayDateKey } from "@/api/habit-logs";
 import type { HabitLog } from "@/api/types";
 import { ApiError, formatPocketBaseError } from "@/utils/errors";
+import { logger } from "@/utils/logger";
+
+export type ToggleHabitLogInput = {
+  habitId: string;
+  date: string;
+  completed: boolean;
+};
 
 function normalizePocketBaseError(error: unknown): ApiError {
   if (error instanceof ApiError) return error;
@@ -91,27 +99,105 @@ export function useRecentHabitLogs(
   });
 }
 
+function applyOptimisticToggle(
+  queryClient: QueryClient,
+  { habitId, date, completed }: ToggleHabitLogInput,
+) {
+  queryClient.setQueryData<HabitLog[]>(habitLogKeys.today(date), (old = []) => {
+    if (!completed) {
+      return old.filter((log) => log.habit !== habitId);
+    }
+
+    const existing = old.find((log) => log.habit === habitId);
+    if (existing) {
+      return old.map((log) =>
+        log.habit === habitId
+          ? {
+              ...log,
+              completed: true,
+              completed_at: new Date().toISOString(),
+            }
+          : log,
+      );
+    }
+
+    const now = new Date().toISOString();
+    const optimistic: HabitLog = {
+      id: `optimistic-${habitId}`,
+      collectionId: "",
+      collectionName: "habit_logs",
+      user: "",
+      habit: habitId,
+      date,
+      completed: true,
+      completed_at: now,
+      created: now,
+      updated: now,
+    };
+    return [...old, optimistic];
+  });
+}
+
+export function isHabitCompletedToday(
+  queryClient: QueryClient,
+  habitId: string,
+  fallback: HabitLog[] = [],
+  date = todayDateKey(),
+) {
+  const logs =
+    queryClient.getQueryData<HabitLog[]>(habitLogKeys.today(date)) ??
+    fallback;
+  return logs.some((log) => log.habit === habitId && log.completed);
+}
+
 export function useToggleHabitLog() {
   const queryClient = useQueryClient();
+  const queueRef = useRef(new Map<string, Promise<unknown>>());
+  const pendingCountRef = useRef(0);
+  const [isPending, setIsPending] = useState(false);
 
-  return useMutation({
-    mutationFn: async ({
-      habitId,
-      date,
-      completed,
-    }: {
-      habitId: string;
-      date: string;
-      completed: boolean;
-    }) => {
-      try {
-        return await habitLogsApi.toggle(habitId, date, completed);
-      } catch (error) {
-        throw normalizePocketBaseError(error);
-      }
+  const toggle = useCallback(
+    (input: ToggleHabitLogInput) => {
+      void queryClient.cancelQueries({ queryKey: habitLogKeys.today(input.date) });
+      applyOptimisticToggle(queryClient, input);
+
+      pendingCountRef.current += 1;
+      setIsPending(true);
+
+      const prev = queueRef.current.get(input.habitId) ?? Promise.resolve();
+      const next = prev.catch(() => undefined).then(async () => {
+        try {
+          await habitLogsApi.toggle(
+            input.habitId,
+            input.date,
+            input.completed,
+          );
+        } catch (error) {
+          void queryClient.invalidateQueries({
+            queryKey: habitLogKeys.today(input.date),
+          });
+          throw normalizePocketBaseError(error);
+        }
+      });
+
+      queueRef.current.set(input.habitId, next);
+
+      void next
+        .catch((error) => {
+          logger.error("Failed to toggle habit log", error);
+        })
+        .finally(() => {
+          pendingCountRef.current -= 1;
+          if (pendingCountRef.current === 0) {
+            setIsPending(false);
+          }
+          if (queueRef.current.get(input.habitId) === next) {
+            void queryClient.invalidateQueries({ queryKey: habitLogKeys.all });
+          }
+        });
     },
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: habitLogKeys.all });
-    },
-  });
+    [queryClient],
+  );
+
+  return { toggle, isPending };
 }

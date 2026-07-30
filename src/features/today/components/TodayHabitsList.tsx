@@ -1,10 +1,12 @@
 import * as Haptics from "expo-haptics";
-import { useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useCallback, useMemo } from "react";
 import { View } from "react-native";
 
 import { Typography } from "heroui-native/text";
 
 import {
+  isHabitCompletedToday,
   todayDateKey,
   useTodayHabitLogs,
   useToggleHabitLog,
@@ -20,15 +22,15 @@ import {
   groupByRoutine,
   ROUTINE_LABEL,
 } from "@/features/habits/lib/group-by-routine";
-import { logger } from "@/utils/logger";
 
 type TodayHabitsListProps = {
   habits: Habit[];
 };
 
 export default function TodayHabitsList({ habits }: TodayHabitsListProps) {
+  const queryClient = useQueryClient();
   const { data: todayLogs = [] } = useTodayHabitLogs();
-  const toggleLog = useToggleHabitLog();
+  const { toggle: toggleLog } = useToggleHabitLog();
 
   const completedIds = useMemo(() => {
     const ids = new Set<string>();
@@ -40,18 +42,24 @@ export default function TodayHabitsList({ habits }: TodayHabitsListProps) {
 
   const sections = useMemo(() => groupByRoutine(habits), [habits]);
 
-  const toggle = (habit: Habit) => {
-    const completed = completedIds.has(habit.id);
-    void toggleLog
-      .mutateAsync({
+  const toggle = useCallback(
+    (habit: Habit) => {
+      const date = todayDateKey();
+      const completed = isHabitCompletedToday(
+        queryClient,
+        habit.id,
+        todayLogs,
+        date,
+      );
+
+      toggleLog({
         habitId: habit.id,
-        date: todayDateKey(),
+        date,
         completed: !completed,
-      })
-      .catch((error) => {
-        logger.error("Failed to toggle habit log", error);
       });
-  };
+    },
+    [queryClient, todayLogs, toggleLog],
+  );
 
   if (habits.length === 0) {
     return (

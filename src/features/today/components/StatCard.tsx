@@ -1,6 +1,7 @@
 import type { ComponentProps, ReactNode } from "react";
 import { View } from "react-native";
 
+import { type MeshBackgroundProps } from "@/components/MeshBackground";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { Card, PressableFeedback, Typography } from "heroui-native";
 
@@ -17,6 +18,7 @@ export type StatCardProps = {
   accessibilityLabel?: string;
   className?: string;
   onPress?: () => void;
+  meshBackgroundProps?: Partial<MeshBackgroundProps>;
 };
 
 export default function StatCard({
@@ -30,6 +32,7 @@ export default function StatCard({
   accessibilityLabel,
   className,
   onPress,
+  meshBackgroundProps,
 }: StatCardProps) {
   return (
     <PressableFeedback

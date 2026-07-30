@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "expo-boiler-plate",
-    "slug": "expo-boiler-plate",
+    "name": "Bloom",
+    "slug": "Bloom",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "expoboilerplate",
+    "scheme": "Bloom",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.changteezy.expo-boiler-plate",
+      "bundleIdentifier": "com.changteezy.Bloom",
       "appleTeamId": "XPZVK3T5VQ",
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "Bloom needs access to your photos so you can choose a profile picture.",
@@ -24,7 +24,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.changteezy.expoboilerplate"
+      "package": "com.changteezy.Bloom"
     },
     "web": {
       "output": "static",

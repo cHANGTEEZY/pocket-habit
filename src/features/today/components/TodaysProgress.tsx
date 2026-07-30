@@ -60,37 +60,39 @@ const TodaysProgress = () => {
   }, [habits, todayLogs]);
 
   return (
-    <StatCard
-      title="Habits"
-      trailing={
-        lastCompleted ? (
-          <View className="flex-row items-center gap-1">
-            <Typography type="body-xs" weight="medium" color="muted">
-              {lastCompleted}
-            </Typography>
-            <HugeiconsIcon
-              icon={ChevronRightIcon}
-              size={16}
-              color={mutedColor ?? "muted"}
-            />
-          </View>
-        ) : undefined
-      }
-      icon={CalendarSyncIcon}
-      accentColor={accentColor}
-      value={completed}
-      unit={`of ${total} completed`}
-      accessibilityLabel={`${completed} of ${total} habits completed`}
-      graphic={
-        <CircularProgress
-          value={percent}
-          progressColor={accentColor}
-          trackColor={trackColor}
-          accessibilityLabel={`${completed} of ${total} habits completed`}
-        />
-      }
-      onPress={() => router.navigate("/(app)/progress")}
-    />
+    <View>
+      <StatCard
+        title="Habits"
+        trailing={
+          lastCompleted ? (
+            <View className="flex-row items-center gap-1">
+              <Typography type="body-xs" weight="medium" color="muted">
+                {lastCompleted}
+              </Typography>
+              <HugeiconsIcon
+                icon={ChevronRightIcon}
+                size={16}
+                color={mutedColor ?? "muted"}
+              />
+            </View>
+          ) : undefined
+        }
+        icon={CalendarSyncIcon}
+        accentColor={accentColor}
+        value={completed}
+        unit={`of ${total} completed`}
+        accessibilityLabel={`${completed} of ${total} habits completed`}
+        graphic={
+          <CircularProgress
+            value={percent}
+            progressColor={accentColor}
+            trackColor={trackColor}
+            accessibilityLabel={`${completed} of ${total} habits completed`}
+          />
+        }
+        onPress={() => router.navigate("/(app)/progress")}
+      />
+    </View>
   );
 };
 

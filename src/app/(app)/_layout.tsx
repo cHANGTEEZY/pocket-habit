@@ -60,7 +60,7 @@ export default function AppLayout() {
       >
         <NativeTabs.Trigger.Label>Today</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon
-          sf={{ default: "sun.max", selected: "sun.max.fill" }}
+          sf={{ default: "house", selected: "house.fill" }}
           md={{ default: "today", selected: "calendar_today" }}
         />
       </NativeTabs.Trigger>

@@ -17,8 +17,8 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ScrollViewMarker } from "react-native-screens/experimental";
 
-import MeshBackground from "@/components/MeshBackground";
 import { useAppColorScheme } from "@/hooks/use-app-color-scheme";
 
 import { Typography } from "heroui-native/text";
@@ -115,20 +115,6 @@ export default function CollapsingLargeHeader({
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
     >
-      {/*
-        Mesh lives inside ScrollView content (not a screen-level sibling) so it
-        paints behind title/children without zIndex — keeps NativeTabs minimize.
-      */}
-      <View
-        pointerEvents="none"
-        style={[
-          styles.meshLayer,
-          { top: -(insets.top + 8) },
-        ]}
-      >
-        <MeshBackground embedded />
-      </View>
-
       <Animated.View style={[styles.expandedRow, largeTitleStyle]}>
         <View style={styles.largeTitleWrap}>
           <Typography
@@ -147,22 +133,27 @@ export default function CollapsingLargeHeader({
     </ScrollView>
   );
 
+  // ScrollViewMarker registers this scroll view with NativeTabs even when a
+  // fixed MeshBackground is the screen's first sibling (paint-behind).
+  const markedScroll =
+    Platform.OS === "ios" ? (
+      <ScrollViewMarker style={styles.scroll}>{scrollView}</ScrollViewMarker>
+    ) : (
+      scrollView
+    );
+
   return (
     <View collapsable={false} style={styles.root}>
-      {/*
-        Plain RN ScrollView so NativeTabs minimizeBehavior can discover it.
-        BlurTargetView only on Android (needed for header blur sampling).
-      */}
       {Platform.OS === "android" ? (
         <BlurTargetView
           collapsable={false}
           ref={blurTargetRef}
           style={styles.scroll}
         >
-          {scrollView}
+          {markedScroll}
         </BlurTargetView>
       ) : (
-        scrollView
+        markedScroll
       )}
 
       <View
@@ -230,7 +221,6 @@ export default function CollapsingLargeHeader({
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    // No zIndex — sibling zIndex reordering breaks NativeTabs ScrollView discovery.
     backgroundColor: "transparent",
   },
   sticky: {
@@ -261,11 +251,6 @@ const styles = StyleSheet.create({
   scroll: {
     flex: 1,
     backgroundColor: "transparent",
-  },
-  meshLayer: {
-    position: "absolute",
-    left: 0,
-    right: 0,
   },
   expandedRow: {
     flexDirection: "row",

@@ -64,18 +64,19 @@ const TodaysProgress = () => {
       <StatCard
         title="Habits"
         trailing={
-          lastCompleted ? (
-            <View className="flex-row items-center gap-1">
+          <View className="flex-row items-center gap-1">
+            {lastCompleted && (
               <Typography type="body-xs" weight="medium" color="muted">
                 {lastCompleted}
               </Typography>
-              <HugeiconsIcon
-                icon={ChevronRightIcon}
-                size={16}
-                color={mutedColor ?? "muted"}
-              />
-            </View>
-          ) : undefined
+            )}
+            <HugeiconsIcon
+              icon={ChevronRightIcon}
+              size={20}
+              color={mutedColor}
+              strokeWidth={1.75}
+            />
+          </View>
         }
         icon={CalendarSyncIcon}
         accentColor={accentColor}

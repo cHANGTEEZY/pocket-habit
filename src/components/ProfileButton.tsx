@@ -8,6 +8,8 @@ import {
   type AvatarSize,
 } from "heroui-native/avatar";
 
+import { getCurrentUserAvatarUrl } from "@/lib/pocketbase";
+
 import { getInitials } from "../features/today/lib/greeting";
 
 type AvatarVariant = "default" | "soft";
@@ -42,7 +44,7 @@ const SOLID_TEXT: Record<AvatarColor, string> = {
 /** Map custom sizes onto HeroUI Avatar props + className overrides. */
 function resolveAvatarSize(size: ProfileButtonSize): {
   avatarSize: AvatarSize;
-  rootClassName?: string;
+  rootClassName: string;
   textClassName?: string;
 } {
   if (size === "xlg") {
@@ -52,7 +54,14 @@ function resolveAvatarSize(size: ProfileButtonSize): {
       textClassName: "text-lg",
     };
   }
-  return { avatarSize: size };
+
+  const sizeClasses: Record<AvatarSize, string> = {
+    sm: "size-10",
+    md: "size-12",
+    lg: "size-16",
+  };
+
+  return { avatarSize: size, rootClassName: sizeClasses[size] };
 }
 
 export default function ProfileButton({
@@ -67,7 +76,11 @@ export default function ProfileButton({
   const isSolid = variant === "default";
   const { avatarSize, rootClassName, textClassName } = resolveAvatarSize(size);
 
-  const rootClasses = [isSolid ? SOLID_BG[color] : undefined, rootClassName]
+  // Prefer an explicit URI (e.g. optimistic local pick), else the saved file URL.
+  const resolvedUri =
+    imageUri ?? (session?.isValid ? getCurrentUserAvatarUrl() : null);
+
+  const rootClasses = [rootClassName, isSolid ? SOLID_BG[color] : undefined]
     .filter(Boolean)
     .join(" ");
 
@@ -87,14 +100,14 @@ export default function ProfileButton({
         onPress?.();
       }}
     >
-      {imageUri ? (
+      {resolvedUri ? (
         <View
           className={`overflow-hidden rounded-full ${rootClasses}`}
           style={{ borderCurve: "continuous" }}
         >
           <Image
-            source={{ uri: imageUri }}
-            style={{ width: "100%", height: "100%" }}
+            source={{ uri: resolvedUri }}
+            className="size-full"
             contentFit="cover"
             transition={150}
           />

@@ -41,11 +41,11 @@ export default function Today() {
         <View className="mb-8 mt-5 gap-3 px-4">
           {isPending ? (
             <Typography type="body-sm" color="muted" className="px-1">
-              Loading today's habits…
+              Loading today&apos;s habits…
             </Typography>
           ) : isError ? (
             <Typography type="body-sm" className="px-1 text-danger">
-              {error?.message ?? "Couldn't load habits."}
+              {error?.message ?? "Couldn&apos;t load habits."}
             </Typography>
           ) : (
             <TodayHabitsList habits={habits} />

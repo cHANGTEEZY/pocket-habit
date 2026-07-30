@@ -61,8 +61,17 @@ export function formatPocketBaseError(error: unknown): string {
     return error instanceof Error ? error.message : "Request failed";
   }
 
-  const fieldErrors = error.data ?? {};
-  const details = Object.entries(fieldErrors)
+  // PocketBase nests field errors under response.data / error.data.data.
+  const payload =
+    error.data &&
+    typeof error.data === "object" &&
+    "data" in error.data &&
+    error.data.data &&
+    typeof error.data.data === "object"
+      ? (error.data.data as Record<string, unknown>)
+      : ((error.data ?? {}) as Record<string, unknown>);
+
+  const details = Object.entries(payload)
     .filter(([, value]) => value && typeof value === "object")
     .map(([key, value]) => {
       const message =

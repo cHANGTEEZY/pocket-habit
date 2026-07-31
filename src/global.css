@@ -5,10 +5,11 @@
 @source "../node_modules/heroui-native/lib";
 
 /*
- * Bloom — Calm Focus theme (DESIGN.md)
+ * Bloom — Sakura / Cherry Blossom theme
  *
- * Accent: soft lavender from MeshBackground (#C8B6E8) — distinct from peach glow.
- * Uniwind only applies theme tokens inside @layer theme + @variant.
+ * Warm pink-blush accent inspired by cherry blossoms.
+ * Canvas and surfaces carry a gentle warmth; the accent is a soft
+ * sakura pink used sparingly to guide attention.
  *
  * @see DESIGN.md
  * @see https://heroui.com/docs/native/getting-started/theming
@@ -22,154 +23,152 @@
 @layer theme {
   @variant light {
     /*
-     * Bloom — Neutral Focus theme
-     * Warm stone neutrals with subtle graphite accent.
-     * Good for habit tracking apps where progress/status colors should stand out.
+     * Sakura (light)
+     * Warm cream canvas, soft pink accent, subtle rose-tinted depths.
      */
 
     /* Canvas & type */
-    --background: oklch(0.975 0.004 85);
-    --foreground: oklch(0.22 0.006 80);
+    --background: oklch(0.975 0.008 70);
+    --foreground: oklch(0.2 0.01 50);
 
     /* Surfaces */
-    --surface: oklch(0.995 0.002 85);
-    --surface-foreground: oklch(0.22 0.006 80);
+    --surface: oklch(0.992 0.006 70);
+    --surface-foreground: oklch(0.2 0.01 50);
 
-    --surface-secondary: oklch(0.955 0.004 85);
-    --surface-secondary-foreground: oklch(0.24 0.006 80);
+    --surface-secondary: oklch(0.958 0.008 70);
+    --surface-secondary-foreground: oklch(0.22 0.01 50);
 
-    --surface-tertiary: oklch(0.925 0.005 85);
-    --surface-tertiary-foreground: oklch(0.24 0.006 80);
+    --surface-tertiary: oklch(0.938 0.01 70);
+    --surface-tertiary-foreground: oklch(0.24 0.01 50);
 
     /* Overlays */
-    --overlay: oklch(0.995 0.002 85);
-    --overlay-foreground: oklch(0.22 0.006 80);
+    --overlay: oklch(0.992 0.006 70);
+    --overlay-foreground: oklch(0.2 0.01 50);
     --backdrop: oklch(0% 0 0 / 24%);
 
     /* Muted text */
-    --muted: oklch(0.52 0.006 80);
+    --muted: oklch(0.52 0.015 60);
 
     /* Default controls */
-    --default: oklch(0.92 0.004 85);
-    --default-foreground: oklch(0.24 0.006 80);
+    --default: oklch(0.928 0.01 70);
+    --default-foreground: oklch(0.24 0.01 50);
 
     /*
-     * Neutral primary accent.
-     * Graphite instead of colorful lavender/green.
+     * Sakura pink accent.
+     * Soft cherry blossom hue — warm, delicate, unmistakable.
      */
-    --accent: oklch(0.34 0.006 80);
-    --accent-foreground: oklch(0.985 0.002 85);
+    --accent: oklch(0.66 0.14 20);
+    --accent-foreground: oklch(0.985 0.004 70);
 
     /* Form fields */
-    --field-background: oklch(0.995 0.002 85);
-    --field-foreground: oklch(0.22 0.006 80);
-    --field-placeholder: oklch(0.58 0.006 80);
-    --field-border: oklch(0.86 0.004 85);
+    --field-background: oklch(0.992 0.006 70);
+    --field-foreground: oklch(0.2 0.01 50);
+    --field-placeholder: oklch(0.58 0.015 60);
+    --field-border: oklch(0.878 0.008 70);
 
     /* Status */
-    --success: oklch(0.58 0.08 155);
-    --success-foreground: oklch(0.985 0.002 85);
+    --success: oklch(0.6 0.12 145);
+    --success-foreground: oklch(0.985 0.004 70);
 
     --warning: oklch(0.72 0.1 75);
-    --warning-foreground: oklch(0.24 0.006 80);
+    --warning-foreground: oklch(0.24 0.01 50);
 
-    --danger: oklch(0.58 0.13 28);
-    --danger-foreground: oklch(0.985 0.002 85);
+    --danger: oklch(0.6 0.15 28);
+    --danger-foreground: oklch(0.985 0.004 70);
 
     /* Components */
-    --segment: oklch(0.94 0.004 85);
-    --segment-foreground: oklch(0.24 0.006 80);
+    --segment: oklch(0.948 0.008 70);
+    --segment-foreground: oklch(0.24 0.01 50);
 
     /* Misc */
-    --border: oklch(0.86 0.004 85);
-    --separator: oklch(0.9 0.003 85);
+    --border: oklch(0.878 0.008 70);
+    --separator: oklch(0.918 0.008 70);
 
-    --focus: oklch(0.34 0.006 80);
-    --link: oklch(0.34 0.006 80);
+    --focus: oklch(0.66 0.14 20);
+    --link: oklch(0.66 0.14 20);
 
-    /* Elevation */
+    /* Elevation — warm shadows */
     --surface-shadow:
-      0 2px 4px 0 rgba(30, 28, 24, 0.04), 0 1px 2px 0 rgba(30, 28, 24, 0.06),
-      0 0 1px 0 rgba(30, 28, 24, 0.08);
+      0 2px 4px 0 rgba(40, 32, 34, 0.04), 0 1px 2px 0 rgba(40, 32, 34, 0.06),
+      0 0 1px 0 rgba(40, 32, 34, 0.08);
 
     --overlay-shadow:
-      0 8px 24px 0 rgba(30, 28, 24, 0.08), 0 2px 8px 0 rgba(30, 28, 24, 0.04);
+      0 8px 24px 0 rgba(40, 32, 34, 0.08), 0 2px 8px 0 rgba(40, 32, 34, 0.04);
 
     --field-shadow:
-      0 1px 2px 0 rgba(30, 28, 24, 0.04), 0 0 1px 0 rgba(30, 28, 24, 0.08);
+      0 1px 2px 0 rgba(40, 32, 34, 0.04), 0 0 1px 0 rgba(40, 32, 34, 0.08);
   }
 
   @variant dark {
     /*
-     * Dark mode — neutral charcoal.
-     * Not blue-black, not purple-black.
+     * Sakura (dark)
+     * Warm charcoal base, soft pink glow, tonal depth.
      */
 
     /* Canvas & type */
-    --background: oklch(0.16 0.004 80);
-    --foreground: oklch(0.96 0.002 85);
+    --background: oklch(0.14 0.008 50);
+    --foreground: oklch(0.95 0.006 70);
 
     /* Surfaces */
-    --surface: oklch(0.22 0.004 80);
-    --surface-foreground: oklch(0.96 0.002 85);
+    --surface: oklch(0.2 0.008 50);
+    --surface-foreground: oklch(0.95 0.006 70);
 
-    --surface-secondary: oklch(0.27 0.004 80);
-    --surface-secondary-foreground: oklch(0.96 0.002 85);
+    --surface-secondary: oklch(0.25 0.008 50);
+    --surface-secondary-foreground: oklch(0.95 0.006 70);
 
-    --surface-tertiary: oklch(0.32 0.004 80);
-    --surface-tertiary-foreground: oklch(0.96 0.002 85);
+    --surface-tertiary: oklch(0.3 0.008 50);
+    --surface-tertiary-foreground: oklch(0.95 0.006 70);
 
     /* Overlays */
-    --overlay: oklch(0.24 0.004 80);
-    --overlay-foreground: oklch(0.96 0.002 85);
+    --overlay: oklch(0.22 0.008 50);
+    --overlay-foreground: oklch(0.95 0.006 70);
     --backdrop: oklch(0% 0 0 / 48%);
 
     /* Muted text */
-    --muted: oklch(0.7 0.004 80);
+    --muted: oklch(0.68 0.01 60);
 
     /* Default controls */
-    --default: oklch(0.31 0.004 80);
-    --default-foreground: oklch(0.96 0.002 85);
+    --default: oklch(0.3 0.008 50);
+    --default-foreground: oklch(0.95 0.006 70);
 
     /*
-     * Neutral accent.
-     * Light stone on dark surfaces.
+     * Brighter pink accent for dark mode.
      */
-    --accent: oklch(0.82 0.004 85);
-    --accent-foreground: oklch(0.17 0.004 80);
+    --accent: oklch(0.74 0.14 20);
+    --accent-foreground: oklch(0.16 0.008 50);
 
     /* Form fields */
-    --field-background: oklch(0.24 0.004 80);
-    --field-foreground: oklch(0.96 0.002 85);
-    --field-placeholder: oklch(0.66 0.004 80);
-    --field-border: oklch(0.38 0.004 80);
+    --field-background: oklch(0.22 0.008 50);
+    --field-foreground: oklch(0.95 0.006 70);
+    --field-placeholder: oklch(0.62 0.01 60);
+    --field-border: oklch(0.36 0.008 50);
 
     /* Status */
-    --success: oklch(0.68 0.09 155);
-    --success-foreground: oklch(0.15 0.004 80);
+    --success: oklch(0.68 0.12 145);
+    --success-foreground: oklch(0.15 0.008 50);
 
     --warning: oklch(0.78 0.1 75);
-    --warning-foreground: oklch(0.17 0.004 80);
+    --warning-foreground: oklch(0.17 0.008 50);
 
-    --danger: oklch(0.66 0.13 28);
-    --danger-foreground: oklch(0.98 0.002 85);
+    --danger: oklch(0.68 0.15 28);
+    --danger-foreground: oklch(0.98 0.004 70);
 
     /* Components */
-    --segment: oklch(0.31 0.004 80);
-    --segment-foreground: oklch(0.96 0.002 85);
+    --segment: oklch(0.3 0.008 50);
+    --segment-foreground: oklch(0.95 0.006 70);
 
     /* Misc */
-    --border: oklch(0.38 0.004 80);
-    --separator: oklch(0.34 0.004 80);
+    --border: oklch(0.36 0.008 50);
+    --separator: oklch(0.32 0.008 50);
 
-    --focus: oklch(0.82 0.004 85);
-    --link: oklch(0.82 0.004 85);
+    --focus: oklch(0.74 0.14 20);
+    --link: oklch(0.74 0.14 20);
 
     /* Dark elevation */
     --surface-shadow: 0 0 0 0 transparent;
 
     --overlay-shadow:
-      0 0 1px 0 rgba(255, 255, 255, 0.12) inset,
+      0 0 1px 0 rgba(255, 240, 245, 0.12) inset,
       0 12px 32px 0 rgba(0, 0, 0, 0.28);
 
     --field-shadow: 0 0 0 0 transparent;

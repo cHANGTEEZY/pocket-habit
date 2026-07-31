@@ -62,6 +62,8 @@ export default function AppLayout() {
         <NativeTabs.Trigger.Icon
           sf={{ default: "house", selected: "house.fill" }}
           md={{ default: "today", selected: "calendar_today" }}
+          // src={require("@/assets/images/tab-icons/home.png")}
+          // renderingMode="original"
         />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger
@@ -76,6 +78,8 @@ export default function AppLayout() {
             selected: "list.bullet.clipboard.fill",
           }}
           md={{ default: "checklist", selected: "checklist" }}
+          // src={require("@/assets/images/tab-icons/habits.png")}
+          // renderingMode="original"
         />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="progress" disableTransparentOnScrollEdge>
@@ -83,6 +87,8 @@ export default function AppLayout() {
         <NativeTabs.Trigger.Icon
           sf={{ default: "chart.bar", selected: "chart.bar.fill" }}
           md={{ default: "bar_chart", selected: "bar_chart" }}
+          // src={require("@/assets/images/tab-icons/progress.png")}
+          // renderingMode="original"
         />
       </NativeTabs.Trigger>
     </NativeTabs>

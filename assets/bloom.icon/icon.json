@@ -1,0 +1,64 @@
+{
+  "fill" : {
+    "automatic-gradient" : "display-p3:0.83949,0.80985,0.92021,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "hidden" : false,
+          "image-name" : "image-no-bg-cropped.png",
+          "name" : "image-no-bg-cropped",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              2.53125,
+              -0.619463049114529
+            ]
+          }
+        },
+        {
+          "hidden" : true,
+          "image-name" : "image.png",
+          "name" : "image",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              17.50397520598267
+            ]
+          }
+        },
+        {
+          "blend-mode" : "normal",
+          "glass" : true,
+          "hidden" : true,
+          "image-name" : "sakura.png",
+          "name" : "sakura",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              5.53125,
+              10.50397520598267
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

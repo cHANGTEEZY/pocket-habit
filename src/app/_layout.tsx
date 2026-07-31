@@ -13,6 +13,8 @@ import { useCSSVariable } from "uniwind";
 import { useAppColorScheme } from "@/hooks/use-app-color-scheme";
 import { AppProviders } from "@/providers/app-providers";
 
+// Keep the native splash up until the root tree has painted — avoids a
+// second "fake splash" flash while JS boots.
 SplashScreen.preventAutoHideAsync().catch(() => {
   // Ignore if splash was already hidden.
 });
@@ -23,9 +25,13 @@ export default function RootLayout() {
   const statusBarStyle = colorScheme === "dark" ? "light" : "dark";
 
   useEffect(() => {
-    SplashScreen.hideAsync().catch(() => {
-      // Ignore if splash was already hidden.
+    // Wait one frame so the first screen background matches the splash.
+    const frame = requestAnimationFrame(() => {
+      SplashScreen.hideAsync().catch(() => {
+        // Ignore if splash was already hidden.
+      });
     });
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {

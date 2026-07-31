@@ -4,11 +4,11 @@
     "slug": "Bloom",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/sakura.png",
     "scheme": "Bloom",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon",
+      "icon": "./assets/bloom.icon",
       "bundleIdentifier": "com.changteezy.Bloom",
       "appleTeamId": "XPZVK3T5VQ",
       "infoPlist": {
@@ -35,9 +35,14 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#F8F5F1",
+          "image": "./assets/icons/bloom-logo.png",
+          "imageWidth": 260,
+          "resizeMode": "contain",
+          "dark": {
+            "backgroundColor": "#211F1D",
+            "image": "./assets/icons/bloom-logo-dark.png"
+          }
         }
       ],
       "expo-secure-store",

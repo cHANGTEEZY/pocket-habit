@@ -37,7 +37,7 @@
         {
           "backgroundColor": "#F8F5F1",
           "image": "./assets/icons/bloom-logo.png",
-          "imageWidth": 260,
+          "imageWidth": 300,
           "resizeMode": "contain",
           "dark": {
             "backgroundColor": "#211F1D",

@@ -1,6 +1,6 @@
 import { type ComponentProps, type ReactNode } from "react";
 
-import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
+import { ArrowUpRight01Icon, Edit01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { ListGroup, PressableFeedback } from "heroui-native";
 import { useCSSVariable } from "uniwind";
@@ -18,6 +18,7 @@ type SettingsRowProps = {
   leading?: ReactNode;
   trailing?: ReactNode | null;
   external?: boolean;
+  edit?: boolean;
   onPress?: () => void;
 };
 
@@ -30,6 +31,7 @@ export function SettingsRow({
   leading,
   trailing,
   external = false,
+  edit = false,
   onPress,
 }: SettingsRowProps) {
   const muted = useCSSVariable("--color-muted");
@@ -56,6 +58,15 @@ export function SettingsRow({
         icon={ArrowUpRight01Icon}
         size={18}
         color={mutedColor}
+        strokeWidth={1.75}
+      />
+    );
+  } else if (edit) {
+    suffix = (
+      <HugeiconsIcon
+        icon={Edit01Icon}
+        size={18}
+        color="#636366"
         strokeWidth={1.75}
       />
     );

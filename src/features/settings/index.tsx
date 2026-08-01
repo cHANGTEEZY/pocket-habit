@@ -102,10 +102,7 @@ export default function Settings() {
               icon={AccountSetting01Icon}
               iconBackground="#636366"
               onPress={() =>
-                Alert.alert(
-                  "Account",
-                  "Manage email and password from here soon.",
-                )
+                router.navigate("/(screens)/settings/account-settings")
               }
             />
             <Separator className="ml-14 mr-4" />
@@ -126,6 +123,7 @@ export default function Settings() {
               icon={BellIcon}
               iconBackground="#FF3B30"
               onPress={openSystemSettings}
+              external
             />
             <Separator className="ml-14 mr-4" />
             <SettingsRow
@@ -133,6 +131,7 @@ export default function Settings() {
               icon={SecurityCheckIcon}
               iconBackground="#34C759"
               onPress={openSystemSettings}
+              external
             />
             <Separator className="ml-14 mr-4" />
             <SettingsRow

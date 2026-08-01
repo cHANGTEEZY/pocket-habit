@@ -10,7 +10,7 @@ import CycleTheme from "../components/cycle-theme";
 const Appearance = () => {
   return (
     <View className="flex-1 bg-background">
-      <CollapsedLargeHeader title="Dark Mode" leading={<GoBackButton />}>
+      <CollapsedLargeHeader title="Appearance" leading={<GoBackButton />}>
         <View className="mt-5 gap-2 px-4 pb-8">
           <Typography type="h5" weight="semibold" className="text-foreground">
             Color Scheme

@@ -84,9 +84,7 @@ export default function Settings() {
               title={name}
               description="View Profile"
               leading={<ProfileButton size="md" />}
-              onPress={() =>
-                Alert.alert("Profile", "Profile details are coming soon.")
-              }
+              trailing={null}
             />
             <Separator className="ml-17 mr-4" />
             <SettingsRow

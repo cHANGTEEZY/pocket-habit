@@ -25,7 +25,7 @@ import {
 type AccountEditSheetProps = {
   field: AccountEditField | null;
   onClose: () => void;
-  onSubmit?: (values: AccountEditValues) => void;
+  onSubmit?: (values: AccountEditValues) => void | Promise<void>;
 };
 
 const SIMPLE_FIELD_META = {
@@ -171,7 +171,7 @@ function ValueEditForm({
       onSubmit: accountEditSchemas[field],
     },
     onSubmit: async ({ value }) => {
-      onSubmit({ field, ...value } as AccountEditValues);
+      await onSubmit({ field, ...value } as AccountEditValues);
     },
   });
 
@@ -229,7 +229,7 @@ function PasswordEditForm({
       onSubmit: accountEditSchemas.password,
     },
     onSubmit: async ({ value }) => {
-      onSubmit({
+      await onSubmit({
         field: "password",
         currentPassword: value.currentPassword,
         newPassword: value.newPassword,
@@ -332,8 +332,8 @@ export function AccountEditSheet({
   onClose,
   onSubmit,
 }: AccountEditSheetProps) {
-  const handleSubmitted = (values: AccountEditValues) => {
-    onSubmit?.(values);
+  const handleSubmitted = async (values: AccountEditValues) => {
+    await onSubmit?.(values);
     onClose();
   };
 

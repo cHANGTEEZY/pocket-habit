@@ -29,6 +29,7 @@ import AddHabitModal from "./components/AddHabitModal";
 import CreateFirstHabit from "./components/CreateFirstHabit";
 import HabitFilterPills from "./components/HabitFilterPills";
 import HabitsList from "./components/HabitsList";
+import HabitsSkeleton from "./components/HabitsSkeleton";
 import type { RoutineFilter, StatusFilter } from "./lib/filter-habits";
 
 function isTruthyParam(value: string | string[] | undefined): boolean {
@@ -183,9 +184,7 @@ export default function Habits() {
 
             <View className="mt-2 gap-4">
               {isLoading ? (
-                <Typography type="body-sm" color="muted" className="px-1">
-                  Loading habits…
-                </Typography>
+                <HabitsSkeleton />
               ) : isError ? (
                 <Typography type="body-sm" className="px-1 text-danger">
                   {error?.message ?? "Couldn’t load habits."}

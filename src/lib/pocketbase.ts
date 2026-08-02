@@ -108,6 +108,73 @@ export async function updateCurrentUserProfile(
   return record;
 }
 
+export async function updateCurrentUserEmail(email: string): Promise<RecordModel> {
+  ensureBaseUrl();
+  const id = pb.authStore.record?.id;
+  if (!id) {
+    throw new Error("You need to be signed in to update your account.");
+  }
+
+  const record = await pb.collection("users").update(id, {
+    email: email.trim(),
+  });
+  saveAuthRecord(record);
+  return record;
+}
+
+export async function updateCurrentUserPhone(phone: string): Promise<RecordModel> {
+  ensureBaseUrl();
+  const id = pb.authStore.record?.id;
+  if (!id) {
+    throw new Error("You need to be signed in to update your account.");
+  }
+
+  const record = await pb.collection("users").update(id, {
+    phone: phone.trim(),
+  });
+  saveAuthRecord(record);
+  return record;
+}
+
+export async function updateCurrentUserUsername(
+  username: string,
+): Promise<RecordModel> {
+  ensureBaseUrl();
+  const id = pb.authStore.record?.id;
+  if (!id) {
+    throw new Error("You need to be signed in to update your account.");
+  }
+
+  const record = await pb.collection("users").update(id, {
+    username: username.trim(),
+  });
+  saveAuthRecord(record);
+  return record;
+}
+
+export async function updateCurrentUserPassword(
+  currentPassword: string,
+  newPassword: string,
+): Promise<RecordModel> {
+  ensureBaseUrl();
+  const record = pb.authStore.record;
+  const id = record?.id;
+  const email = record?.email;
+  if (!id || typeof email !== "string") {
+    throw new Error("You need to be signed in to update your password.");
+  }
+
+  // Validate the current password before rotating to a new one.
+  await pb.collection("users").authWithPassword(email, currentPassword);
+
+  const updated = await pb.collection("users").update(id, {
+    password: newPassword,
+    passwordConfirm: newPassword,
+  });
+  saveAuthRecord(updated);
+  return updated;
+}
+
 export type ProfileAvatarUpload = {
   uri: string;
   mimeType?: string;

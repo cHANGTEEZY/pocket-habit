@@ -20,6 +20,7 @@ import { ProgressConsistencyCard } from "./components/ProgressConsistencyCard";
 import { ProgressRecentActivity } from "./components/ProgressRecentActivity";
 import { ProgressUpNext } from "./components/ProgressUpNext";
 import { ProgressWeekCard } from "./components/ProgressWeekCard";
+import ProgressSkeleton from "./components/ProgressSkeleton";
 import { addDays, startOfLocalDay } from "./lib/schedule";
 import { computeProgressStats, computeUpNext } from "./lib/stats";
 
@@ -79,9 +80,7 @@ export default function Progress() {
       >
         <View className="mt-3 gap-4 px-4">
           {isLoading ? (
-            <Typography type="body-sm" color="muted" className="px-1">
-              Loading progress…
-            </Typography>
+            <ProgressSkeleton />
           ) : isError ? (
             <Typography type="body-sm" className="px-1 text-danger">
               {error?.message ?? "Couldn’t load progress."}

@@ -8,6 +8,7 @@ import { Typography } from "heroui-native/text";
 
 import { router } from "expo-router";
 import TodayHabitsList from "./components/TodayHabitsList";
+import TodaySkeleton from "./components/TodaySkeleton";
 import TodaysProgress from "./components/TodaysProgress";
 import WeeklyInsight from "./components/WeeklyInsight";
 import { getGreeting } from "./lib/greeting";
@@ -31,26 +32,28 @@ export default function Today() {
         }
         contentContainerStyle={{ paddingBottom: 80 }}
       >
-        <View className="mb-3 mt-3 px-4">
-          <TodaysProgress />
-        </View>
-        <View className="mb-3 px-4">
-          <WeeklyInsight />
-        </View>
+        {isPending ? (
+          <TodaySkeleton />
+        ) : (
+          <>
+            <View className="mb-3 mt-3 px-4">
+              <TodaysProgress />
+            </View>
+            <View className="mb-3 px-4">
+              <WeeklyInsight />
+            </View>
 
-        <View className="mb-8 mt-5 gap-3 px-4">
-          {isPending ? (
-            <Typography type="body-sm" color="muted" className="px-1">
-              Loading today&apos;s habits…
-            </Typography>
-          ) : isError ? (
-            <Typography type="body-sm" className="px-1 text-danger">
-              {error?.message ?? "Couldn&apos;t load habits."}
-            </Typography>
-          ) : (
-            <TodayHabitsList habits={habits} />
-          )}
-        </View>
+            <View className="mb-8 mt-5 gap-3 px-4">
+              {isError ? (
+                <Typography type="body-sm" className="px-1 text-danger">
+                  {error?.message ?? "Couldn&apos;t load habits."}
+                </Typography>
+              ) : (
+                <TodayHabitsList habits={habits} />
+              )}
+            </View>
+          </>
+        )}
       </CollapsingLargeHeader>
     </View>
   );

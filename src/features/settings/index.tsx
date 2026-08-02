@@ -3,8 +3,6 @@ import { Alert, Linking, Platform, View } from "react-native";
 import { useUniwind } from "uniwind";
 
 import {
-  AccountSetting01Icon,
-  AlarmClockIcon,
   BellIcon,
   Logout01Icon,
   Mail01Icon,
@@ -54,8 +52,6 @@ export default function Settings() {
     typeof session?.record?.name === "string" && session.record.name.trim()
       ? session.record.name.trim()
       : "Your profile";
-  const email =
-    typeof session?.record?.email === "string" ? session.record.email : null;
   const confirmSignOut = () => {
     Alert.alert(
       "Sign out?",
@@ -82,37 +78,11 @@ export default function Settings() {
           <SettingsSection>
             <SettingsRow
               title={name}
-              description="View Profile"
+              description="Profile, account & reminders"
               leading={<ProfileButton size="md" />}
               trailing={null}
-            />
-            <Separator className="ml-17 mr-4" />
-            <SettingsRow
-              title="Edit Profile"
-              onPress={() =>
-                router.navigate("/(screens)/settings/edit-profile")
-              }
-            />
-          </SettingsSection>
-
-          <SettingsSection>
-            <SettingsRow
-              title="Account"
-              description={email ?? "Email, password, security"}
-              icon={AccountSetting01Icon}
-              iconBackground="#636366"
               onPress={() =>
                 router.navigate("/(screens)/settings/account-settings")
-              }
-            />
-            <Separator className="ml-14 mr-4" />
-            <SettingsRow
-              title="Reminders"
-              description="Daily habit check-in times"
-              icon={AlarmClockIcon}
-              iconBackground="#AF52DE"
-              onPress={() =>
-                Alert.alert("Reminders", "Habit reminder times will live here.")
               }
             />
           </SettingsSection>

@@ -29,37 +29,37 @@ import { runHaptic } from "@/components/HapticButton";
 import { accentTint, CARD_ACCENT } from "@/features/progress/lib/card-colors";
 import { addDays, startOfLocalDay } from "@/features/progress/lib/schedule";
 import { computeProgressStats } from "@/features/progress/lib/stats";
-import { useAppColorScheme } from "@/hooks/use-app-color-scheme";
 
 import {
   pickCongratsMessage,
   type CongratsMessage,
 } from "../lib/congrats-messages";
 
+function themeColor(
+  value: string | number | undefined,
+  fallback: string,
+): string {
+  return typeof value === "string" && value.length > 0 ? value : fallback;
+}
+
 type Stage = "idle" | "congrats" | "streak";
 
 const STREAK_LOOKBACK_DAYS = 90;
 const SHEET_RADIUS = 32;
 const SHEET_INSET = 5;
-
-/** Soft single-hue washes — kept quiet so they dissolve into the sheet. */
-const CONGRATS_GLOW = { light: "#B7DCC6", dark: "#3A5A48" } as const;
-const STREAK_GLOW = { light: "#F0D0B0", dark: "#5A4234" } as const;
+const CELEBRATION_DELAY_MS = 1200;
 
 let washUid = 0;
 
 /** Subtle top glow painted on the sheet background (under the handle). */
 function CelebrationSheetBackground({
   style,
-  glow,
+  glowColor,
 }: BottomSheetBackgroundProps & {
-  glow: { light: string; dark: string };
+  glowColor: string;
 }) {
-  const scheme = useAppColorScheme();
   const overlay = useCSSVariable("--color-overlay");
-  const surface =
-    typeof overlay === "string" && overlay.length > 0 ? overlay : "#FFFFFF";
-  const glowColor = scheme === "dark" ? glow.dark : glow.light;
+  const surface = themeColor(overlay, "#FFFFFF");
   const id = useRef(`cw${++washUid}`).current;
   const [size, setSize] = useState<{ width: number; height: number } | null>(
     null,
@@ -121,14 +121,26 @@ function CelebrationSheetBackground({
   );
 }
 
-function makeBackground(glow: { light: string; dark: string }) {
+function makeThemeBackground(
+  token: `--color-${string}`,
+  fallback: string,
+) {
   return function Background(props: BottomSheetBackgroundProps) {
-    return <CelebrationSheetBackground {...props} glow={glow} />;
+    const glowVar = useCSSVariable(token);
+    return (
+      <CelebrationSheetBackground
+        {...props}
+        glowColor={themeColor(glowVar, fallback)}
+      />
+    );
   };
 }
 
-const CongratsBackground = makeBackground(CONGRATS_GLOW);
-const StreakBackground = makeBackground(STREAK_GLOW);
+const CongratsBackground = makeThemeBackground(
+  "--color-success",
+  "#2FBE73",
+);
+const StreakBackground = makeThemeBackground("--color-warning", "#C49A3A");
 
 const HANDLE_STYLE: StyleProp<ViewStyle> = {
   backgroundColor: "transparent",
@@ -167,8 +179,9 @@ export default function AllDoneCelebration() {
   const shownKeyRef = useRef<string | null>(null);
 
   const success = useCSSVariable("--color-success");
-  const successColor = typeof success === "string" ? success : "#2FBE73";
-  const flameColor = CARD_ACCENT.week;
+  const successColor = themeColor(success, "#2FBE73");
+  const warning = useCSSVariable("--color-warning");
+  const flameColor = themeColor(warning, CARD_ACCENT.week);
 
   const allDone = useMemo(() => {
     if (habits.length === 0) return false;
@@ -192,11 +205,16 @@ export default function AllDoneCelebration() {
 
     shownKeyRef.current = key;
     setMessage(pickCongratsMessage());
-    setStage("congrats");
-    void runHaptic({
-      type: "notification",
-      style: Haptics.NotificationFeedbackType.Success,
-    });
+
+    const timeoutId = setTimeout(() => {
+      setStage("congrats");
+      void runHaptic({
+        type: "notification",
+        style: Haptics.NotificationFeedbackType.Success,
+      });
+    }, CELEBRATION_DELAY_MS);
+
+    return () => clearTimeout(timeoutId);
   }, [allDone]);
 
   const streakEnabled = stage === "congrats" || stage === "streak";

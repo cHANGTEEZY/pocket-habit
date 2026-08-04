@@ -7,6 +7,7 @@ import ProfileButton from "@/components/ProfileButton";
 import { Typography } from "heroui-native/text";
 
 import { router } from "expo-router";
+import AllDoneCelebration from "./components/AllDoneCelebration";
 import TodayHabitsList from "./components/TodayHabitsList";
 import TodaySkeleton from "./components/TodaySkeleton";
 import TodaysProgress from "./components/TodaysProgress";
@@ -20,6 +21,7 @@ export default function Today() {
   return (
     <View collapsable={false} className="flex-1 bg-background">
       <MeshBackground />
+      <AllDoneCelebration />
       <CollapsingLargeHeader
         title={greeting}
         trailing={

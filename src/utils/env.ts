@@ -39,12 +39,27 @@ function getDevHostIp(): string | null {
 
 const DEFAULT_POCKETBASE_PORT = "8090";
 
+/** Hosts where PocketBase typically runs on :8090 without a reverse proxy. */
+function isDirectPocketBaseHost(hostname: string): boolean {
+  if (hostname === "localhost" || hostname === "127.0.0.1") return true;
+  if (/^192\.168\.\d{1,3}\.\d{1,3}$/.test(hostname)) return true;
+  if (/^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname)) return true;
+  if (/^172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}$/.test(hostname)) return true;
+  // Raw VPS IP (e.g. http://203.0.113.50 → :8090)
+  if (/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname)) return true;
+  return false;
+}
+
 /**
- * PocketBase must include an explicit port in local/dev URLs.
+ * PocketBase must include an explicit port in local/direct HTTP URLs.
  * `http://192.168.x.x` (no port) silently hits :80 and fails with ClientResponseError 0.
+ *
+ * Production HTTPS domains keep the default port (443) — do not append :8090.
  */
 function ensurePocketBasePort(url: URL): void {
-  if (!url.port) {
+  if (url.port) return;
+  if (url.protocol === "https:") return;
+  if (isDirectPocketBaseHost(url.hostname)) {
     url.port = DEFAULT_POCKETBASE_PORT;
   }
 }
